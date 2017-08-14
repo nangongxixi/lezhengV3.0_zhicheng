@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>预约管理</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/table.css"/>
+
+</head>
+<body>
+<div class="layui-field-box">
+    <blockquote class="layui-elem-quote">
+        <form class="layui-form" action="">
+            <div class="layui-form-item self-layui-form-item">
+                <label class="layui-form-label" style="width:auto">选择时间</label>
+
+                <div class="layui-input-inline">
+                    <input class="layui-input" placeholder="开始日" id="LAY_demorange_s1" name="begintime">
+                </div>
+                <div class="layui-input-inline">
+                    <input class="layui-input" placeholder="截止日" id="LAY_demorange_e1" name="endtime">
+                </div>
+
+                <!--
+                <label class="layui-form-label" style="width:auto">区域选择</label>
+
+                <div class="layui-input-inline self-layui-input-inline" id="area">
+                    <select name="area" lay-filter="areaname">
+                        <option value="">—— 请选择 ——</option>
+                    </select>
+                </div>
+                <label class="layui-form-label" style="width:auto">部门</label>
+
+                <div class="layui-input-inline" id="partment">
+                    <select name="partment">
+                        <option value="">—— 请选择 ——</option>
+                    </select>
+                </div>
+                -->
+
+                <label class="layui-form-label" style="width:auto">事件名称</label>
+
+                <div class="layui-input-inline">
+                    <input type="text" name="keyword" lay-verify="title" autocomplete="off" placeholder="请输入事件名称"
+                           class="layui-input">
+                </div>
+                <button class="layui-btn" lay-submit="" lay-filter="searhei" style="margin-left: 30px">搜索</button>
+                <button type="reset" class="layui-btn layui-btn-primary" id="resetall">重置</button>
+
+            </div>
+        </form>
+    </blockquote>
+    <span id="items-list1"></span>
+    <br><br><br>
+
+    <div class="admin-table-page">
+        <div id="page1" class="page"></div>
+    </div>
+</div>
+
+<!---行政审批-->
+<script id="orderHandle1" type="text/html">
+    <table class="site-table table-hover">
+        <thead>
+        <tr>
+            <th>姓名</th>
+            <th>身份证号</th>
+            <th>手机号</th>
+            <th>办理日期</th>
+            <th>预约时间</th>
+            <th>区域</th>
+            <th>预约流水号</th>
+            <th>事件</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# layui.each(d.datalist, function(index, item){ }}
+        <tr>
+            <td>{{ item.name }}</td>
+            <td>{{ item.idcard }}</td>
+            <td>{{ item.phone }}</td>
+            <td>{{ item.bookingdate }}</td>
+            <td>{{ item.bookingtime }}</td>
+            <td>{{ item.handlearea }}</td>
+            <td>{{ item.sector }}</td>
+            <td title="{{ item.matter }}">{{ item.matter.length>18?item.matter.substring(0, 18)+ "...":item.matter }}
+            </td>
+            <td style="display:none">{{ item.adress }}</td>
+            <td>
+                <span class="layui-breadcrumb detail" lay-separator=" " indexid="{{ index }}">
+                    <a href="javascript:;" title="详情">
+                        <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                    </a>
+                </span>
+            </td>
+        </tr>
+        {{# }); }}
+        </tbody>
+    </table>
+</script>
+
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+
+<script>
+    //搜索表单
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('serviceIndex'),
+                orderID = common.getUrlParam("id"),
+                itemID = common.getUrlParam("itemid"),//事项id
+                layer = layui.layer;
+        common.saveTabIndex('serviceIndex');
+        common.init();
+        common.layTime(); //时间选择
+
+        /*------------------------------------------------------------------获取数据--------------------------------------------------------------------- */
+
+        getJson()
+        $("#resetall").on('click', function () {//重置操作
+            getJson();
+        });
+        function getJson() {
+            var dataArr = {
+                "page": 1
+            }
+            common.getJsonData('api/bossApi/preengage/preengageSearch', 1, dataArr);
+        }
+
+        //区域下拉列表
+        var dataArr = {"id": 0};
+        var areaBig = common.getJsonData('api/bossApi/service/areaSearch', '', dataArr);
+        $.each(areaBig.datalist, function (index, item) {
+            $("#area select").append('<optgroup label="' + item.areaname + '" oid="' + item.areacode + '"></optgroup>');
+            var dataArr = {"id": item.areacode};
+            var areaSmall = common.getJsonData('api/bossApi/service/areaSearch', '', dataArr);
+            for (var i = 0; i < areaSmall.datalist.length; i++) {
+                $("optgroup[oid='" + item.areacode + "']").append('<option value="' + areaSmall.datalist[i].areaid + '">' + areaSmall.datalist[i].areaname + '</option>');
+            }
+        });
+        //部门下拉
+        form.render();
+
+        form.on('select(areaname)', function (data) {
+            $("#partment select").html('<option value="">—— 请选择 ——</option>');
+            var dataArr = {"id": data.value};
+            var partment = common.getJsonData('api/bossApi/service/departmentSearchByAreaID', '', dataArr);
+            $.each(partment.datalist, function (index, item) {
+                $("#partment select").append('<option value="' + item.name + '">' + item.name + '</option>');
+            });
+            form.render();
+        })
+
+
+        /*------------------------------------------------------------------搜索表单--------------------------------------------------------------------- */
+
+        form.on('submit(searhei)', function (data) {
+            var dataArr = {
+                "timebegin": data.field.begintime,
+                "timeend": data.field.endtime,
+                //"area": data.field.area,
+                //"sector": data.field.partment,
+                "matter": data.field.keyword,
+                "page": 1
+            }
+            common.getJsonData('api/bossApi/preengage/preengageSearch', 1, dataArr);
+            return false;
+        });
+
+        $(document).on('click', '.detail', function () {
+            var indexid = $(this).attr("indexid");
+            var index = $(this).parent().parent();
+            //拼凑数组并放到localhost，以便详情使用
+            var arr = {
+                "name": index.children().eq(0).html(),
+                "idcard": index.children().eq(1).html(),
+                "phone": index.children().eq(2).html(),
+                "bookingdate": index.children().eq(3).html(),
+                "bookingtime": index.children().eq(4).html(),
+                "handlearea": index.children().eq(5).html(),
+                "sector": index.children().eq(6).html(),
+                "matter": index.children().eq(7).html(),
+                "address": index.children().eq(8).html()
+            };
+            localStorage.setItem("yuyuemanager", JSON.stringify(arr));
+        });
+
+        //弹出详情
+        $(document).on('click', '.layui-breadcrumb', function () {
+            layer.open({
+                type: 2,
+                title: '预约详情',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['550px', '80%'],
+                content: 'detail.html',//iframe的url
+            });
+        });
+
+    });
+</script>
+</body>
+</html>

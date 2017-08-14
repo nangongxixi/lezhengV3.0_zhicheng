@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>管理</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/table.css"/>
+    <style>
+        .layui-choose-left {
+            float: right;
+            width: 19%;
+            margin: 10px 0 0 10px;
+            overflow: hidden
+        }
+
+        .layui-colla-content {
+            padding: 0;
+        }
+
+        .layui-colla-content li {
+            height: 40px;
+            line-height: 40px;
+            padding-left: 40px;
+            cursor: pointer;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .layui-colla-content li:hover {
+            background: #eee;
+        }
+
+        .layui-colla-content li.active {
+            background: #009e94;
+            color: #fff;
+        }
+
+        .layui-choose-right {
+            margin-left: 220px;
+        }
+
+        .layui-choose-tab {
+            padding: 0 15px;
+        }
+
+        .choosed-title {
+            background: #f2f2f2;
+            font-size: 15px;
+            height: 40px;
+            line-height: 40px;
+            padding-left: 10px;
+            color: #5d5c5c;
+            border: 1px solid #e2e2e2;
+        }
+
+        .choosed-content {
+            border: 1px solid #f2f2f2;
+            border-top: 0;
+            min-height: 50px;
+            padding: 10px;
+            overflow: hidden;
+        }
+
+        .choosed-item {
+            float: left;
+            margin: 0 15px 10px 0;
+            padding: 0 10px;
+            height: 30px;
+            line-height: 30px;
+            font-size: 16px;
+            color: #5FB878;
+            border: 1px solid #5FB878;
+            -webkit-border-radius: 2px;
+            -moz-border-radius: 2px;
+            border-radius: 2px;
+        }
+
+        .choosed-item:hover {
+            color: #009688;
+            border: 1px solid #009688;
+        }
+
+        .choosed-item i {
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .itemstyla {
+            cursor: pointer;
+            min-height: 40px;
+            line-height: 40px;
+            border-bottom: 1px solid #ddd;
+            font-size: 14px;
+            font-weight: 400;
+            text-align: left;
+            background-color: #009688 !important;
+            color: #fff !important;
+        }
+
+    </style>
+
+</head>
+<body>
+<div style="margin: 15px;">
+    <div class="layui-tab layui-tab-card" lay-filter="attrManage">
+        <ul class="layui-tab-title">
+            <li>区域</li>
+            <li>主题</li>
+            <li>标签</li>
+            <li>会员体系</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item">
+                <div class="layui-field-box">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item self-layui-form-item">
+                                <label class="layui-form-label" style="width:auto">关键字</label>
+
+                                <div class="layui-input-inline">
+                                    <input type="text" name="keyword" lay-verify="" autocomplete="off"
+                                           placeholder="请输入关键字" class="layui-input">
+                                </div>
+                                <button class="layui-btn" lay-submit="" lay-filter="searquyu" style="margin-left: 40px">
+                                    搜索
+                                </button>
+                                <button type="reset" class="layui-btn layui-btn-primary resetquyu">重置</button>
+                            </div>
+                        </form>
+                    </blockquote>
+                    <a href="javascript:;" type="submit" class="layui-btn addparement" areaid=""><i
+                            class="layui-icon ico-color"></i>&nbsp;添加</a>
+
+
+                    <div>
+                        <span id="items-list1"></span>
+
+                        <div class="layui-choose-left">
+                            <div style="line-height: 35px; height: 35px; background-color: #eeeeee; padding-left: 15px">
+                                <i class="fa fa-dribbble" aria-hidden="true"></i> 区域管理
+                                <span class="right weih" id="addarea">添加</span>
+                            </div>
+                            <div class="layui-collapse" lay-accordion="" id="area"></div>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="admin-table-page">
+                        <div id="page1" class="page"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="layui-field-box">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item self-layui-form-item">
+                                <label class="layui-form-label" style="width:auto">关键字</label>
+
+                                <div class="layui-input-inline">
+                                    <input type="text" name="keyword" lay-verify="" autocomplete="off"
+                                           placeholder="请输入关键字" class="layui-input">
+                                </div>
+                                <button class="layui-btn" lay-submit="" lay-filter="searzhuti"
+                                        style="margin-left: 40px">搜索
+                                </button>
+                                <button type="reset" class="layui-btn layui-btn-primary resetzhuti">重置</button>
+                            </div>
+                        </form>
+                    </blockquote>
+                    <a href="editPerson.html?add=2" class="layui-btn"><i
+                            class="layui-icon ico-color"></i>&nbsp;添加</a>
+                    <span id="items-list2"></span>
+
+                    <div class="admin-table-page">
+                        <div id="page2" class="page"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="layui-field-box">
+                    <span class="layui-btn" id="additem"><i class="layui-icon ico-color"></i>&nbsp;添加</span>
+                    <span id="items-list3"></span>
+
+                    <div class="admin-table-page">
+                        <div id="page3" class="page"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="layui-field-box">
+                   <!-- <a href='editMember.html' class="layui-btn"><i class="layui-icon ico-color"></i>&nbsp;添加</a>-->
+                    <span id="items-list4"></span>
+
+                    <div class="admin-table-page">
+                        <div id="page4" class="page"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!---区域-->
+<script id="orderHandle1" type="text/html">
+    <table class="site-table self-site-table table-hover left">
+        <thead>
+        <tr>
+            <th>编号</th>
+            <th>部门名称</th>
+            <th>描述</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# layui.each(d.datalist, function(index, item){ }}
+        <tr>
+            <td>{{ item.number }}</td>
+            <td title="{{ item.name }}">{{ item.name && item.name.length>18?item.name.substring(0, 18)+ "...":item.name
+                }}
+            </td>
+            <td title="{{ item.remark }}">{{ item.remark && item.remark.length>18?item.remark.substring(0, 18)+
+                "...":item.remark }}
+            </td>
+            <td style="display:none">{{ item.imgguid }}</td>
+            <td style="display:none">{{ item.departmentid }}</td>
+            <td style="display:none">{{ item.areaid }}</td>
+            <td style="display:none">{{ item.remark }}</td>
+            <td style="display:none">{{ item.imgurl }}</td>
+            <td style="display:none">{{ item.status }}</td>
+            <td style="display:none">{{ item.statusname }}</td>
+            <td style="display:none">1</td>
+            <td>
+                            <span class="layui-breadcrumb" lay-separator=" ">                        
+                                <a href="javascript:;" title="详情" class="detail" detail="1"><i
+                                        class="fa fa-file-text-o" aria-hidden="true"></i></a>
+                                <a href="javascript:;" title="编辑" class="detail" edit="1"><i
+                                        class="fa fa-edit"
+                                        aria-hidden="true"></i></a>
+                                <a href="javascript:;" title="删除" orderid="{{ item.departmentid }}" id="delarea"><i
+                                        class="layui-icon self-cursor" data-icon="&#x1006;">&#x1006;</i></a>
+                            </span>
+            </td>
+        </tr>
+        {{# }); }}
+        </tbody>
+    </table>
+</script>
+<!---主题-->
+<script id="orderHandle2" type="text/html">
+    <table class="site-table table-hover">
+        <thead>
+        <tr>
+            <th>编号</th>
+            <th>主题名称</th>
+            <th>描述</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# layui.each(d.datalist, function(index, item){ }}
+        <tr>
+            <td>{{ item.number }}</td>
+            <td title="{{ item.name }}">{{ item.name && item.name.length>18?item.name.substring(0, 18)+ "...":item.name
+                }}
+            </td>
+            <td title="{{ item.remark }}">
+                {{# if(item.remark == null){ }}/{{# }else{ }}
+                {{ item.remark && item.remark.length>18?item.remark.substring(0, 18)+ "...":item.remark }}
+                {{# } }}
+
+            </td>
+            <td style="display:none">{{ item.imgguid }}</td>
+            <td style="display:none">{{ item.themeid }}</td>
+            <td style="display:none">{{ item.areaid }}</td>
+            <td style="display:none">{{ item.remark }}</td>
+            <td style="display:none">{{ item.imgurl }}</td>
+            <td style="display:none">2</td>
+            <td>
+                            <span class="layui-breadcrumb" lay-separator=" ">                        
+                               <a href="javascript:;" title="详情" class="detail" detail="2"><i
+                                       class="fa fa-file-text-o" aria-hidden="true"></i></a>
+                               <a href="javascript:;" title="编辑" class="detail" edit="2"><i
+                                       class="fa fa-edit"
+                                       aria-hidden="true"></i></a>
+                            </span>
+            </td>
+        </tr>
+        {{# }); }}
+        </tbody>
+    </table>
+</script>
+<!---标签-->
+<script id="orderHandle3" type="text/html">
+    {{#  layui.each(d.data, function(index, item){ }}
+    <div class="layui-btn layui-btn-primary" title="{{ item.name }}" id="{{ item.tagsid }}">
+        <i class="layui-icon self-cursor right del" data-icon="&#x1006;" style="display:none">&#x1006;</i>
+        <i class="layui-icon self-cursor right edit" data-icon="&#xe642;" style="display:none">&#xe642;</i>
+        <span>{{ item.name }}&nbsp;  </span>
+
+        <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入用户名"
+               class="layui-input self-form-input" style="display:none">
+
+        <div class="layui-icon  right" data-icon="&#xe605;"
+             style="position: relative;top:-38px; margin-right: 15px; display: none">&#xe605;
+        </div>
+    </div>
+    {{#  }); }}
+</script>
+<!---会员体系-->
+<script id="orderHandle4" type="text/html">
+    <table class="site-table table-hover">
+        <thead>
+        <tr>
+            <th>级别</th>
+            <th>头衔</th>
+            <th>成长值</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# layui.each(d.datalist, function(index, item){ }}
+        <tr>
+            <td>{{ item.level }}级</td>
+            <td title="{{ item.levelname }}">{{ item.levelname}}
+            </td>
+            <td title="{{ item.growthvalue }}">{{ item.growthvalue}}
+            </td>
+            <td style="display:none">{{ item.imgguid }}</td>
+            <td style="display:none">{{ item.level }}</td>
+            <td style="display:none">{{ item.memberid }}</td>
+            <td style="display:none">{{ item.remark }}</td>
+            <td style="display:none">{{ item.imgurl }}</td>
+            <td style="display:none">4</td>
+            <td>
+                            <span class="layui-breadcrumb" lay-separator=" ">
+                                <a href="javascript:;" title="详情" class="detail" member="true" memberdetail="true"
+                                   detail="4"><i
+                                        class="fa fa-file-text-o" aria-hidden="true"></i></a>
+                               <a href="javascript:;" title="编辑" class="detail" member="true" edit="4"><i
+                                       class="fa fa-edit"
+                                       aria-hidden="true"></i></a>
+                            </span>
+            </td>
+        </tr>
+        {{# }); }}
+        </tbody>
+    </table>
+
+</script>
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                orderID = common.getUrlParam("id"),
+                layer = layui.layer;
+        common.init();
+        common.saveTabIndex('attrManage');
+        common.layTime(); //时间选择
+        //复选框样式
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_flat-green'
+        });
+
+        console.log(localStorage);
+
+        /* ------------------------------------------------------------- 数据列表显示 ---------------------------------------------------------------- */
+
+        getJsonList('api/bossApi/property/departmentListForPage', 0, {"page": 1});//区域
+        getJsonList('api/bossApi/property/themeListForPage', 1, {"page": 1});//主题
+        getJsonList('api/bossApi/property/tagList', 2, '');//标签
+        getJsonList('api/bossApi/property/memberListForPage', 3, {"page": 1});//会员列表
+
+        $(".resetquyu").on('click', function () {
+            getJsonList('api/bossApi/property/departmentList', 0, '');
+            $(".smallitem").siblings().removeClass("active");
+        });
+        $(".resetzhuti").on('click', function () {
+            getJsonList('api/bossApi/property/themeListForPage', 1, '');
+        });
+
+        //区域列表
+        var dataArr = {"id": 0};
+        var areaBig = common.getJsonData('api/bossApi/service/areaSearch', '', dataArr);
+        $.each(areaBig.datalist, function (index, item) {
+            $("#area").append('<div class="layui-colla-item"><h2 class="layui-colla-title" id="' + item.areaid + '">' + item.areaname + '</h2><div class="layui-colla-content"><ul id="areasmall' + item.areaid + '"></ul></div></div>');
+            if (index == 0) {
+                $(".layui-colla-content").addClass("layui-show");
+            }
+            var dataArr = {"id": item.areaid};
+            var areaSmall = common.getJsonData('api/bossApi/service/areaSearch', '', dataArr);
+            for (var i = 0; i < areaSmall.datalist.length; i++) {
+                $("#areasmall" + item.areaid).append('<li class="smallitem" id="' + areaSmall.datalist[i].areaid + '">' + areaSmall.datalist[i].areaname + '</li>');
+            }
+        });
+        //列表样式
+        $("#area ul>li:even").css("background", "#fbfbfb");
+        $("#area ul>li:last").css("border", "0");
+
+        $(".smallitem").on('click', function () {
+            $(this).addClass("itemstyla").siblings().removeClass("itemstyla");
+            $(".right-btn").attr("class", "self-input");
+            var areaid = $(this).attr('id');
+            $(".addparement").attr("areaid", areaid);
+        });
+
+        $(".addparement").on('click', function () {
+            var areaid = $(this).attr('areaid');
+
+            if (areaid == '') {
+                layer.msg('请选择区域');
+                return false;
+            }
+
+            location.href = "editPerson.html?add=1&areaid=" + areaid;
+        });
+
+
+        /* ------------------------------------------------------------- 数据搜索操作 ---------------------------------------------------------------- */
+
+        //区域 -> 搜索（关键字）
+        form.on('submit(searquyu)', function (data) {
+            var dataArr = {
+                "id": 0,
+                "keyword": data.field.keyword
+            };
+            getJsonList('api/bossApi/property/departmentListForPage', 0, dataArr);
+            return false;
+        });
+        $(document).on('click', '.smallitem', function () {
+            var id = $(this).attr("id");
+            var dataArr = {
+                "id": id,
+                "page": 1
+            };
+            getJsonList('api/bossApi/property/departmentListForPage', 0, dataArr);//区域
+            // getJsonList('api/bossApi/property/departmentList', 0, dataArr);
+            return false;
+        });
+
+        //主题 -> 搜索（关键字）
+        form.on('submit(searzhuti)', function (data) {
+            var dataArr = {
+                "id": 0,
+                "page": 1,
+                "keyword": data.field.keyword
+            };
+            getJsonList('api/bossApi/property/themeListForPage', 1, dataArr);
+            return false;
+        });
+
+        /* ------------------------------------------------------------- 数据MODEL ---------------------------------------------------------------- */
+
+        function getJsonList(APIname, typeid, dataArr) {
+            var cc = typeid + 1;
+            var dataArray = dataArr || {"id": 0};
+            common.getJsonData(APIname, cc, dataArray);
+        }
+
+        /* ------------------------------------------------------------- 保存详情 ---------------------------------------------------------------- */
+
+        $(document).on('click', '.detail', function () {
+            var index = $(this).parent().parent().siblings();
+            var detail = $(this).attr('detail');
+            var edit = $(this).attr('edit');
+            var member = $(this).attr('member');
+            var memberdetail = $(this).attr('memberdetail');
+            //拼凑数组并放到localhost，以便详情使用
+            var arr = {
+                "param1": index.eq(0).html(),
+                "param2": index.eq(1).attr("title"),
+                "param3": index.eq(2).attr("title"),
+                "param4": index.eq(3).html(),
+                "param5": index.eq(4).html(),
+                "param6": index.eq(5).html(),
+                "param7": index.eq(6).html(),
+                "param8": index.eq(7).html(),
+                "param9": index.eq(8).html(),
+                "param10": index.eq(9).html(),
+                "param11": index.eq(10).html()
+            };
+            localStorage.setItem("attrmanagerDetail", JSON.stringify(arr));
+            if (detail == 1 || detail == 2) {
+                location.href = "detail.html";
+            } else if (detail == 4) {
+                location.href = "memberdetail.html";
+            } else {
+            }
+
+            if (edit == 1) {
+                location.href = "editperson.html?edit=1";
+            }
+            if (edit == 2) {
+                location.href = "editperson.html?edit=2";
+            }
+            if (edit == 4) {
+                location.href = "editmember.html?edit=4";
+            }
+
+        });
+
+        /* ------------------------------------------------------------- 其他操作 ---------------------------------------------------------------- */
+
+        //鼠标移入-》显示可编辑按钮
+        $(document).on('mousemove', '.layui-btn-primary', function () {
+            $(this).children('.edit,.del').removeAttr('style');
+            $(this).children('.edit,.del').css('color', '#009688');
+        });
+        //鼠标移出-》隐藏可编辑按钮
+        $(document).on('mouseout', '.layui-btn-primary', function () {
+            $(this).find('.edit,.del').css('display', 'none');
+        });
+        //删除标签操作
+        $(document).on('click', '.layui-btn-primary .del', function () {
+            var orderid = parseInt($(this).parent().attr('id'));
+            layer.confirm('您确定要删除本条数据？', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                var APIname = "api/bossApi/property/tagDel";
+                var dataArr = {"id": orderid};
+                var getJSON = common.getJsonData(APIname, '', dataArr);
+                // console.log(dataArr);
+                //console.log(getJSON);
+                // return false;
+                if (getJSON["code"] == 1) {
+                    layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                        window.location.reload();
+                    });
+                }
+            });
+            return false;
+        });
+
+        //编辑操作
+        $(document).on('click', '.layui-btn-primary .edit', function () {
+            var inputval = $(this).parent().attr('title');
+            var orderid = $(this).parent().attr('id');
+            $(this).parent().children('input,div').css({"display": "block", "color": "red"}); //显示input
+            $(this).parent().css('border', '0'); //去掉负极的默认边框
+            $(this).parent().children('input').val(inputval).focus(); //获取焦点
+            $(this).parent().children('i,span').remove(); //隐藏除input外的所有元素
+        });
+
+        /*
+         //失去光标时保存
+         $(document).on('blur', '.layui-btn-primary input', function () {
+         var orderid = $(this).parent().attr('id');
+         var inputval = $(this).val();
+         savedata(orderid, inputval);
+         })
+         */
+
+        //点击“对钩”的时候
+        $(document).on('click', '.layui-btn-primary div', function () {
+            var orderid = $(this).parent().attr('id');
+            var inputval = $(this).prev().val();
+            // var inputval = $("input[name='title']").val();
+            savedata(orderid, inputval);
+        })
+        function savedata(orderid, inputval) {
+            if (orderid) {
+                var dataArray = {
+                    "tagsid": orderid,
+                    "code": 0,
+                    "status": 0,
+                    "name": inputval
+                };
+            } else {
+                var dataArray = {
+                    "tagsid": 0,
+                    "code": 0,
+                    "status": 0,
+                    "name": inputval
+                };
+            }
+            var getJSON = common.getJsonData('api/bossApi/property/tagEdit', '', dataArray);
+            // console.log(dataArray);
+            // console.log(getJSON);
+            //return false;
+            if (getJSON["code"] == 1) {
+                layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                    localStorage.removeItem("attrmanagerDetail");
+                    window.location.reload();
+                });
+            } else {
+                layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                    history.go(-1);
+                });
+            }
+            return false;
+        }
+
+        //添加标签
+        $("#additem").on('click', function () {
+            $("#items-list3").prepend('<div class="layui-btn layui-btn-primary"><i class="layui-icon self-cursor right del" data-icon="&#x1006;" style="display:none">&#x1006;</i><i class="layui-icon self-cursor right edit" data-icon="&#xe642;" style="display:none">&#xe642;</i><span>请填写新建标签名字</span><input type="text" name="title" lay-verify="title" autocomplete="off"  placeholder="请输入用户名" class="layui-input self-form-input" style="display:none"><div class="layui-icon  right" data-icon="&#xe605;" style="position: relative;top:-38px; margin-right: 15px; display: none">&#xe605;</div></div>');
+        });
+        $(document).on('click', '.layui-colla-content li', function () {
+            $('.layui-colla-content li').removeClass('active');
+            $(this).addClass('active')
+        });
+        //选项卡切换
+        $('.site-demo-active').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+        //给选项卡定义样式
+        $(".selected-input").find(".layui-input").css({
+            'border': '0',
+            'background-color': '#f1f1f1',
+            'height': '34px',
+            'text-align': 'center'
+        });
+        $(".selsect-content0 tr, .selsect-content1 tr, .selsect-content2 tr").find("h2:even").css("background", "#ffffff");
+        $(".selsect-content0 tr, .selsect-content1 tr, .selsect-content2 tr").find("h2:last").css("border", "0");
+        //选项卡联动
+        $(".layui-anim dd").on('click', function () {
+            var index = $(this).index();
+            $(".selsect-content0 tr").eq(index).attr("class", "").siblings().addClass("layui-hide");
+        });
+
+        //监听提交
+        form.on('submit(sear)', function (data) {
+            layer.alert(JSON.stringify(data.field));
+            return false;
+        });
+
+        //弹出添加库
+        $("#chooseitem").on("click", function () {
+            layer.open({
+                type: 2,
+                title: '服务区域',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['1400px', '80%'],
+                content: 'SystemManage/roleManage/personitems.html' //iframe的url
+            });
+        });
+        //显示及操作角色项目
+        var ee = JSON.parse(localStorage.getItem("ids"));
+        for (var i in ee) {
+            $("#items").prepend('<div class="layui-btn layui-btn-primary" title="' + ee[i] + '" id="' + i + '">' + ee[i] + '&nbsp;<i class="layui-icon self-cursor" data-icon="&#x1006;">&#x1006;</i></div>');
+        }
+        $(".layui-btn").on('mouseover', function () {
+            $(this).find('.layui-icon').css('color', '#009688');
+        });
+        $(".layui-btn").on('mouseout', function () {
+            $(this).find('.layui-icon').css('color', '#666');
+        });
+        $(".layui-btn .layui-icon").on('click', function () {
+            var fulei = $(this).parent();
+            var key = fulei.attr('id');
+            delete ee[key]; //删除相应的键值
+            localStorage.setItem('ids', JSON.stringify(ee)); //重新存回localsession
+            fulei.remove(); //删除响应的items
+        });
+        //点击角色维护 -》添加
+        $(".weih").on("click", function () {
+            var obj = $(".select_input-items");
+            if (obj.find(".daibj").html() == '添加角色') {
+                layer.msg('请先完善添加信息', {icon: 0});
+                return false;
+            }
+            obj.append('<h2 class="self-input self-add-input"><i class="fa fa-id-card-o" aria-hidden="true"></i>&nbsp;&nbsp;<span class="daibj">添加角色</span></h2>');
+            $(".selsect-content tr").find("h2:even").css("background", "#ffffff");
+        });
+
+        //删除区域
+        $(document).on('click', '#delarea', function () {
+            var obj = $(this);
+            layer.confirm('您确定要删除本条数据？', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                var orderid = parseInt(obj.attr("orderid"));
+                var APIname = "api/bossApi/property/departmentDel";
+                var dataArr = {"id": orderid};
+                var getJSON = common.getJsonData(APIname, '', dataArr);
+                if (getJSON["code"] == 1) {
+                    layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                        location.href = "../attrManage/index.html";
+                    });
+                } else {
+                    layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                        history.go(0);
+                    });
+                }
+            });
+            return false;
+        });
+
+        $("#addarea").on('click', function () {
+            location.href = "addarea.html";
+        });
+
+    });
+</script>
+</body>
+</html>

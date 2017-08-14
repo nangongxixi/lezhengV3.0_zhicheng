@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>编辑/添加优惠券</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <style>
+        .layui-field-box {
+            padding: 0;
+        }
+
+        .layui-input-inline {
+            width: 200px;
+        }
+
+        .layui-form-item .layui-input-inline {
+            width: 300px;
+        }
+
+        .order-form-title {
+            padding-left: 20px;
+            height: 38px;
+            line-height: 38px;
+            background: #e2e2e2;
+            font-size: 15px;
+        }
+
+        .order-form-block {
+            border: 1px solid #e2e2e2;
+            border-top: 0;
+            padding: 20px 0;
+        }
+
+        .layui-form-item:nth-child(1) {
+            margin-top: 0;
+        }
+    </style>
+</head>
+
+<body>
+<div style="margin: 15px;">
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>发放优惠券</legend>
+    </fieldset>
+    <div class="layui-field-box">
+        <div class="order-form-title">积分兑换领取</div>
+        <div class="order-form-block">
+            <form class="layui-form" action="" id="grantQrcode">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">选择优惠券</label>
+
+                        <div class="layui-input-inline">
+                            <input type="hidden" name="discountamount" id="discountamount">
+                            <input type="hidden" name="couponlibraryid" id="chooseCoupon">
+                            <input type="text" name="discountname" lay-verify="required" autocomplete="off"
+                                   class="layui-input chooseCoupon" id="discountname"
+                                   placeholder="请选择要发放的优惠券" style="cursor: pointer">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">发放编号</label>
+
+                        <div class="layui-input-inline">
+                            <input type="text" name="number" lay-verify="required" autocomplete="off"
+                                   class="layui-input" placeholder="请选输入本次操作的编号">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-item2">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">发放总数</label>
+
+                        <div class="layui-input-inline">
+                            <input type="text" name="releasequantity" lay-verify="required" autocomplete="off"
+                                   class="layui-input" placeholder="请填写要发放的总数量">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">所需积分</label>
+
+                        <div class="layui-input-inline">
+                            <input type="text" name="rule" lay-verify="required" autocomplete="off"
+                                   class="layui-input" placeholder="请选输入本次操作的编号">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-btn" id="sendcon" style="margin: 20px 0 0 40px !important;">
+                    发放
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('serviceIndex'),
+                couponlibraryid = common.getUrlParam("couponlibraryid"),
+                itemID = common.getUrlParam("itemid"),//事项id
+                layer = layui.layer;
+        common.saveTabIndex('serviceIndex');
+        common.init();
+        common.layTime(); //时间选择
+
+        //避免input被刷新清空
+        formInStorage.init({
+            formElem: '#grantQrcode',
+            formSession: 'grantQrcode'
+        });
+
+        //选择优惠券弹层
+        $('.chooseCoupon').on('click', function () {
+            layer.open({
+                type: 2,
+                title: '选择优惠券',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['90%', '80%'],
+                content: 'chooseCoupon.html'
+            });
+        })
+
+
+        $(document).on('click', '#sendcon', function (data) {
+            var couponlibraryid = parseInt($("input[name='couponlibraryid']").val());
+            var number = $("input[name='number']").val();
+            var releasequantity = parseInt($("input[name='releasequantity']").val()); //发放总数
+            var count = releasequantity * parseInt($("input[name='discountamount']").val());
+            var rule = $("input[name='rule']").val();//页面来源
+            if (!couponlibraryid) {
+                layer.msg('请选择优惠券');
+                return false;
+            }
+            if (!number) {
+                layer.msg('请填写编号');
+                return false;
+            }
+            if (!releasequantity) {
+                layer.msg('请填写发放总数');
+                return false;
+            }
+            if (!rule) {
+                layer.msg('请填写页面来源');
+                return false;
+            }
+            var layer_html = '  <div class="layer-begin">' +
+                    '<form action=""></form>' +
+                    '<div class="layui-form-item">' +
+                    '<label class="layui-form-label" style="width:auto">优惠券名称：</label>' +
+                    '<div class="layui-input-inline" style="width: 240px; line-height: 40px">' +
+                    $("input[name='discountname']").val() +
+                    '</div>' +
+                    '</div>' +
+                    '<div class="layui-form-item">' +
+                    '<label class="layui-form-label" style="width:auto">发放编码：</label>' +
+                    '<div class="layui-input-inline" style="width: 240px; line-height: 40px">' +
+                    $("input[name='number']").val() +
+                    '</div>' +
+                    '</div>' +
+                    '<div class="layui-form-item">' +
+                    '<label class="layui-form-label" style="width:auto">发放总数：</label>' +
+                    '<div class="layui-input-inline" style="width: 240px; line-height: 40px">' +
+                    $("input[name='releasequantity']").val() +
+                    '</div>' +
+                    '</div>' +
+                    '<div class="layui-form-item">' +
+                    '<label class="layui-form-label" style="width:auto">所需积分：</label>' +
+                    '<div class="layui-input-inline" style="width: 240px; line-height: 40px">' +
+                    $("input[name='rule']").val() +
+                    '</div>' +
+                    '</div>' +
+                    '<div class="layui-form-item">' +
+                    '<label class="layui-form-label" style="width:auto">优惠总金额：</label>' +
+                    '<div class="layui-input-inline" style="width: 240px; line-height: 40px">' +
+                    count +
+                    '</div>' +
+                    '</div>' +
+                    '</div>';
+            layer.open({
+                type: 1,
+                area: ['420px', '450px'],
+                shadeClose: true,
+                title: '发放信息',
+                content: layer_html,
+                btn: ['提交', '取消'],
+                btn1: function (index, layero) {
+                    var dataArr = {
+                        "couponlibraryid": couponlibraryid,
+                        "number": number,
+                        "releasequantity": releasequantity,
+                        "rule": rule,
+                        "payment": '4'
+                    }
+                    var getJSON = common.getJsonData('api/bossApi/couponrole/addcoupon', '', dataArr);
+                    // console.log(dataArr);
+                    // console.log(getJSON);
+                    // return false;
+                    if (getJSON["code"] == 1) {
+                        layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                            localStorage.removeItem("grantQrcode");
+                            localStorage.removeItem("productdata");
+                            localStorage.removeItem("addCoupon_form");
+                            // window.history.go(-2);
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                            window.history.go(-1);
+
+                        });
+                    } else {
+                        layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                            history.go(-1);
+                        });
+                    }
+                    return false;
+                    //layer.msg('提交成功')
+                    layer.close(index)
+                }
+            });
+        });
+
+    });
+</script>
+</body>
+
+</html>

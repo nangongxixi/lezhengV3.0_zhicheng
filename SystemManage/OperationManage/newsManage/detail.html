@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>新闻详情</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <style>
+        .newsDetail-tools-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: #dfe6ec;
+            height: 90px;
+            padding: 15px;
+            box-shadow: 0px 1px 2px #99a3ab;
+        }
+
+        .news-poster {
+            margin-right: 15px;
+            width: 90px;
+            height: 90px;
+        }
+
+        .news-poster img {
+            width: 100%;
+            height: auto;
+        }
+
+        .news-info {
+            margin-right: 15px;
+        }
+
+        .news-info h3 {
+            font-size: 22px;
+            color: #000;
+        }
+
+        .news-info > div {
+            height: 20px;
+            line-height: 20px;
+            color: #949494;
+        }
+
+        .newsDetail-tools-bar .layui-btn {
+            margin: 25px 10px;
+            height: 30px;
+            line-height: 30px;
+            width: 90px;
+        }
+
+        .newsDetail-container {
+            padding: 20px;
+            padding-top: 120px;
+        }
+
+        .newsDetail-container h1 {
+            margin: 10px 0;
+            font-size: 30px;
+            color: #000;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .newsDetail-container .date {
+            text-align: center;
+            color: #949494;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .newsDetail-container .poster img {
+            width: 100%;
+            height: auto;
+        }
+
+        .newsDetail-container .content {
+            padding: 15px 0;
+        }
+
+        .newsDetail-container .content p {
+            margin-bottom: 10px;
+            line-height: 2;
+            font-size: 15px;
+        }
+
+        .user-info-left img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .user-info-right {
+            padding: 5px;
+            margin-left: 60px;
+        }
+
+        .user-info-right .username {
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+
+        .user-info-right .time {
+            color: #666;
+        }
+
+        .newsDetail-container .content {
+            padding: 10px 0;
+            line-height: 2;
+        }
+
+        .newsDetail-container .content li {
+            float: left;
+            width: 33.33%;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .newsDetail-container .content li img {
+            width: 90%;
+            height: auto;
+        }
+
+        .comments-item {
+            border-bottom: 1px solid #e4e4e4;
+        }
+
+        .comments-content .title {
+            background: #f2f2f2;
+            height: 40px;
+            line-height: 40px;
+            font-size: 16px;
+            padding: 0 10px;
+        }
+
+        .comments-item {
+            margin: 10px 0;
+            padding: 10px 0;
+        }
+
+        .comments-item img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .comments-item .r {
+            margin-left: 60px;
+        }
+
+        .comments-item p {
+            margin: 10px 0;
+            line-height: 2;
+        }
+
+        .comments-item .handle {
+            text-align: right;
+        }
+
+        .comments-item .handle span {
+            margin: 0 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div style="margin: 15px;">
+    <span id="items-list1"></span>
+    <span id="items-list2"></span>
+
+    <div class="admin-table-page">
+        <div id="page1" class="page"></div>
+        <div id="page2" class="page"></div>
+    </div>
+</div>
+
+<script id="orderHandle1" type="text/html">
+    <div class="newsDetail-tools-bar clear">
+        <div class="pull-left news-poster js_preview_img">
+            <img src="../../images/0.jpg" alt="">
+        </div>
+        <div class="pull-left news-info">
+            <h3>{{d.data.title}}</h3>
+
+            <div> {{# if(d.data.status == 10 ){ }}未上线{{# } }}{{# if(d.data.status == 20 ){ }}已上线{{# } }}</div>
+            <div>推送标签： {{d.data.tagsname}}</div>
+        </div>
+
+        {{# if(d.data.status == 10 ){ }}
+        <div class="pull-right">
+            <button class="layui-btn edit" newsid="{{d.data.newsid}}">编辑</button>
+            <button class="layui-btn upline" newsid="{{d.data.newsid}}">上线</button>
+        </div>
+        {{# } }}
+
+        {{# if(d.data.status == 20 ){ }}
+        <div class="pull-right">
+            <button class="layui-btn ">分享 {{d.data.sharenum}}</button>
+            <a href="#pointeve" class="layui-btn ">评论 {{d.data.reviewnum}}</a>
+            <button class="layui-btn ">点赞 {{d.data.praisenum}}</button>
+        </div>
+        {{# } }}
+
+    </div>
+    <div class="newsDetail-container">
+        <h1>{{d.data.title}}</h1>
+
+        <div class="date">{{d.data.modifytime}}</div>
+        {{# if(d.data.videourl != null ){ }}
+        <div class="poster" style="margin:0 auto; text-align: center">
+            <iframe height=498 width=510 src='{{d.data.videourl}}' frameborder=0
+            'allowfullscreen'></iframe>
+            <br>
+        </div>
+        {{# } }}
+        <div class="content">
+            {{d.data.content}}
+            <span id="pointeve" style="margin-top: 50px"><br></span>
+        </div>
+        <div class="comments-content">
+            <div class="title">评论管理</div>
+        </div>
+    </div>
+</script>
+
+<script id="orderHandle2" type="text/html">
+    {{# layui.each(d.data, function(index, item){ }}
+    <div class="comments-item" style="margin: 20px">
+        <div class="row-1 clear">
+            <div class="pull-left">
+                <img src="{{item.imgguid}}"
+                     alt="">
+            </div>
+            <div class="user-info-right">
+                <div class="username">{{item.nickname}}</div>
+                <div class="time">{{item.createtime}}</div>
+                <p> {{item.reviewcontent}}</p>
+                <br>
+
+                <div>
+                    <button class="layui-btn layui-btn-primary layui-btn-mini right" plid="{{item.reviewid}}">删除
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    {{# }); }}
+
+</script>
+
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('serviceIndex'),
+                newsid = common.getUrlParam("newsid"),
+                vedionewsid = common.getUrlParam("vedionewsid"),//兑换记录详情
+                libraryid = common.getUrlParam("libraryid"), //商品库商品详情
+                newstype = common.getUrlParam("newstype"), //商品库商品详情
+
+                layer = layui.layer;
+        common.saveTabIndex('serviceIndex');
+        common.init();
+        //common.layTime(); //时间选择
+
+
+        if (newsid) {
+            var dataArr = {
+                "id": newsid
+            }
+            common.getJsonData('api/bossApi/news/newsDetail', 1, dataArr);
+        } else {
+            var dataArr = {
+                "exchangeid": exchangeid
+            }
+            common.getJsonData('api/bossApi/exchang/getinfo', 1, dataArr);
+            $('#shangjiaxx').css('display', 'none');
+        }
+        var dataArray = {"id": newsid}
+        common.getJsonData('api/bossApi/news/reviewList', 2, dataArray);
+
+        $(document).on('click', '.edit', function () {
+            var newsid = $(this).attr('newsid');
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+            window.parent.location.href = "editImgNews.html?newsid=" + newsid + "&" + newstype + "=1";
+
+        });
+
+
+        $(document).on('click', '.layui-btn-mini', function () {
+            var obj = $(this);
+            layer.confirm('您确定要删除本条评论？', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                var id = obj.attr('plid');
+                var getJSON = common.getJsonData('api/bossApi/news/reviewDel', '', {"id": id});
+                if (getJSON["code"] == 1) {
+                    layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                        window.location.reload();
+                    });
+                } else {
+                    layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                        window.location.reload();
+                    });
+                }
+            });
+            return false;
+        });
+
+    });
+</script>
+</body>
+</html>
+

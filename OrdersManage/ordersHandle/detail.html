@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>订单详情</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+<div style="margin: 15px;">
+    <fieldset class="layui-elem-field">
+        <legend>订单详情</legend>
+        <div class="layui-field-box">
+            <span id="tkxq" style="display:none">
+            <legend>退款信息</legend>
+            <table class="layui-table" id="items-list1">
+            </table>
+           </span>
+
+            <table class="layui-table" id="items-list2">
+            </table>
+            <legend>流程追踪</legend>
+            <table class="layui-table">
+                <tr>
+                    <td id="step">
+                        <!--
+                        <ul class="time_axis"><li><b class="icon004"></b><div class="order_step"><h3>退款审核</h3><p class="pass_info">退款审核通过</p><p class="pass_time">2017-06-14 16:23:09&nbsp;&nbsp;&nbsp;黄雪</p></div></li><li><b class="icon001"></b><div class="order_step"><h3>商家退款审核</h3><p class="pass_info"></p><p class="pass_time">2017-06-14 16:22:12&nbsp;&nbsp;&nbsp;</p></div></li><li><b class="icon001"></b><div class="order_step"><h3>退款申请</h3><p class="pass_info">后台进行退款申请操作</p><p class="pass_time">2017-06-14 13:32:36&nbsp;&nbsp;&nbsp;田秀华</p></div></li><li><b class="icon001"></b><div class="order_step"><h3>订单支付</h3><p class="pass_info">您的订单已经支付成功</p><p class="pass_time">2017-06-14 13:14:28&nbsp;&nbsp;&nbsp;</p></div></li><li><b class="icon001"></b><div class="order_step"><h3>审核</h3><p class="pass_info">订单已经通过审核</p><p class="pass_time">2017-06-14 13:12:20&nbsp;&nbsp;&nbsp;</p></div></li><li><b class="icon001"></b><div class="order_step"><h3>待审核</h3><p class="pass_info"></p><p class="pass_time">2017-06-14 13:10:00&nbsp;&nbsp;&nbsp;</p></div></li></ul>
+                        -->
+                    </td>
+
+                </tr>
+            </table>
+            <span id="page1" class="page"></span>
+            <span id="page2" class="page"></span>
+            <span id="page3" class="page"></span>
+
+            <div class="self-btn-return" id="paidan" style="display:none">
+                <button class="layui-btn layui-btn-big" onclick=" history.go(-1)">返回</button>
+                <button class="layui-btn layui-btn-big layui-btn-warm" id="return"><i class="fa fa-send"
+                                                                                      data-icon="fa-send"
+                                                                                      aria-hidden="true"></i> 派单
+                </button>
+            </div>
+            <div class="self-btn-return" id="shensu" style="display:none">
+                <button class="layui-btn layui-btn-big shensu" istakeexplain="true">
+                    同意
+                </button>
+                <button class="layui-btn layui-btn-big layui-btn-warm shensu" istakeexplain="false"><i
+                        class="fa fa-send" data-icon="fa-send" aria-hidden="true"></i>
+                    拒绝
+                </button>
+            </div>
+        </div>
+    </fieldset>
+</div>
+<script id="orderHandle1" type="text/html">
+    <tr>
+        <th class="self-form-title">退款金额：</th>
+        <td>￥{{ d.data.amount}}</td>
+    </tr>
+    <tr>
+        <th>账务名称：</th>
+        <td>{{ d.data.username}}</td>
+    </tr>
+    <tr>
+        <th>收款银行：</th>
+        <td>{{ d.data.bankname}}</td>
+    </tr>
+    <tr>
+        <th>收款账号：</th>
+        <td>{{ d.data.banknumber}}</td>
+    </tr>
+    <tr>
+        <th>备注：</th>
+        <td>{{ d.data.reason}}</td>
+    </tr>
+</script>
+<script id="orderHandle2" type="text/html">
+    <tr>
+        <td colspan='2' class='step-name'>订单信息</td>
+    </tr>
+    <tr>
+        <th class="self-form-title">订单状态：</th>
+        <td>{{ d.data.orderstatusname}}</td>
+    </tr>
+    <tr>
+        <th>订单编号：</th>
+        <td>{{ d.data.ordercode}}</td>
+    </tr>
+    <tr>
+        <th>下单时间：</th>
+        <td>{{# if(d.data.ordertime == null){ }}--:--:--{{# }else{ }}{{ d.data.ordertime}}{{# } }}</td>
+    </tr>
+    <tr>
+        <th>基础服务费：</th>
+        <td>{{ d.data.basefee}}</td>
+    </tr>
+    <tr>
+        <th>增值服务费：</th>
+        <td>{{ d.data.incrementfee}}</td>
+    </tr>
+    {{# if(d.data.orderstatus > 1008){ }}
+    <tr>
+        <th>付款时间：</th>
+        <td>{{# if(d.data.paytime == null){ }}--:--:--{{# }else{ }}{{ d.data.paytime}}{{# } }}</td>
+    </tr>
+    <tr>
+        <th>付款方式：</th>
+        <td>{{# if(d.data.paytype == '0'){ }}APP{{# }else if(d.data.paytype == '1'){ }}微信{{# }else
+            if(d.data.paytype == '2'){ }}业务支撑系统{{# }else{ }}/{{# } }}
+        </td>
+    </tr>
+    <tr>
+        <th>应付金额：</th>
+        <td>{{# if(d.data.payable == null){ }}￥0{{# }else{ }}{{ d.data.payable}}{{# } }}</td>
+    </tr>
+    <tr>
+        <th>优惠金额：</th>
+        <td>{{# if(d.data.discount == null){ }}￥0{{# }else{ }}{{ d.data.discount}}{{# } }}</td>
+    </tr>
+    <tr>
+        <th>实付金额：</th>
+        <td>{{# if(d.data.payamount == null){ }}￥0{{# }else{ }}{{ d.data.payamount}}{{# } }}</td>
+    </tr>
+    <tr>
+        <th>定价备注：</th>
+        <td>{{# if(d.data.pricingremark == null){ }}/{{# }else{ }}{{ d.data.pricingremark}}{{# } }}</td>
+    </tr>
+    <tr>
+        <th>所需材料：</th>
+        <td>{{# if(d.data.needmaterials == null){ }}/{{# }else{ }}{{ d.data.needmaterials}}{{# } }}</td>
+    </tr>
+    {{# } }}
+    <tr>
+        <th>订单来源：</th>
+        <td>{{# if(d.data.ordersource == '0'){ }}APP{{# }else if(d.data.ordersource == '1'){ }}微信{{# }else
+            if(d.data.ordersource == '2'){ }}业务支撑系统{{# }else{ }}暂无！{{# } }}
+        </td>
+    </tr>
+    <tr>
+        <td colspan='2' class='step-name'>基本信息</td>
+    </tr>
+    <tr>
+        <th>服务类型：</th>
+        <td>{{ d.data.servicecode}}</td>
+    </tr>
+    <tr>
+        <th>预约客户：</th>
+        <td>{{ d.data.username}}</td>
+    </tr>
+    <tr>
+        <th>手机号码：</th>
+        <td>{{ d.data.uphonenumber}}</td>
+    </tr>
+    <tr>
+        <th>办事区域：</th>
+        <td>{{ d.data.officearea}}</td>
+    </tr>
+    <tr>
+        <th>身份证号：</th>
+        <td>{{# if(d.data.idcardno == null){ }}/{{# }else{ }}{{ d.data.idcardno}}{{# } }}</td>
+    </tr>
+    <tr>
+        <th>身份证地址：</th>
+        <td>{{# if(d.data.idcardaddress == null){ }}/{{# }else{ }}{{ d.data.idcardaddress}}{{# } }}</td>
+    </tr>
+    <tr>
+        <th>通行证号：</th>
+        <td>{{# if(d.data.passnumber == null){ }}/{{# }else{ }}{{ d.data.passnumber}}{{# } }}</td>
+    </tr>
+    <tr>
+        <th>取件地址：</th>
+        <td>{{ d.data.officeaddress}}</td>
+    </tr>
+    <tr>
+        <td colspan='2' class='step-name'>送件方式</td>
+    </tr>
+    <tr>
+        <th>送件方式：</th>
+        <td>{{ d.data.deliveryway}}</td>
+    </tr>
+    <tr>
+        <th>收件人：</th>
+        <td>{{# if(d.data.addressee == null){ }}/{{# }else{ }}{{ d.data.addressee}}{{# } }}</td>
+    </tr>
+    <tr>
+        <th>手机号码：</th>
+        <td>{{# if(d.data.aphonenumber == null){ }}/{{# }else{ }}{{ d.data.aphonenumber}}{{# } }}</td>
+    </tr>
+    <tr>
+        <th>收件区域：</th>
+        <td>{{# if(d.data.inboxarea == null){ }}/{{# }else{ }}{{ d.data.inboxarea}}{{# } }}</td>
+    </tr>
+    <tr>
+        <th>详细地址：</th>
+        <td>{{# if(d.data.inboxaddress == null || d.data.inboxaddress=='undefined'){ }}/{{# }else{ }}{{
+            d.data.inboxaddress}}{{# } }}
+        </td>
+    </tr>
+    <tr>
+        <td colspan='2' class='step-name'>留言</td>
+    </tr>
+    <tr>
+        <th>留言内容：</th>
+        <td>{{# if(d.data.remarks == null){ }}/{{# }else{ }}{{ d.data.remarks}}{{# } }}</td>
+    </tr>
+</script>
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('serviceIndex'),
+                id = common.getUrlParam("id"),
+                chuli = common.getUrlParam("chuli"),
+                wancheng = common.getUrlParam("wancheng"),
+                layer = layui.layer;
+        common.saveTabIndex('serviceIndex');
+        common.init();
+        //common.layTime(); //时间选择
+
+        //获取详情
+        var dataArr = {"id": id}
+        common.getJsonData('api/bossApi/order/ordersDetail', 2, dataArr);
+
+        if (wancheng) {
+            var getpaymentinfo = common.getJsonData('api/bossApi/order/ordersPaymentDetail', '', {"id": id});
+            if (getpaymentinfo.code !== 0) {
+                $("#tkxq").removeAttr("style");
+                common.getJsonData('api/bossApi/order/ordersPaymentDetail', 1, {"id": id});
+            }
+        }
+
+        //获取步骤
+        var getStep = common.getJsonData('api/bossApi/order/ordersteps', '', {"id": id});
+        if (getStep.data.length < 1) {
+            $("#step").html('<span style="letter-spacing: 1px; padding-left: 15px; line-height: 100px">暂无踪迹…</span>')
+        }
+        $.each(getStep.data, function (index, item) {
+            if (getStep.data.length == (index + 1)) {
+                //最新的一条
+                $("#step").prepend('<div class="orderinfo_status_box"><div class="all_text"><div class="orderinfo_status_lvda left"></div><div class="orderinfo_clz orderinfo_text_hei">' + item.stepname + '</div><div class="orderinfoht">' + item.stepremark + '<br>' + item.reason + '</div><div class="feigcs_sj">' + item.steptime + '</div><div class="feigcs_sj" id="stepimglists'+index+'"></div><div class="orderinfo_status_info bottom_line orderinfo_kongge right"></div></div><div class="clear"></div></div>');
+                for(var i=0; i<(item.imglist).length; i++){
+                    $("#stepimglists"+index).prepend('<img class="stepsimg" style="margin-right:15px" height="60" src="' + item.imglist[i] + '">');
+                };
+            } else {
+                $("#step").prepend('<div class="all_text"><div class="orderinfo_status_huidaico left"></div><div class="orderinfo_clz">' + item.stepname + '</div><div class="orderinfoht">' + item.stepremark + '<br>' + item.reason + '</div><div class="feigcs_sj">' + item.steptime + '</div><div class="feigcs_sj" id="stepimglist'+index+'"></div><div class="orderinfo_status_info bottom_line orderinfo_kongge right"></div></div><div class="clear"></div>');
+                for(var i=0; i<(item.imglist).length; i++){
+                    $("#stepimglist"+index).prepend('<img class="stepsimg" style="margin-right:15px" height="60" src="' + item.imglist[i] + '">');
+                };
+            }
+        });
+
+        //图片放大
+        $(document).on('click', '.feigcs_sj img', function () {
+            layer.open({
+                type: 1,
+                title: false,
+                area: ['80%', '80%'],
+                closeBtn: 0,
+                skin: 'layui-layer-nobg', //没有背景色
+                shadeClose: true,
+                content: '<img src="' + $(this).attr("src") + '">'
+            });
+        });
+
+        //申述中 --> 处理
+        if (chuli) {
+            $("#shensu").removeAttr('style');
+        }
+
+        //待审核-关闭
+        $(document).on('click', '.shensu', function () {
+            var obj = $(this);
+            var istakeexplain = $(this).attr('istakeexplain');
+            console.log(istakeexplain)
+            if(istakeexplain=='true'){
+                //同意
+                layer.open({
+                    type: 1,
+                    area: ['420px', '250px'],
+                    shadeClose: true,
+                    title: '填写金额',
+                    content: layer_htmlty,
+                    btn: ['提交', '取消'],
+                    btn1: function (index, layero) {
+                        var dataArr = {
+                            "orderid": id,
+                            "istakeexplain": istakeexplain,
+                            "basefee": document.getElementsByName('sendMode')[0].value,
+                            "incrementfee": document.getElementsByName('sendMode')[1].value,
+                        }
+                        var getJSON = common.getJsonData('api/bossApi/order/ordersEditExplain', '', dataArr);
+                        //console.log(dataArr);
+                       // console.log(getJSON);
+                        //return false;
+                        if (getJSON["code"] == 1) {
+                            layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                                var index = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(index);
+                                location.href = 'index.html';
+                            });
+                        } else {
+                            layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                            });
+                        }
+                        return false;
+                        layer.close(index)
+                    }
+                });
+            }else{
+                //拒绝
+                layer.open({
+                    type: 1,
+                    area: ['420px', '310px'],
+                    shadeClose: true,
+                    title: '拒绝原因',
+                    content: layer_html,
+                    btn: ['提交', '取消'],
+                    btn1: function (index, layero) {
+                        var dataArr = {
+                            "orderid": id,
+                            "istakeexplain": istakeexplain,
+                            "reason": document.getElementsByName('sendMode')[0].value
+                        }
+                        var getJSON = common.getJsonData('api/bossApi/order/ordersEditExplain', '', dataArr);
+                        // console.log(ids);
+                        //console.log(dataArr);
+                        //  console.log(getJSON);
+                        //return false;
+                        if (getJSON["code"] == 1) {
+                            layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                                var index = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(index);
+                                location.href = 'index.html';
+                            });
+                        } else {
+                            layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                                // location.href = 'index.html';
+                            });
+                        }
+                        return false;
+                        layer.close(index)
+                    }
+                });
+            }
+
+
+
+
+        });
+
+        //同意的弹窗样式
+        var layer_htmlty = '  <div class="layer-begin">' +
+                '<form action=""></form>' +
+                '<div class="layui-form-item">' +
+                '<label class="layui-form-label">基础服务费: </label>' +
+                '<div class="layui-input-inline" style="width: 240px;">' +
+                '<input type="text" name="sendMode" autocomplete="off" class="layui-input" placeholder="">' +
+                '</div>' +
+                '</div>' +
+                '<div class="layui-form-item">' +
+                '<label class="layui-form-label">增值服务费: </label>' +
+                '<div class="layui-input-inline" style="width: 240px;">' +
+                '<input type="text" name="sendMode" autocomplete="off" class="layui-input" placeholder="">' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+
+        //拒绝的弹窗样式
+        var layer_html = '  <div class="layer-begin">' +
+                '<form action=""></form>' +
+                '<div class="layui-form-item">' +
+                '<div class="layui-input-inline">' +
+                '<textarea type="text" name="sendMode" autocomplete="off" class="layui-input" placeholder="" style="width: 400px;height:190px; margin-left: 10px"></textarea>' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+
+
+
+        //收集表格选中项
+        function collectSelcet(elm) {
+            var btnType = elm.attr('data-type');
+            if (btnType === '0') {
+                var tableID = elm.attr('data-table'),
+                        inputs = $('#' + tableID).find('input:checked.input-self'),
+                        ids = [];
+                for (var i in inputs) {
+                    if (inputs[i].id) {
+                        ids.push(inputs[i].id)
+                    }
+                }
+                if (ids.length === 0) {
+                    return 0;
+                } else {
+                    sessionStorage.setItem('tableID', ids);
+                    return 1;
+                }
+            } else {
+                var id = elm.parents('tr').find('input').attr('id');
+                sessionStorage.setItem('tableID', id);
+                return 1;
+            }
+        }
+
+    });
+</script>
+</body>
+</html>

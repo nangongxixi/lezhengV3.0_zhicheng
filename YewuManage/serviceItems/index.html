@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>服务事项</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/table.css"/>
+</head>
+<body>
+<div style="margin: 15px;">
+    <div class="layui-tab layui-tab-card" lay-filter="serviceIndex">
+        <ul class="layui-tab-title">
+            <li>行政委托</li>
+            <li>查询服务</li>
+            <li>第三方服务</li>
+            <li>企业服务</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item">
+                <div class="layui-field-box">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item self-layui-form-item">
+                                <label class="layui-form-label">服务主题</label>
+
+                                <div class="layui-input-inline" id="theme">
+                                    <select name="theme">
+                                        <option value="">—— 请选择 ——</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label">事项状态</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="status">
+                                        <option value="">—— 请选择 ——</option>
+                                        <option value="0">已上线</option>
+                                        <option value="1">未上线</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label">事项名称</label>
+
+                                <div class="layui-input-inline">
+                                    <input type="text" name="title" lay-verify="title" autocomplete="off"
+                                           placeholder="请输入事项名称" class="layui-input">
+                                </div>
+                                <button class="layui-btn" lay-submit="" lay-filter="searApprova"
+                                        style="margin-left: 40px">搜索
+                                </button>
+                                <button type="reset" class="layui-btn layui-btn-primary" id="resetXingzheng">重置</button>
+
+                            </div>
+                        </form>
+                    </blockquote>
+                    <button class="layui-btn" id="additem" departmentid="" areaid=""><i class="layui-icon"></i>&nbsp;添加
+                    </button>
+                    <a href="itemLibrary.html?flag=1" class="layui-btn layui-btn-danger">事项库</a>
+
+                    <div>
+                        <table class="site-table self-site-table table-hover left">
+                            <thead>
+                            <tr>
+                                <th><input type="checkbox" class="table_selected_all"></th>
+                                <th>产品编号</th>
+                                <th>事项名称</th>
+                                <th>服务主题</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody id="items-list1"></tbody>
+                        </table>
+                        <table class="site-table table-hover selected-css right">
+                            <thead>
+                            <tr>
+                                <td style="padding:0">
+                                    <form class="layui-form" action="">
+                                        <div class="layui-input-inline" id="area">
+                                            <select name="area" style="border:0" lay-filter="area">
+                                                <option value="">—— 请选择 ——</option>
+                                            </select>
+                                        </div>
+                                    </form>
+                                </td>
+                            </tr>
+                            </thead>
+                            <tbody class="selsect-content0">
+                            <tr>
+                                <td class="select_input-items"></td>
+                            </tr>
+                            <tr class="layui-hide">
+                                <td class="select_input-items"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="admin-table-page">
+                        <div id="page1" class="page"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="layui-field-box">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item self-layui-form-item">
+                                <label class="layui-form-label" style="width:auto !important">状态</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="thirdServiceStatus">
+                                        <option value="">—— 请选择 ——</option>
+                                        <option value="10">普通</option>
+                                        <option value="20">热门</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label">事项名称</label>
+
+                                <div class="layui-input-inline">
+                                    <input type="text" name="queryServiceTitle" lay-verify="queryServiceTitle"
+                                           autocomplete="off" placeholder="请输入事项名称" class="layui-input">
+                                </div>
+                                <button class="layui-btn" lay-submit="" lay-filter="searQueryService"
+                                        style="margin-left: 30px">搜索
+                                </button>
+                                <button type="reset" class="layui-btn layui-btn-primary" id="resetQueryserver">重置
+                                </button>
+                            </div>
+                        </form>
+                    </blockquote>
+
+                    <div class="layui-btn" id="addquery" dalid=""><i class="layui-icon"></i>&nbsp;新建</div>
+
+
+                    <div>
+                        <table class="site-table self-site-table table-hover left">
+                            <thead>
+                            <tr>
+                                <th><input type="checkbox" class="table_selected_all"></th>
+                                <th>事项编号</th>
+                                <th>事项名称</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody id="items-list2"></tbody>
+                        </table>
+                        <table class="site-table table-hover selected-css right">
+                            <thead>
+                            <tr>
+                                <th>
+                                    <i class="fa fa-folder-open-o" aria-hidden="true"></i> 服务大类
+                                    <a href="addServiceItem.html" class="right weih">维护</a>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody class="selsect-content1">
+                            <tr>
+                                <td class="select_input-items" id="serverList"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="admin-table-page">
+                        <div id="page2" class="page"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="layui-field-box">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item self-layui-form-item">
+                                <label class="layui-form-label" style="width:auto !important">状态</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="status">
+                                        <option value="">—— 请选择 ——</option>
+                                        <option value="10">普通</option>
+                                        <option value="20">热门</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label">事项名称</label>
+
+                                <div class="layui-input-inline">
+                                    <input type="text" name="thirdServiceTitle" lay-verify="thirdServiceTitle"
+                                           autocomplete="off" placeholder="请输入事项名称" class="layui-input">
+                                </div>
+                                <button class="layui-btn" lay-submit="" lay-filter="searThirdService"
+                                        style="margin-left: 30px">搜索
+                                </button>
+                                <button type="reset" class="layui-btn layui-btn-primary" id="resetThirdService">重置
+                                </button>
+                            </div>
+                        </form>
+                    </blockquote>
+
+                    <div class="layui-btn" id="addthird" dalid=""><i class="layui-icon"></i>&nbsp;新建</div>
+
+
+                    <div>
+                        <table class="site-table self-site-table table-hover left">
+                            <thead>
+                            <tr>
+                                <th><input type="checkbox" class="table_selected_all"></th>
+                                <th>事项编号</th>
+                                <th>事项名称</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody id="items-list3"></tbody>
+                        </table>
+                        <table class="site-table table-hover selected-css right">
+                            <thead>
+                            <tr>
+                                <th>
+                                    <i class="fa fa-folder-open-o" aria-hidden="true"></i> 服务大类
+                                    <a href="addServiceItem.html" class="right weih">维护</a>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody class="selsect-content2">
+                            <tr>
+                                <td class="select_input-items" id="thirdServerList"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="admin-table-page">
+                        <div id="page3" class="page"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="layui-field-box">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item self-layui-form-item">
+                                <label class="layui-form-label">事项名称</label>
+
+                                <div class="layui-input-inline">
+                                    <input type="text" name="businessServiceTitle" lay-verify="businessServiceTitle"
+                                           autocomplete="off" placeholder="请输入事项名称" class="layui-input">
+                                </div>
+                                <button class="layui-btn" lay-submit="" lay-filter="searBuinessService"
+                                        style="margin-left: 30px">搜索
+                                </button>
+                                <button type="reset" class="layui-btn layui-btn-primary" id="resetBuniessService">重置
+                                </button>
+                            </div>
+                        </form>
+                    </blockquote>
+                    <a href="businessServiceEdit.html">
+                        <div class="layui-btn" dalid=""><i class="layui-icon"></i>&nbsp;新建</div>
+                    </a>
+                    <table class="site-table table-hover">
+                        <thead>
+                        <tr>
+                            <th>事项编号</th>
+                            <th>事项名称</th>
+                            <th>类型</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="items-list4"></tbody>
+                    </table>
+                    <div class="admin-table-page">
+                        <div id="page4" class="page"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!---行政审批-->
+<script id="orderHandle1" type="text/html">
+    {{#  layui.each(d.datalist, function(index, item){ }}
+    <tr>
+        <td><input type="checkbox" class="input-self" id="orderHandleone{{ item.id }}"><label
+                for="orderHandleone{{ item.id }}" class="self-cursor"></label></td>
+        <td>{{ item.productcode }}</td>
+        <td title="{{ item.title }}">{{ item.eventname && item.eventname.length>18?item.eventname.substring(0, 18)+
+            "...":item.eventname }}
+        </td>
+        <td>{{ item.theme }}</td>
+        <td>{{# if(item.status === 1){ }} 未上线{{# }else{ }} 已上线{{# } }}</td>
+        <td>
+                <span class="layui-breadcrumb" lay-separator=" ">
+                    <a href="../serviceItems/xingzhengdetail.html?id={{ item.id }}" title="详情"><i
+                            class="fa fa-file-text-o"></i></a>
+                    <a href="../serviceItems/xingzhengEdit.html?id={{ item.id }}" title="编辑"><i class="fa fa-edit"></i></a>
+                    {{#  if(item.status == 1){ }}
+                    <a href="javascript:;" title="上线" class="approvalSet" orderid="{{ item.id }}"
+                       status="{{ item.status }}"><i class="layui-icon self-cursor" data-icon="&#xe62f;">
+                        &#xe62f;</i></a>
+                    {{#  }else{ }}
+                        {{#  if(item.ishot == 0){ }}
+                        <a href="javascript:;" title="添加热门" class="approvalSet" orderid="{{ item.id }}"
+                           ishot="{{item.ishot}}"><i class="fa fa-fire" aria-hidden="true"></i></a>
+                        {{#  }else{ }}
+                        <a href="javascript:;" title="取消热门" class="approvalSet" orderid="{{ item.id }}"
+                           ishot="{{item.ishot}}"><i class="layui-icon self-cursor" data-icon="&#xe636;">
+                            &#xe636;</i></a>
+                        {{#  } }}
+                    <a href="javascript:;" title="下线" id="downline" class="approvalSet" orderid="{{ item.id }}"
+                       status="{{ item.status }}"><i class="layui-icon" data-icon="&#xe601;">&#xe601;</i></a>
+                    {{#  } }}
+                </span>
+        </td>
+    </tr>
+    {{#  }); }}
+</script>
+
+<!---查询服务-->
+<script id="orderHandle2" type="text/html">
+    {{#  layui.each(d.datalist, function(index, item){ }}
+    <tr>
+        <td><input type="checkbox" class="input-self" id="orderHandletwo{{ item.id }}"><label
+                for="orderHandletwo{{ item.id }}" class="self-cursor"></label></td>
+        <td>{{ item.code }}</td>
+        <td title="{{ item.title }}">{{ item.title && item.title.length>18?item.title.substring(0, 18)+ "...":item.title
+            }}
+        </td>
+        <td>{{# if(item.status == 10){ }}普通{{# }else{ }}热门 {{# } }}</td>
+        <td>
+                <span class="layui-breadcrumb" lay-separator=" ">
+                    <a href="../serviceItems/queryServiceDetail.html?id={{ item.id }}" title="详情"><i
+                            class="fa fa-file-text-o" aria-hidden="true"></i></a>
+                    <a href="../serviceItems/queryServiceEdit.html?id={{ item.id }}" title="编辑"><i class="fa fa-edit"
+                                                                                                   aria-hidden="true"></i></a>
+                    <a href="javascript:;" title="删除" id="delQueryService" orderid="{{item.id}}"><i
+                            class="layui-icon self-cursor" data-icon="&#x1006;">&#x1006;</i></a>
+                </span>
+        </td>
+    </tr>
+    {{#  }); }}
+</script>
+
+<!---第三方服务-->
+<script id="orderHandle3" type="text/html">
+    {{#  layui.each(d.datalist, function(index, item){ }}
+    <tr>
+        <td><input type="checkbox" class="input-self" id="orderHandlethree{{ item.id }}"><label
+                for="orderHandlethree{{ item.id }}" class="self-cursor"></label></td>
+        <td>{{ item.code }}</td>
+        <td title="{{ item.title }}">{{ item.title && item.title.length>18?item.title.substring(0, 18)+ "...":item.title
+            }}
+        </td>
+        <td>{{# if(item.status == 20){ }}热门{{# }else{ }}普通 {{# } }}</td>
+        <td>
+                <span class="layui-breadcrumb" lay-separator=" ">
+                    <a href="../serviceItems/thirdServiceDetail.html?id={{ item.id }}" title="详情"><i
+                            class="fa fa-file-text-o" aria-hidden="true"></i></a>
+                    <a href="../serviceItems/thirdServiceEdit.html?id={{ item.id }}" title="编辑"><i class="fa fa-edit"
+                                                                                                   aria-hidden="true"></i></a>
+                    <a href="javascript:;" title="删除" id="delThirdService" orderid="{{item.id}}"><i
+                            class="layui-icon self-cursor" data-icon="&#x1006;">&#x1006;</i></a>
+                </span>
+        </td>
+    </tr>
+    {{#  }); }}
+</script>
+
+<!---企业服务-->
+<script id="orderHandle4" type="text/html">
+    {{#  layui.each(d.datalist, function(index, item){ }}
+    <tr>
+        <td>{{ item.code }}</td>
+        <td title="{{ item.title }}">{{ item.title && item.title.length>18?item.title.substring(0, 18)+ "...":item.title
+            }}
+        </td>
+        <td>企业服务</td>
+        <td>
+                <span class="layui-breadcrumb" lay-separator=" ">
+                    <a href="../serviceItems/businessServiceDetail.html?id={{ item.id }}" title="详情"><i
+                            class="fa fa-file-text-o" aria-hidden="true"></i></a>
+                    <a href="../serviceItems/businessServiceEdit.html?id={{ item.id }}" title="编辑"><i class="fa fa-edit"
+                                                                                                      aria-hidden="true"></i></a>
+                    <a href="javascript:;" title="删除" id="delBuniessService" orderid="{{item.id}}"><i
+                            class="layui-icon self-cursor" data-icon="&#x1006;">&#x1006;</i></a>
+                </span>
+        </td>
+    </tr>
+    {{#  }); }}
+</script>
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('serviceIndex'),
+                layer = layui.layer;
+        common.saveTabIndex('serviceIndex');
+        common.init();
+        common.layTime(); //时间选择
+
+        /*------------------------------------------------------------- 行政审批服务主题列表 ---------------------------------------------------------------- */
+
+        //服务主题下拉列表
+        var dataarr = {"keyword": ""};
+        var getJSON = common.getJsonData('api/bossApi/property/themeList', '', dataarr);
+        $.each(getJSON.data, function (index, item) {
+            $("#theme select").append('<option value="' + item.themeid + '">' + item.name + '</option>');
+            $("#theme select").next().find(".layui-anim-upbit").append('<dd lay-value="' + item.themeid + '" class="">' + item.name + '</dd>');
+        });
+        form.render();
+
+        /*------------------------------------------------------------------数据和事件--------------------------------------------------------------------- */
+
+        //行政审批
+        getXingzhengData(); //默认加载行政审批
+        getQueryserverData(); //默认加载查询服务
+        getThirdServiceData(); //默认加载第三方服务
+        getBuniessServiceData(); //默认加载企业服务
+
+        //点击行政审批的重置
+        $("#resetXingzheng").on('click', function () {
+            getXingzhengData();
+        });
+        //点击查询服务的重置
+        $("#resetQueryserver").on('click', function () {
+            getQueryserverData();
+        });
+        //点击第三方服务的重置
+        $("#resetThirdService").on('click', function () {
+            getThirdServiceData();
+        });
+        //点击企业服务的重置
+        $("#resetBuniessService").on('click', function () {
+            getBuniessServiceData();
+        });
+
+        //行政审批列表
+        function getXingzhengData() {
+
+            common.getJsonData('api/bossApi/service/approvalSearch', 1, {"areaid": 5});
+
+            // common.getJsonData('api/bossApi/service/approvalList', 1, {"page": 1});
+        }
+
+        //查询服务列表
+        function getQueryserverData() {
+            common.getJsonData('api/bossApi/service/queryServiceList', 2, {"page": 1});
+        }
+
+        //第三方服务列表
+        function getThirdServiceData() {
+            common.getJsonData('api/bossApi/service/thirdServiceList', 3, {"page": 1});
+        }
+
+        //企业服务列表
+        function getBuniessServiceData() {
+            common.getJsonData('api/bossApi/service/businessServiceList', 4, {"page": 1});
+        }
+
+        /*-------------------------------------------------------------右侧列表---------------------------------------------------------------- */
+
+        //默认行政审批 -> 区域选择
+        var APIname = 'api/bossApi/service/areaSearch';
+        var areaBig = common.getJsonData(APIname, '', {"id": 0});
+        $.each(areaBig.datalist, function (index, item) {
+            $("#area select").append('<optgroup label="' + item.areaname + '" oid="' + item.areaid + '"></optgroup>');
+            var areaSmall = common.getJsonData(APIname, '', {"id": item.areaid});
+            for (var i = 0; i < areaSmall.datalist.length; i++) {
+                $("optgroup[oid='" + item.areaid + "']").append('<option value="' + areaSmall.datalist[i].areaid + '">' + areaSmall.datalist[i].areaname + '</option>');
+            }
+        });
+        //显示默认的部门列表
+        var keeparea = sessionStorage.getItem("areaid");
+        var keepdepartment = sessionStorage.getItem("departmentid");
+        if (!keeparea) {
+            keeparea = 4;
+        }
+        $("#additem").attr('areaid', keeparea);
+        $("#additem").attr('departmentid', keepdepartment);
+        var getJSON = common.getJsonData('api/bossApi/service/departmentSearchByAreaID', '', {"id": keeparea});
+        var selectTr = $(".selsect-content0 tr").find('.select_input-items');
+        $.each(getJSON.datalist, function (index, item) {
+            selectTr.append('<h2 class="self-input" areaid="' + keeparea + '" departmentid="' + item.departmentid + '"><i class="layui-icon self-cursor" data-icon="&#xe602;">&#xe602;</i> ' + item.name + '</h2>');//区域列表
+        });
+        /*
+        if(!keepdepartment){
+            keepdepartment = getJSON.datalist[0].departmentid;
+        }
+        sessionStorage.setItem('departmentid', keepdepartment);
+        sessionStorage.setItem('areaid', keeparea);
+        $("#additem").attr('departmentid', keepdepartment);
+        */
+
+        common.getJsonData('api/bossApi/service/approvalSearch', 1, {
+            "areaid": keeparea,
+            "departmentid": keepdepartment
+        });//默认事项列表
+        selectTr.find('h2[departmentid="' + keepdepartment + '"]').attr("class", "right-btn").siblings().attr("class", "self-input")//记住点击过的部门
+
+        itemStyle();//给右侧选项卡定义样式
+
+        //点击加背景
+        $(document).on('click', '.selsect-content0 h2', function () {
+            $(this).attr("class", "right-btn").siblings().attr("class", "self-input")
+        });
+
+        //默认查询服务 -> 服务大类
+        var APIserviceTypeList = "api/bossApi/service/serviceTypeList";
+        var getServiceTypeList = common.getJsonData(APIserviceTypeList, '', '');
+        $("#serverList").html("");
+        $.each(getServiceTypeList.datalist, function (index, item) {
+            $("#serverList").append('<h2 class="self-input" queryServerListID="' + item.id + '"><i class="layui-icon self-cursor" data-icon="&#xe602;">&#xe602;</i> ' + item.title + '</h2>');
+        });
+        itemStyle();//给右侧选项卡定义样式
+
+        //默认第三方服务 -> 服务大类
+        var APIthirdServerList = "api/bossApi/service/serviceTypeList";
+        var getThirdServerList = common.getJsonData(APIthirdServerList, '', '');
+        $("#thirdServerList").html("");
+        $.each(getThirdServerList.datalist, function (index, item) {
+            $("#thirdServerList").append('<h2 class="self-input" thirdServerListID="' + item.id + '"><i class="layui-icon self-cursor" data-icon="&#xe602;">&#xe602;</i> ' + item.title + '</h2>');
+        });
+        itemStyle();//给右侧选项卡定义样式
+        form.render()
+
+        //默认行政委托-右侧区域input值
+        var dd = $("select[name='area']").next().find('dd[lay-value="' + keeparea + '"]').html();
+        $("select[name='area']").next().find('input').attr("placeholder", dd);
+        $("select[name='area']").next().find('input').attr("value", dd);
+
+        /*----------------------------------------------------------------操作右侧列表--------------------------------------------------------------- */
+
+        //根据区域显示部门列表
+        form.on('select(area)', function (data) {
+            //根据区域显示部门列表
+            var getJSON = common.getJsonData('api/bossApi/service/departmentSearchByAreaID', '', {"id": data.value});
+            var selectTr = $(".selsect-content0 tr").find('.select_input-items');
+            selectTr.html('');
+            $.each(getJSON.datalist, function (index, item) {
+                selectTr.append('<h2 class="self-input" areaid="' + data.value + '" departmentid="' + item.departmentid + '"><i class="layui-icon self-cursor" data-icon="&#xe602;">&#xe602;</i> ' + item.name + '</h2>');//区域列表
+                itemStyle();//给右侧选项卡定义样式
+            });
+            //切换区域加载当前区域的第一个部门对应的事项列表
+            var areaid = $(".selsect-content0 tr").find('.select_input-items h2').first().attr("areaid"); //第一个子类
+            common.getJsonData('api/bossApi/service/approvalSearch', 1, {"areaid": areaid});
+            //把区域id和部门id赋值给添加按钮
+            $("#additem").attr("departmentid", '');//切换区域 清除上次操作的部门id
+            $("#additem").attr("areaid", areaid);
+            sessionStorage.setItem('departmentid', '');
+            sessionStorage.setItem('areaid', areaid);
+            console.log(sessionStorage);
+        });
+
+        //点击行政审批 -> 具体小区域的时候
+        $(document).on('click', '.selsect-content0 .select_input-items h2', function () {
+            var areaid = $(this).attr("areaid");
+            var departmentid = $(this).attr("departmentid");
+            var dataArr = {"areaid": areaid, "departmentid": departmentid, "page": 1};
+            common.getJsonData('api/bossApi/service/approvalSearch', 1, dataArr);
+            $("#additem").attr("areaid", areaid) //把部门id重新赋值给添加按钮
+            $("#additem").attr("departmentid", departmentid) //把部门id重新赋值给添加按钮
+            sessionStorage.setItem('departmentid', departmentid);
+            sessionStorage.setItem('areaid', areaid);
+            console.log(sessionStorage);
+        });
+        console.log(sessionStorage);
+
+        //点击查询服务 -> 具体小分类的时候
+        $(document).on('click', '.selsect-content1 .select_input-items h2', function () {
+            $(this).attr("class", "right-btn").siblings().attr("class", "self-input");
+            var queryserverlistid = $(this).attr("queryserverlistid");
+            $("#addquery").attr("dalid", queryserverlistid);
+            var APIname = 'api/bossApi/service/queryServiceSearch';
+            var orderHandleId = 2;
+            var dataArr = {"ServiceTypeId": queryserverlistid, "pageindex": 1};
+            common.getJsonData(APIname, orderHandleId, dataArr);
+        });
+
+        //点击第三方服务 -> 具体小分类的时候
+        $(document).on('click', '.selsect-content2 .select_input-items h2', function () {
+            $(this).attr("class", "right-btn").siblings().attr("class", "self-input");
+            var thirdserverlistid = $(this).attr("thirdserverlistid");
+            $("#addthird").attr("dalid", thirdserverlistid);
+            var APIname = 'api/bossApi/service/thirdServiceList';
+            var orderHandleId = 3;
+            var dataArr = {"ServiceTypeId": thirdserverlistid, "pageindex": 1};
+            common.getJsonData(APIname, orderHandleId, dataArr);
+        });
+
+        //右侧样式（服务大类…）
+        function itemStyle() {
+            $(".selected-input").find(".layui-input").css({
+                'border': '0',
+                'background-color': '#f1f1f1',
+                'height': '34px',
+                'text-align': 'center'
+            });
+            $(".selsect-content0 tr, .selsect-content1 tr, .selsect-content2 tr").find("h2:even").css("background", "#ffffff");
+            $(".selsect-content0 tr, .selsect-content1 tr, .selsect-content2 tr").find("h2:last").css("border", "0");
+        }
+
+        /* ------------------------------------------------------------- 搜索部分 ---------------------------------------------------------------- */
+
+        //行政审批 -> 搜索
+        form.on('submit(searApprova)', function (data) {
+            var APIname = 'api/bossApi/service/approvalSearch';
+            var orderHandleId = 1;
+            var theme = $("#theme").next().find("dd[class='layui-this']").attr("lay-value");
+            var dataArr = {
+                "theme": data.field.theme,
+                "status": data.field.status,
+                "keyword": data.field.title,
+                "page": 1
+            };
+            common.getJsonData(APIname, orderHandleId, dataArr);
+            return false;
+        });
+
+        //查询服务 -> 搜索
+        form.on('submit(searQueryService)', function (data) {
+            var APIname = 'api/bossApi/service/queryServiceSearch';
+            var orderHandleId = 2;
+            var dataArr = {"status": data.field.status, "keyword": data.field.queryServiceTitle, "page": 1};
+            common.getJsonData(APIname, orderHandleId, dataArr);
+            return false;
+        });
+
+        //第三方服务 -> 搜索
+        form.on('submit(searThirdService)', function (data) {
+            var APIname = 'api/bossApi/service/thirdServiceList';
+            var orderHandleId = 3;
+            var dataArr = {"status": data.field.status, "keyword": data.field.thirdServiceTitle, "page": 1};
+            common.getJsonData(APIname, orderHandleId, dataArr);
+            return false;
+        });
+
+        //企业服务 -> 搜索
+        form.on('submit(searBuinessService)', function (data) {
+            var APIname = 'api/bossApi/service/businessServiceSearch';
+            var orderHandleId = 4;
+            var dataArr = {"keyword": data.field.businessServiceTitle, "page": 1};
+            common.getJsonData(APIname, orderHandleId, dataArr);
+            return false;
+        });
+
+        /* ------------------------------------------------------------- 其他操作 ---------------------------------------------------------------- */
+
+        //弹出添加库
+        $("#additem").on("click", function () {
+            var departmentid = $(this).attr("departmentid");
+            var areaid = $(this).attr("areaid");
+            if (!departmentid || !areaid) {
+                layer.msg('请选择区域和部门');
+                return false;
+            }
+            //保存到session
+            sessionStorage.setItem("departmentid", departmentid);
+            sessionStorage.setItem("areaid", areaid);
+            layer.open({
+                type: 2,
+                title: '行政审批事项库',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['90%', '80%'],
+                content: 'itemTanchuang.html' //iframe的url
+            });
+        });
+
+        $("#addthird").on('click', function () {
+            var dalid = $(this).attr('dalid');
+            sessionStorage.setItem("dalid", dalid);
+            location.href = "thirdServiceEdit.html";
+        });
+        $("#addquery").on('click', function () {
+            var dalid = $(this).attr('dalid');
+            sessionStorage.setItem("dalid", dalid);
+            location.href = "queryServiceEdit.html";
+        });
+
+
+        //删除查询服务
+        $(document).on('click', '#delQueryService', function () {
+            var obj = $(this);
+            layer.confirm('您确定要删除本条数据？', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                var orderid = obj.attr("orderid");
+                var APIname = "api/bossApi/service/queryServiceDel";
+                var dataArr = {"id": orderid};
+                var getJSON = common.getJsonData(APIname, '', dataArr);
+                //console.log(getJSON);
+                //return false;
+                if (getJSON["code"] == 1) {
+                    layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                        history.go(0);
+                    });
+                }
+            });
+            return false;
+        });
+
+        //删除第三方服务
+        $(document).on('click', '#delThirdService', function () {
+            var obj = $(this);
+            layer.confirm('您确定要删除本条数据？', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                var orderid = obj.attr("orderid");
+                var APIname = "api/bossApi/service/thirdServiceDel";
+                var dataArr = {"id": orderid};
+                var getJSON = common.getJsonData(APIname, '', dataArr);
+                //console.log(getJSON);
+                //return false;
+                if (getJSON["code"] == 1) {
+                    layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                        history.go(0);
+                    });
+                }
+            });
+            return false;
+        });
+
+        //删除企业服务
+        $(document).on('click', '#delBuniessService', function () {
+            var obj = $(this);
+            layer.confirm('您确定要删除本条数据？', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                var orderid = obj.attr("orderid");
+                var APIname = "api/bossApi/service/businessServiceDel";
+                var dataArr = {"id": orderid};
+                var getJSON = common.getJsonData(APIname, '', dataArr);
+                //console.log(getJSON);
+                //return false;
+                if (getJSON["code"] == 1) {
+                    layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                        history.go(0);
+                    });
+                }
+            });
+            return false;
+        });
+
+        //上线和下线（“1”下线的状态，“0”上线的状态），添加热门和取消热门（“0”不热，“1”已热）
+        $(document).on('click', '.approvalSet', function () {
+            var orderID = $(this).attr("orderid");
+            var status = $(this).attr("status");
+            var ishot = $(this).attr("ishot");
+            var APIname = "api/bossApi/service/approvalSet";
+            if (status == 1) {
+                var dataArr = {"id": orderID, "isonline": true};
+            } else {
+                var dataArr = {"id": orderID, "isonline": false};
+            }
+            if (ishot != undefined) {
+                if (ishot == 0) {
+                    var dataArr = {"id": orderID, "ishot": true};
+                } else {
+                    var dataArr = {"id": orderID, "ishot": false};
+                }
+            }
+            var getJSON = common.getJsonData(APIname, '', dataArr);
+            // console.log(getJSON);
+            //console.log(ishot);
+            // return false;
+            if (getJSON["code"] == 1) {
+                layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                    window.location.reload();
+                });
+            } else {
+                layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                    window.location.reload();
+                });
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

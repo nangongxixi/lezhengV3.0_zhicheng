@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>编辑行政审批</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/table.css"/>
+
+    <!--富文本编辑器-->
+    <script src="../../plugins/ckeditor/ckeditor.js"></script>
+    <script src="../../plugins/ckeditor/samples/js/sample.js"></script>
+
+</head>
+
+<body>
+<div style="margin: 15px;">
+    <fieldset class="layui-elem-field">
+        <legend></legend>
+        <div class="layui-field-box">
+            <form class="layui-form" action="" id="addXingzheng">
+                <table class="layui-table" id="content">
+                </table>
+                <table class="layui-table">
+                    <tr>
+                        <th class="self-form-title">事项名称：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="hidden" name="eventid" class="layui-input self-form-input" disabled>
+                                <!-- <input type="hidden" name="eventname"  class="layui-input self-form-input" disabled>-->
+                                <input type="text" name="eventname" lay-verify="required" autocomplete="off"
+                                       placeholder="请输入事项名称" class="layui-input self-form-input" disabled>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="self-form-title">事项编号：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="text" name="itemcode" lay-verify="required" autocomplete="off"
+                                       placeholder="请输入事项编号" class="layui-input self-form-input" disabled>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="self-form-title">服务主题：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="hidden" name="theme" lay-verify="required" autocomplete="off"
+                                       placeholder="请输入服务主题" class="layui-input self-form-input" disabled>
+                                <input type="text" name="themename" lay-verify="" autocomplete="off"
+                                       placeholder="请输入服务主题" class="layui-input self-form-input" disabled>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="self-form-title">产品编号：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="text" name="productcode" dataStorage="productcode" lay-verify="required"
+                                       autocomplete="off" placeholder="请输入产品编号" class="layui-input self-form-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="self-form-title">订单步骤：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <div class="layui-input-inline" id="fixedstep">
+                                    <select name="fixedstep" lay-verify="required">
+                                        <option value="">— 请选择固定步骤 —</option>
+                                    </select>
+                                </div>
+                                -
+                                <div class="layui-input-inline" id="customstep">
+                                    <select name="customstep" lay-verify="required">
+                                        <option value="">— 请选择自定义步骤 —</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr style="display:none">
+                        <th class="self-form-title">事项类型：</th>
+                        <td>
+                            <div class="layui-input-inline" id="eventtype">
+                                <select name="eventtype" dataStorage="eventtype" lay-verify="">
+                                    <option value="">— 请选择事项类型 —</option>
+                                    <option value="1">行政审批</option>
+                                    <option value="2">行政服务</option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr style="display: none">
+                        <th class="self-form-title">推送版本：</th>
+                        <td>
+                            <div class="layui-input-inline" id="version">
+                                <input name="version[person]" lay-skin="primary" datastorage="version" title="个人版"
+                                       type="checkbox" fid="0">
+                                <input name="version[buniess]" lay-skin="primary" datastorage="version" title="企业版"
+                                       type="checkbox" fid="1">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="self-form-title">推送标签：</th>
+                        <td>
+                            <div class="layui-input-inline" id="tags">
+                                <input name="" lay-skin="primary" title="全选" type="checkbox" lay-filter="allChoose">&nbsp;
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="detail-title">办理须知：</th>
+                        <td><textarea id="TextArea1" cols="20" rows="2" class="ckeditor"></textarea></td>
+                    </tr>
+                </table>
+                <div class="layui-btn-group self-btn-return">
+                    <button class="layui-btn upline" lay-submit="" lay-filter="contro" status="1">保存</button>
+                    <button class="layui-btn layui-btn-primary upline" lay-submit="" lay-filter="contro" status="0">上线
+                    </button>
+                    <a href="javascript:history.go(-1);" class="layui-btn">返回</a>
+                </div>
+                <!--
+                <a href="javascript:history.go(-1);" class="return-go"><i class="fa fa-reply" data-icon="fa-reply" aria-hidden="true"></i> 返回</a>-->
+            </form>
+        </div>
+    </fieldset>
+</div>
+
+<script id="orderHandle" type="text/html">
+    <tr>
+        <th>事项名称：</th>
+        <td>{{ d.eventname}}</td>
+    </tr>
+    <tr>
+        <th>事项编号：</th>
+        <td>{{ d.id}}</td>
+    </tr>
+    <tr>
+        <th>服务主题：</th>
+        <td>建筑类</td>
+    </tr>
+    <tr>
+        <th>订单步骤：</th>
+        <td>订单步骤一</td>
+    </tr>
+</script>
+
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+
+<script>
+    var editor = CKEDITOR.replace('TextArea1');//实例化富文本编辑框
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('serviceIndex'),
+                orderID = common.getUrlParam("id"),
+                itemID = common.getUrlParam("itemid"),//事项id
+                layer = layui.layer;
+        common.saveTabIndex('serviceIndex');
+        //common.init();
+        common.layTime(); //时间选择
+
+        //全选
+        form.on('checkbox(allChoose)', function (data) {
+            var child = $(data.elem).parents('table').find('#tags input');
+            child.each(function (index, item) {
+                item.checked = data.elem.checked;
+            });
+            form.render('checkbox');
+        });
+
+        //固定步骤下拉列表
+        var APIname = "api/bossApi/step/fixedStepList";
+        var getJSON = common.getJsonData(APIname, '', '');
+        $.each(getJSON.data, function (index, item) {
+            $("#fixedstep select").append('<option value="' + item.fixedstepid + '">' + item.typename + '</option>');
+            $("#fixedstep select").next().find(".layui-anim-upbit").append('<dd lay-value="' + item.fixedstepid + '" class="">' + item.typename + '</dd>');
+        });
+        //自定义步骤下拉列表
+        var APIname = "api/bossApi/step/customStepSetList";
+        var getJSON = common.getJsonData(APIname, '', '');
+        $.each(getJSON.data, function (index, item) {
+            $("#customstep select").append('<option value="' + item.customstepsetid + '">' + item.setname + '</option>');
+            $("#customstep select").next().find(".layui-anim-upbit").append('<dd lay-value="' + item.customstepsetid + '" class="">' + item.setname + '</dd>');
+        });
+        //推送标签列表
+        var APIname = "api/bossApi/property/tagList";
+        var getJSON = common.getJsonData(APIname, '', '');
+        $.each(getJSON.data, function (index, item) {
+            $("#tags").append('<input name="' + item.name + '" lay-skin="primary" title="' + item.name + '" datastorage="tags" type="checkbox" fid="' + item.tagsid + '">');
+        });
+        form.render();
+
+        //避免input被刷新清空
+        formInStorage.init({
+            formElem: '#addXingzheng',
+            formSession: 'addXingzheng'
+        });
+        //保存富文本的输入
+        $(window.frames["yuliu_ckedtor"].document).find("body").on('keyup', function () {
+            var textval = $(window.frames["yuliu_ckedtor"].document).find("body").html();
+            localStorage.setItem("textarea", textval);
+        })
+        $(window.frames["yuliu_ckedtor"].document).find("body").html(localStorage.getItem("textarea"));
+
+        //修改的时候
+        if (orderID != null) {
+            //修改时，获取行政审批的详情
+            $("legend").html('编辑行政审批');
+            var APItitle = "api/bossApi/service/approvalDetail";
+            var dataArr = {"id": orderID};
+            var getJSON = common.getJsonData(APItitle, '', dataArr);
+            $("input[name='eventid']").attr("value", getJSON.data.eventid);
+            $("input[name='eventname']").attr("value", getJSON.data.title);
+            $("input[name='itemcode']").attr("value", getJSON.data.itemcode);
+            $("input[name='theme']").attr("value", getJSON.data.theme);
+            $("input[name='themename']").attr("value", getJSON.data.themename);
+            $("input[name='productcode']").attr("value", getJSON.data.productcode);
+            //选中固定步骤
+            var dd = $("#fixedstep dd[lay-value='" + getJSON.data.step.substring(0, 1) + "']");
+            $("#fixedstep input").attr("placeholder", dd.html());
+            $("#fixedstep option[value=" + getJSON.data.step.substring(0, 1) + "]").attr("selected", "selected");
+            //选中自定义步骤
+            var dd = $("#customstep dd[lay-value='" + getJSON.data.step.substring(2, 3) + "']");
+            $("#customstep input").attr("placeholder", dd.html());
+            $("#customstep option[value=" + getJSON.data.step.substring(2, 3) + "]").attr("selected", "selected");
+            //选中相应的事项类型
+            // var dd = $("#eventtype dd[lay-value='"+getJSON.data.eventtype+"']");
+            $("#eventtype input").attr("placeholder", getJSON.data.eventtype);
+            $("#eventtype option:contains('" + getJSON.data.eventtype + "')").attr("selected", "selected");
+            //选中版本
+            for (var i = 0; i < getJSON.data.version.length; i++) {
+                $("#version input[fid='" + getJSON.data.version[i] + "']").next().addClass("layui-form-checked");
+                $("#version input[fid='" + getJSON.data.version[i] + "']").attr("checked", "checked");
+            }
+            //选中标签
+            var tags = getJSON.data.tags.split(",");
+            if (tags.length == $("input[datastorage='tags']").length) {
+                $("input[title='全选']").next().addClass("layui-form-checked")
+            }
+
+            editor.setData(getJSON.data.guide);//给富文本区域赋值
+            //console.log(tags);
+            // console.log(tags.length);
+            for (var i = 0; i < tags.length; i++) {
+                $("#tags input[fid='" + tags[i] + "']").next().addClass("layui-form-checked");
+                $("#tags input[fid='" + tags[i] + "']").attr("checked", "checked");
+            }
+            $("#return").attr("mody", 1)//标识修改
+
+        }
+        //新增的时候
+        if (itemID != null) {
+            //新增时，获取事项库的详情
+            $("legend").html('添加行政审批');
+            var APItitle = "api/bossApi/service/eventDetail";
+            var dataArr = {"id": itemID};
+            var getJSON = common.getJsonData(APItitle, '', dataArr);
+            $("input[name='eventid']").attr("value", getJSON.data.id);
+            $("input[name='eventname']").attr("value", getJSON.data.title);
+            $("input[name='title']").attr("value", getJSON.data.title);
+            $("input[name='itemcode']").attr("value", getJSON.data.productcode);//事项编号
+            $("input[name='theme']").attr("value", getJSON.data.theme);
+            $("input[name='themename']").attr("value", getJSON.data.theme);
+            $("input[name='productcode']").attr("value", getJSON.data.productcode);
+            editor.setData(getJSON.data.guide);//给富文本区域赋值
+        }
+
+        //自定义验证规则
+        form.verify({
+            number: function (value) {
+                if (value.length < 6) {
+                    return '编号不能为空且不小于6';
+                }
+            },
+            content: function (value) {
+                layedit.sync(editIndex);
+                var contentvalue = layedit.getContent(editIndex);
+                if (contentvalue.length < 5) {
+                    return '内容不能为空且不小于5';
+                }
+            }
+        });
+
+        //监听提交
+        form.on('submit(contro)', function (data) {
+            $(this).attr('disabled', "true");
+            var editorcontent = editor.document.getBody().getHtml();//获取富文本编辑框的值
+            //版本和标签至少选择了一个
+            var version = $("#version").find(".layui-form-checked").length; //是否选择了版本
+            var tags = $("#tags").find(".layui-form-checked").length; //是否选择了标签
+            $("#version,#tags").css("border", "0");
+            /*
+            if (version == 0) {
+                $("#version").css("border", "1px solid red");
+                layer.msg('必填项不能为空！', {icon: 5, shift: 6});
+                return false;
+            }
+            */
+            if (tags == 0) {
+                $("#tags").css("border", "1px solid red");
+                layer.msg('必填项不能为空！', {icon: 5, shift: 6});
+                return false;
+            }
+            //拼装数据，请求接口
+            var version = "";
+            var tags = "";
+            $('input[datastorage="version"]:checked').each(function () { //当前选中的复选框
+                version += $(this).attr('fid') + ",";
+            });
+            $('input[datastorage="tags"]:checked').each(function () { //当前选中的复选框
+                tags += $(this).attr('fid') + ",";
+            });
+            version = version.substring(0, version.length - 1);// '1,2,'去掉最后一个逗号
+            tags = tags.substring(0, tags.length - 1); // '1,2,'去掉最后一个逗号
+            //请求接口
+            var departmentid = sessionStorage.getItem("departmentid");
+            var areaid = sessionStorage.getItem("areaid");
+            if (data.field.itemcode == data.field.productcode) {
+                layer.msg('产品编号和事项编号不能相同哦！');
+                return false;
+            }
+            //如果是一上线，则保持已上线
+            var status = $(this).attr('status');
+            if (orderID) {
+                var getJSON = common.getJsonData('api/bossApi/service/approvalDetail', '', {"id": orderID});
+                if (getJSON.data.status == 0) {
+                    var status = 0;
+                }
+            }
+
+            if (orderID != null) {
+                var dataArr = {
+                    "id": orderID,
+                    "departmentid": getJSON.data.departmentid,
+                    "areaid": getJSON.data.areaid,
+                    "eventname": data.field.eventname,
+                    "itemcode": data.field.itemcode,
+                    "theme": data.field.theme,
+                    "productcode": data.field.productcode,
+                    "fixedstep": data.field.fixedstep,
+                    "customstep": data.field.customstep,
+                    "eventid": parseInt(data.field.eventid),
+                    "eventtype": parseInt(data.field.eventtype),
+                   // "version": version,
+                    "tags": tags,
+                    "status": parseInt(status),
+                    "guide": editorcontent
+                };
+            } else {
+                var dataArr = {
+                    "id": 0,
+                    "departmentid": departmentid,
+                    "areaid": areaid,
+                    "eventname": data.field.eventname,
+                    "itemcode": data.field.itemcode,
+                    "theme": data.field.theme,
+                    "productcode": data.field.productcode,
+                    "fixedstep": data.field.fixedstep,
+                    "customstep": data.field.customstep,
+                    "eventid": parseInt(data.field.eventid),
+                    "eventtype": parseInt(data.field.eventtype),
+                    //"version": version,
+                    "tags": tags,
+                    "status": parseInt(status),
+                    "guide": editorcontent
+                };
+            }
+            var getJSON = common.getJsonData('api/bossApi/service/approvalEdit', '', dataArr);
+            // console.log(dataArr);
+            // console.log(getJSON);
+            // return false;
+            if (getJSON["code"] == 1) {
+                layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                    localStorage.removeItem("addXingzheng");
+                    if (orderID) {
+                        history.go(-1);
+                    } else {
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                        window.parent.location.reload();
+                    }
+                });
+            } else {
+                layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                    $(".layui-btn").removeAttr('disabled');
+                });
+            }
+            return false;
+        });
+
+        $("#return").on('click', function () {
+            var mody = $(this).attr("mody");
+            if (mody != 1) {
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);
+                window.parent.location.reload();
+            } else {
+                history.go(-1);
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

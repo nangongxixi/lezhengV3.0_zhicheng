@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>通知详情</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <style>
+        .newsDetail-tools-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: #dfe6ec;
+            height: auto;
+            padding: 15px;
+            box-shadow: 0px 1px 2px #99a3ab;
+        }
+
+        .news-poster {
+            margin-right: 15px;
+            width: 90px;
+            height: 90px;
+        }
+
+        .news-poster img {
+            width: 100%;
+            height: auto;
+        }
+
+        .news-info {
+            margin-right: 15px;
+        }
+
+        .news-info h3 {
+            font-size: 22px;
+            color: #000;
+        }
+
+        .news-info > div {
+            height: 20px;
+            line-height: 20px;
+            color: #949494;
+        }
+
+        .newsDetail-tools-bar .layui-btn {
+            margin: 25px 10px;
+            height: 30px;
+            line-height: 30px;
+            width: 90px;
+        }
+
+        .newsDetail-container {
+            padding: 20px;
+            padding-top: 120px;
+        }
+
+        .newsDetail-container h1 {
+            margin: 10px 0;
+            font-size: 30px;
+            color: #000;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .newsDetail-container .date {
+            text-align: center;
+            color: #949494;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .newsDetail-container .poster img {
+            width: 100%;
+            height: auto;
+        }
+
+        .newsDetail-container .content {
+            padding: 15px 0;
+        }
+
+        .newsDetail-container .content p {
+            margin-bottom: 10px;
+            line-height: 2;
+            font-size: 15px;
+        }
+    </style>
+</head>
+
+<body>
+<span id="items-list"></span>
+
+<div class="self-btn-return">
+    <button class="layui-btn layui-btn-big" id="return" style="margin:0 auto 15px !important">
+        <i class="fa fa-reply" data-icon="fa-reply" aria-hidden="true"></i> 返回
+    </button>
+</div>
+<script id="orderHandle" type="text/html">
+    <div class="newsDetail-tools-bar clear">
+        <div class="pull-left news-info">
+            <h3 class="title">{{d.param1}}</h3>
+
+            <div>
+                {{# if(d.param11 == 10){ }}
+                编辑中
+                {{# } }}
+                {{# if(d.param11 == 0){ }}
+                已上线
+                {{# } }}
+                {{# if(d.param11 == 1){ }}
+                待上线
+                {{# } }}
+                {{# if(d.param11 == 2){ }}
+                已下线
+                {{# } }}
+                {{# if(d.param11 == 3){ }}
+                已过期
+                {{# } }}
+            </div>
+            {{# if(d.type==0){ }}
+            <div class="youx">有效期：<span class="valtime">{{d.param6}}</span></div>
+            {{# } }}
+        </div>
+
+        {{# if(d.testview != 1){ }}
+        <div class="pull-right" style="display:none">
+            <a href="javascript:;" class="layui-btn edit">编辑</a>
+            {{# if(d.param6 == 0){ }}
+            <button class="layui-btn upline" orderid="{{d.param8}}" status="{{d.param6}}">下线</button>
+            {{# } }}
+            {{# if(d.param6 == 1){ }}
+            <button class="layui-btn upline" orderid="{{d.param8}}" status="{{d.param6}}">上线</button>
+            {{# } }}
+            {{# if(d.param6 == 2){ }}
+            <button class="layui-btn upline" orderid="{{d.param8}}" status="{{d.param6}}">待上线</button>
+            {{# } }}
+
+        </div>
+        {{# } }}
+
+    </div>
+    <div class="newsDetail-container">
+        <h1 class="title">{{d.param1}}</h1>
+
+        <div class="date">{{d.param4}}</div>
+        <div class="content">{{d.param5}}</div>
+    </div>
+</script>
+
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('userindex'),
+                testview = common.getUrlParam("testview"),
+                type = common.getUrlParam("type"),
+                version = common.getUrlParam("version"),
+                layer = layui.layer;
+        common.saveTabIndex('userindex');
+        //common.init();
+        //common.layTime(); //时间选择
+
+        //取出值赋值给模版
+        var arr = JSON.parse(localStorage.getItem("noticmanager"));
+        arr.type = type;
+        var inputarr = JSON.parse(localStorage.getItem("addnotice"));
+        console.log(localStorage);
+        renderTpl(arr);
+        if (localStorage.getItem("textarea")) {
+            $(".content").html(localStorage.getItem("textarea"));
+        }
+
+        var dd = inputarr.validitytime;
+        if (dd) {
+            $(".valtime").html(inputarr.validitytime);
+        }
+        //模版调用
+        function renderTpl(data) {
+            var tplid = document.getElementById('orderHandle'),
+                    viewid = document.getElementById('items-list');
+            var getTpl = tplid.innerHTML;
+            laytpl(getTpl).render(data, function (html) {
+                viewid.innerHTML = html;
+                element.init();
+            });
+        }
+
+        //==1的时候为预览，不清空localseesion
+        if (testview == '1') {
+            $("#return").css("display", "none");
+        } else {
+            localStorage.removeItem("noticmanager");
+            $(".pull-right").removeAttr('style')
+
+        }
+
+        $(document).on('click', '.edit', function () {
+
+        })
+
+        $(document).on('click', '.upline', function () {
+            var orderid = $(this).attr('orderid');
+            var status = parseInt($(this).attr('status'));
+            alert(55)
+            if (status == 0) {
+                status = 2;
+            } else if (status == 1) {
+                status = 0;
+            } else if (status == 2) {
+                status = 1;
+            } else {
+
+            }
+            var dataArr = {"noticeid": orderid, "status": status};
+            var getJSON = common.getJsonData("api/bossApi/notice/noticeSet", "", dataArr);
+            console.log(dataArr);
+            console.log(getJSON);
+            return false;
+            if (getJSON["code"] == 1) {
+                layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                    window.location.reload();
+                });
+            } else {
+                layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                    window.location.reload();
+                });
+            }
+
+        })
+        //假如是消息的预览 就隐藏时间
+        if (type == 1) {
+            $(".youx").css("display", "none");
+        }
+    });
+
+    //返回
+    document.getElementById("return").onclick = function () {
+        history.go(-1);
+    };
+
+</script>
+</body>
+</html>
+

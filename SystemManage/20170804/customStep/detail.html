@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>步骤详情</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+<div style="margin: 15px;">
+    <fieldset class="layui-elem-field">
+        <legend>步骤详情</legend>
+        <div class="layui-field-box">
+            <table class="layui-table" id="items-list1">
+            </table>
+            <div class="self-btn-return">
+                <button class="layui-btn layui-btn-big" id="return"><i class="fa fa-reply" data-icon="fa-reply"
+                                                                       aria-hidden="true"></i> 返回
+                </button>
+            </div>
+        </div>
+    </fieldset>
+</div>
+<script id="orderHandle1" type="text/html">
+    <tr>
+        <th>步骤集名称：</th>
+        <td>{{d.data.setname}}</td>
+    </tr>
+    <tr>
+        <th>编号：</th>
+        <td>{{d.data.code}}</td>
+    </tr>
+    {{# layui.each(d.data.steplist, function(index, item){ }}
+    <tr>
+        <td colspan='2' class='step-name'>步骤{{index+1}}</td>
+    </tr>
+    <tr>
+        <th>步骤名称：</th>
+        <td>{{item.stepname}}</td>
+    </tr>
+    <tr>
+        <th>步骤编号：</th>
+        <td>{{item.code}}</td>
+    </tr>
+    <tr>
+        <th>是否必须：</th>
+        <td>{{# if(item.ismust == 1){ }}是{{# }else{ }}否 {{# } }}</td>
+    </tr>
+    <tr>
+        <th>是否完结：</th>
+        <td>{{# if(item.isend == 1){ }}是{{# }else{ }}否 {{# } }}</td>
+    </tr>
+    <tr>
+        <th>约束条件：</th>
+        <td>{{item.remarks}}</td>
+    </tr>
+    {{# }); }}
+</script>
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                orderID = common.getUrlParam("id"),
+                layer = layui.layer;
+        common.init();
+        common.saveTabIndex('attrManage');
+        common.layTime(); //时间选择
+
+        var dataArr = {
+            "id": orderID
+        };
+
+        common.getJsonData('api/bossApi/step/customStepSetStepList', 1, dataArr);//区域
+
+        //图片放大
+        $(document).on('click', '.suoluetu img', function () {
+            layer.open({
+                type: 1,
+                title: false,
+                closeBtn: 0,
+                skin: 'layui-layer-nobg', //没有背景色
+                shadeClose: true,
+                content: '<img src="' + $(this).attr("src") + '">'
+            });
+        });
+
+    });
+
+    //返回
+    document.getElementById("return").onclick = function () {
+        history.go(-1);
+    };
+
+</script>
+</body>
+</html>
+

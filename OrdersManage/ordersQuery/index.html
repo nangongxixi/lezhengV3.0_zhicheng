@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>订单查询</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/table.css"/>
+    <style>
+        .layui-form-item .layui-input-inline {
+            width: 170px;
+        }
+
+        .layui-form-label {
+            width: 60px;
+        }
+    </style>
+</head>
+
+<body>
+<div style="margin: 15px;">
+    <div class="layui-tab layui-tab-card" lay-filter="queryIndex">
+        <ul class="layui-tab-title">
+            <li>政务审批</li>
+            <li>第三方服务</li>
+            <li>企业服务</li>
+        </ul>
+        <div class="layui-tab-content">
+            <!--政务审批-->
+            <div class="layui-tab-item">
+                <div class="admin-main">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">订单来源</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="orgin">
+                                        <option value="">—— 请选择 ——</option>
+                                        <option value="0">APP</option>
+                                        <option value="1">微信</option>
+                                        <option value="2">业务支撑系统</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label">区域</label>
+
+                                <div class="layui-input-inline" id="area">
+                                    <select name="area">
+                                        <option value="">—— 请选择 ——</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label">商家</label>
+
+                                <div class="layui-input-inline" id="businessid">
+                                    <select name="businessid">
+                                        <option value="">—— 请选择 ——</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label">下单时间</label>
+
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="开始日" id="LAY_demorange_s1" name="begintime">
+                                </div>
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="截止日" id="LAY_demorange_e1" name="endtime">
+                                </div>
+                                <!--
+                                <label class="layui-form-label">服务大类</label>
+
+                                <div class="layui-input-inline" id="fuwudalei">
+                                    <select name="fuwudalei">
+                                        <option value="">—— 请选择 ——</option>
+                                    </select>
+                                </div>
+-->
+                                <div class="self-form-time">
+                                    <label class="layui-form-label">状态</label>
+
+                                    <div class="layui-input-inline">
+                                        <select name="orderstatus">
+                                            <option value="">—— 请选择 ——</option>
+                                            <option value="1001">待分配-平台</option>
+                                            <option value="1002">系统订单-商家</option>
+                                            <option value="1003,1020">待处理-商家</option>
+                                            <option value="1004">待审核-平台</option>
+                                            <option value="1005">待接单-平台</option>
+                                            <option value="1006">待处理-商家</option>
+                                            <option value="1007">待支付-商家</option>
+                                            <option value="1008">订单关闭</option>
+                                            <option value="10091,10092,10093,10094,10095,10096,10097">处理中-商家</option>
+                                            <option value="10101,10102">已完结</option>
+                                            <option value="1011">待退款-商家</option>
+                                            <option value="1012">待退款-平台</option>
+                                            <option value="1013">申诉中</option>
+                                            <option value="1014">申诉完成</option>
+                                            <option value="1015">退款完成</option>
+                                            <option value="1016">待处理</option>
+                                            <option value="1017">已取消</option>
+                                            <option value="1018">售后中</option>
+                                            <option value="1019">售后完成</option>
+                                        </select>
+                                    </div>
+                                    <label class="layui-form-label">事项名称</label>
+
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="keyword" lay-verify="" autocomplete="off"
+                                               placeholder="请输入标题" class="layui-input">
+                                    </div>
+                                    <button class="layui-btn" lay-submit="" lay-filter="sear1"
+                                            style="margin-left: 40px">
+                                        搜索
+                                    </button>
+                                    <button type="reset" class="layui-btn layui-btn-primary reset1">重置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </blockquote>
+                </div>
+                <div class="layui-field-box">
+                    <div class="site-text">
+                        <a href="addOrder.html" class="layui-btn" style="color: #fff;">新建订单</a>
+                        <button class="layui-btn layui-btn-normal js_tab1_export" data-table="items-list1"
+                                onclick="javascript:exportExcel1()"
+                                data-type="0">导出
+                        </button>
+                        <button class="layui-btn layui-btn-warm js_tab1_close" data-table="items-list1" data-type="0">
+                            关闭
+                        </button>
+                    </div>
+                    <table class="site-table table-hover" id="targetTable1">
+                        <thead>
+                        <tr>
+                            <th><input type="checkbox" id="selected-all1" class="table_selected_all"></th>
+                            <th>产品编号</th>
+                            <th>事项名称</th>
+                            <th>区域</th>
+                            <th>下单人</th>
+                            <th>受理商家</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="items-list1"></tbody>
+                    </table>
+                    <div class="admin-table-page">
+                        <div id="page1" class="page"></div>
+                    </div>
+                </div>
+            </div>
+            <!--第三方服务-->
+            <div class="layui-tab-item">
+                <div class="admin-main">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">订单来源</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="orgin">
+                                        <option value="">—— 请选择 ——</option>
+                                        <option value="0">APP</option>
+                                        <option value="1">微信</option>
+                                        <option value="2">业务支撑系统</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label">区域</label>
+
+                                <div class="layui-input-inline" id="area">
+                                    <select name="area">
+                                        <option value="">—— 请选择 ——</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label">商家</label>
+
+                                <div class="layui-input-inline" id="businessid">
+                                    <select name="businessid">
+                                        <option value="">—— 请选择 ——</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label">下单时间</label>
+
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="开始日" id="LAY_demorange_s2" name="begintime">
+                                </div>
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="截止日" id="LAY_demorange_e2" name="endtime">
+                                </div>
+                                <!--
+                                <label class="layui-form-label">服务大类</label>
+
+                                <div class="layui-input-inline" id="fuwudalei">
+                                    <select name="fuwudalei">
+                                        <option value="">—— 请选择 ——</option>
+                                    </select>
+                                </div>
+-->
+                                <div class="self-form-time">
+                                    <label class="layui-form-label">状态</label>
+
+                                    <div class="layui-input-inline">
+                                        <select name="orderstatus">
+                                            <option value="">—— 请选择 ——</option>
+                                            <option value="1001">待分配-平台</option>
+                                            <option value="1002">系统订单-商家</option>
+                                            <option value="1003,1020">待处理-商家</option>
+                                            <option value="1004">待审核-平台</option>
+                                            <option value="1005">待接单-平台</option>
+                                            <option value="1006">待处理-商家</option>
+                                            <option value="1007">待支付-商家</option>
+                                            <option value="1008">订单关闭</option>
+                                            <option value="10091,10092,10093,10094,10095,10096,10097">处理中-商家</option>
+                                            <option value="10101,10102">已完结</option>
+                                            <option value="1011">待退款-商家</option>
+                                            <option value="1012">待退款-平台</option>
+                                            <option value="1013">申诉中</option>
+                                            <option value="1014">申诉完成</option>
+                                            <option value="1015">退款完成</option>
+                                            <option value="1016">待处理</option>
+                                            <option value="1017">已取消</option>
+                                            <option value="1018">售后中</option>
+                                            <option value="1019">售后完成</option>
+                                        </select>
+                                    </div>
+                                    <label class="layui-form-label">事项名称</label>
+
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="keyword" lay-verify="" autocomplete="off"
+                                               placeholder="请输入标题" class="layui-input">
+                                    </div>
+                                    <button class="layui-btn" lay-submit="" lay-filter="sear2"
+                                            style="margin-left: 40px">
+                                        搜索
+                                    </button>
+                                    <button type="reset" class="layui-btn layui-btn-primary reset2">重置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </blockquote>
+                </div>
+                <div class="layui-field-box">
+                    <div class="site-text">
+                        <button class="layui-btn layui-btn-normal js_tab2_export" data-table="items-list2"
+                                onclick="javascript:exportExcel2()"
+                                data-type="0">导出
+                        </button>
+                        <button class="layui-btn layui-btn-warm js_tab2_close" data-table="items-list2" data-type="0">
+                            关闭
+                        </button>
+                    </div>
+                    <table class="site-table table-hover" id="targetTable2">
+                        <thead>
+                        <tr>
+                            <th><input type="checkbox" id="selected-all2" class="table_selected_all"></th>
+                            <th>产品编号</th>
+                            <th>事项名称</th>
+                            <th>服务大类</th>
+                            <th>区域</th>
+                            <th>下单人</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="items-list2"></tbody>
+                    </table>
+                    <div class="admin-table-page">
+                        <div id="page2" class="page"></div>
+                    </div>
+                </div>
+            </div>
+            <!--企业服务-->
+            <div class="layui-tab-item">
+                <div class="admin-main">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">订单来源</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="orgin">
+                                        <option value="">—— 请选择 ——</option>
+                                        <option value="0">APP</option>
+                                        <option value="1">微信</option>
+                                        <option value="2">业务支撑系统</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label">区域</label>
+
+                                <div class="layui-input-inline" id="area">
+                                    <select name="area">
+                                        <option value="">—— 请选择 ——</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label">商家</label>
+
+                                <div class="layui-input-inline" id="businessid">
+                                    <select name="businessid">
+                                        <option value="">—— 请选择 ——</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label">下单时间</label>
+
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="开始日" id="LAY_demorange_s3" name="begintime">
+                                </div>
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="截止日" id="LAY_demorange_e3" name="endtime">
+                                </div>
+
+                                <!--
+                               <label class="layui-form-label">服务大类</label>
+                               <div class="layui-input-inline" id="fuwudalei">
+                                   <select name="fuwudalei">
+                                       <option value="">—— 请选择 ——</option>
+                                   </select>
+                               </div>
+-->
+                                <div class="self-form-time">
+                                    <label class="layui-form-label">状态</label>
+
+                                    <div class="layui-input-inline">
+                                        <select name="orderstatus">
+                                            <option value="">—— 请选择 ——</option>
+                                            <option value="1001">待分配-平台</option>
+                                            <option value="1002">系统订单-商家</option>
+                                            <option value="1003,1020">待处理-商家</option>
+                                            <option value="1004">待审核-平台</option>
+                                            <option value="1005">待接单-平台</option>
+                                            <option value="1006">待处理-商家</option>
+                                            <option value="1007">待支付-商家</option>
+                                            <option value="1008">订单关闭</option>
+                                            <option value="10091,10092,10093,10094,10095,10096,10097">处理中-商家</option>
+                                            <option value="10101,10102">已完结</option>
+                                            <option value="1011">待退款-商家</option>
+                                            <option value="1012">待退款-平台</option>
+                                            <option value="1013">申诉中</option>
+                                            <option value="1014">申诉完成</option>
+                                            <option value="1015">退款完成</option>
+                                            <option value="1016">待处理</option>
+                                            <option value="1017">已取消</option>
+                                            <option value="1018">售后中</option>
+                                            <option value="1019">售后完成</option>
+                                        </select>
+                                    </div>
+                                    <label class="layui-form-label">事项名称</label>
+
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="keyword" lay-verify="" autocomplete="off"
+                                               placeholder="请输入标题" class="layui-input">
+                                    </div>
+                                    <button class="layui-btn" lay-submit="" lay-filter="sear3"
+                                            style="margin-left: 40px">
+                                        搜索
+                                    </button>
+                                    <button type="reset" class="layui-btn layui-btn-primary reset3">重置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </blockquote>
+                </div>
+                <div class="layui-field-box">
+                    <div class="site-text">
+                        <a href="addOrder.html" class="layui-btn" style="color: #fff;">新建订单</a>
+                        <button class="layui-btn layui-btn-normal js_tab3_export" data-table="items-list3"
+                                onclick="javascript:exportExcel3()"
+                                data-type="0">导出
+                        </button>
+                        <button class="layui-btn layui-btn-warm js_tab3_close" data-table="items-list3" data-type="0">
+                            关闭
+                        </button>
+                    </div>
+                    <table class="site-table table-hover" id="targetTable3">
+                        <thead>
+                        <tr>
+                            <th><input type="checkbox" class="table_selected_all"></th>
+                            <th>产品编号</th>
+                            <th>事项名称</th>
+                            <th>服务大类</th>
+                            <th>区域</th>
+                            <th>受理商家</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="items-list3"></tbody>
+                    </table>
+                    <div class="admin-table-page">
+                        <div id="page3" class="page"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--政务审批-->
+<script id="orderHandle1" type="text/html">
+    {{# layui.each(d.datalist, function(index, item){ }}
+    <tr id="order4">
+        <td>
+            {{# if(item.orderstatus != 10008){ }}
+            <input type="checkbox" class="input-self" id="{{ item.orderid }}"><label for="{{ item.orderid }}"></label>
+            {{# }else{ }}
+            <input type="checkbox" class="input-self" id="{{ item.orderid }}" disabled=""><label
+                for="{{ item.orderid }}"></label>
+            {{# } }}
+        </td>
+        <td>{{ item.ordercode }}</td>
+        <td class="title">{{ item.servicecode }}</td>
+        <td>{{ item.areaname }}</td>
+        <td>{{# if(item.username=='' || item.username==null){ }}/{{# }else{ }}{{item.username}}{{# } }}</td>
+        <td>{{ item.businessname }}</td>
+        <td>{{ item.orderstatusname }}</td>
+        <td>
+        <span class="layui-breadcrumb" lay-separator="|">
+								<a href="../ordersHandle/detail.html?id={{ item.orderid }}">详情</a>
+								<a href="../ordersHandle/index.html">更多</a>
+						</span>
+        </td>
+    </tr>
+    {{# }); }}
+</script>
+<!--第三方服务-->
+<script id="orderHandle2" type="text/html">
+    {{# layui.each(d.datalist, function(index, item){ }}
+    <tr>
+        <td>
+            {{# if(item.orderstatus != 10008){ }}
+            <input type="checkbox" class="input-self" id="{{ item.orderid }}"><label for="{{ item.orderid }}"></label>
+            {{# }else{ }}
+            <input type="checkbox" class="input-self" id="{{ item.orderid }}" disabled=""><label
+                for="{{ item.orderid }}"></label>
+            {{# } }}
+        </td>
+        <td>{{ item.ordercode }}</td>
+        <td class="title">{{ item.servicecode }}</td>
+        <td>待回来确定</td>
+        <td>{{# if(item.username=='' || item.username==null){ }}/{{# }else{ }}{{item.username}}{{# } }}</td>
+        <td>{{ item.businessname }}</td>
+        <td>{{ item.orderstatusname }}</td>
+        <td>
+        <span class="layui-breadcrumb" lay-separator="|">
+								<a href="../ordersHandle/detail.html?id={{ item.orderid }}">详情</a>
+								<a href="../ordersHandle/index.html">更多</a>
+						</span>
+        </td>
+    </tr>
+    {{# }); }}
+</script>
+<!--企业服务-->
+<script id="orderHandle3" type="text/html">
+    {{# layui.each(d.datalist, function(index, item){ }}
+    <tr id="">
+        <td>
+            {{# if(item.orderstatus != 10008){ }}
+            <input type="checkbox" class="input-self" id="{{ item.orderid }}"><label for="{{ item.orderid }}"></label>
+            {{# }else{ }}
+            <input type="checkbox" class="input-self" id="{{ item.orderid }}" disabled=""><label
+                for="{{ item.orderid }}"></label>
+            {{# } }}
+        </td>
+        <td>{{ item.ordercode }}</td>
+        <td class="title">{{ item.servicecode }}</td>
+        <td>待回来确定</td>
+        <td>{{ item.areaname }}</td>
+        <td>{{ item.businessname }}</td>
+        <td>{{ item.orderstatusname }}</td>
+        <td>
+        <span class="layui-breadcrumb" lay-separator="|">
+				<a href="../ordersHandle/detail.html?id={{ item.orderid }}">详情</a>
+            {{# if(item.orderstatus != 10101){ }}
+               <a href="javascript:;" class="wanjie" orderid="{{ item.orderid }}" data-type="1">完结</a>
+            {{# } }}
+			    <a href="../ordersHandle/index.html">更多</a>
+		</span>
+        </td>
+    </tr>
+    {{# }); }}
+</script>
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('rolemanage'),
+                orderID = common.getUrlParam("id"),
+                layer = layui.layer;
+        common.saveTabIndex('queryIndex');
+        common.init();
+        common.layTime(); //时间选择
+        //复选框样式
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_flat-green'
+        });
+
+        /* ------------------------------------------------------------- 数据列表显示 ---------------------------------------------------------------- */
+        //重置 、 搜索 、列表
+        getJSONData(1, '');
+        getJSONData(2, '');
+        getJSONData(3, '');
+        $(".reset1").on('click', function () {
+            getJSONData(1, '');
+        });
+        $(".reset2").on('click', function () {
+            getJSONData(2, '');
+        });
+        $(".reset3").on('click', function () {
+            getJSONData(3, '');
+        });
+
+        form.on('submit(sear1)', function (data) {
+            var dataArr = {
+                "type": 0,
+                "ordersource": data.field.orgin,
+                "araeid": data.field.area,
+                "businessid": data.field.businessid,
+                "orderstatus": data.field.orderstatus,
+                "begintime": data.field.begintime,
+                "endtime": data.field.endtime,
+                "searchtext": data.field.keyword,
+                "page": 1
+            };
+            console.log(dataArr)
+            getJSONData(1, dataArr);
+            return false;
+        });
+        form.on('submit(sear2)', function (data) {
+            var dataArr = {
+                "type": 1,
+                "ordersource": data.field.orgin,
+                "araeid": data.field.area,
+                "businessid": data.field.businessid,
+                "orderstatus": data.field.orderstatus,
+                "searchtext": data.field.keyword,
+                "begintime": data.field.begintime,
+                "endtime": data.field.endtime,
+                "page": 1
+            };
+            console.log(dataArr)
+            getJSONData(2, dataArr);
+            return false;
+        });
+        form.on('submit(sear3)', function (data) {
+            var dataArr = {
+                "type": 2,
+                "ordersource": data.field.orgin,
+                "araeid": data.field.area,
+                "businessid": data.field.businessid,
+                "orderstatus": data.field.orderstatus,
+                "searchtext": data.field.keyword,
+                "begintime": data.field.begintime,
+                "endtime": data.field.endtime,
+                "page": 1
+            };
+            console.log(dataArr)
+            getJSONData(3, dataArr);
+            return false;
+        });
+
+        /* ------------------------------------------------------------- 操作 ---------------------------------------------------------------- */
+
+        //政府审批-导出
+        $(document).on('click', '.js_tab1_export', function () {
+
+        });
+
+        //第三方服务-导出
+        $(document).on('click', '.js_tab2_export', function () {
+
+        });
+
+        //企业服务-导出
+        $(document).on('click', '.js_tab3_export', function () {
+
+        });
+
+        //政务服务-关闭
+        $(document).on('click', '.js_tab1_close,.js_tab2_close,.js_tab3_close', function () {
+            var obj = $(this);
+            var flag = collectSelcet($(this));
+            if (flag) {
+                layer.open({
+                    type: 1,
+                    area: ['420px', '310px'],
+                    shadeClose: true,
+                    title: '关闭原因',
+                    content: layer_html,
+                    btn: ['提交', '取消'],
+                    btn1: function (index, layero) {
+                        var orderid = obj.attr('orderid');
+                        var ids = sessionStorage.getItem('tableID');
+                        var dataArr = {
+                            "orderid": ids,
+                            "cancelcause": document.getElementsByName('sendMode')[0].value,
+                            "orderstatus": 1
+                        };
+                        var getJSON = common.getJsonData('api/bossApi/order/updateOrderStatus', '', dataArr);
+                        //   console.log(ids);
+                        // console.log(dataArr);
+                        // console.log(getJSON);
+                        // return false;
+                        if (getJSON["code"] == 1) {
+                            layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                                var index = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(index);
+                                //window.parent.location.reload();
+                                history.go(-1);
+                            });
+                        } else {
+                            layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                                history.go(-1);
+                            });
+                        }
+                        return false;
+                        layer.close(index)
+                    }
+                });
+            } else {
+                layer.msg('至少勾选一个哇！');
+            }
+        });
+
+        //企业服务-完结
+        $(document).on('click', '.wanjie', function () {
+            var obj = $(this);
+            layer.open({
+                type: 1,
+                area: ['420px', '310px'],
+                shadeClose: true,
+                title: '完结订单',
+                content: layer_html,
+                btn: ['提交', '取消'],
+                btn1: function (index, layero) {
+                    var flag = collectSelcet(obj);
+                    var ids = sessionStorage.getItem('tableID');
+                    if (flag) {
+                        var dataArr = {
+                            "orderid": ids,
+                            "orderstatus": 2,
+                            "cancelcause": document.getElementsByName('sendMode')[0].value
+                        };
+                        var getJSON = common.getJsonData('api/bossApi/order/updateOrderStatus', '', dataArr);
+                    } else {
+                        layer.msg('至少勾选一个哇！');
+                    }
+                    // console.log(ids);
+                    // console.log(dataArr);
+                    // console.log(getJSON);
+                    //return false;
+                    if (getJSON["code"] == 1) {
+                        layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                            window.location.reload();
+                           // history.go(-1);
+                        });
+                    } else {
+                        layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                            history.go(-1);
+                        });
+                    }
+                    return false;
+                    layer.close(index)
+                }
+            });
+        });
+
+        /* ------------------------------------------------------------- 搜索条件的列表 ---------------------------------------------------------------- */
+
+        //区域下拉列表
+        var dataArr = {"id": 0};
+        var areaBig = common.getJsonData('api/bossApi/service/areaSearch', '', dataArr);
+        $.each(areaBig.datalist, function (index, item) {
+            $("#area select").append('<optgroup label="' + item.areaname + '" oid="' + item.areacode + '"></optgroup>');
+            var dataArr = {"id": item.areacode};
+            var areaSmall = common.getJsonData('api/bossApi/service/areaSearch', '', dataArr);
+            for (var i = 0; i < areaSmall.datalist.length; i++) {
+                $("optgroup[oid='" + item.areacode + "']").append('<option value="' + areaSmall.datalist[i].areaid + '">' + areaSmall.datalist[i].areaname + '</option>');
+            }
+        });
+        //商家下拉列表
+        var dataArr = {"page": 1};
+        var areaBig = common.getJsonData('api/bossApi/businessMain/businessMainSearch', '', dataArr);
+        $.each(areaBig.datalist, function (index, item) {
+            $("#businessid select").append('<option value="' + item.businessid + '">' + item.businessname + '</option>');
+
+        });
+        //服务大类下拉列表
+        var dataArr = {"page": 1};
+        var areaBig = common.getJsonData('api/bossApi/service/serviceTypeList', '', dataArr);
+        $.each(areaBig.datalist, function (index, item) {
+            $("#fuwudalei select").append('<option value="' + item.id + '">' + item.title + '</option>');
+
+        });
+        form.render();
+
+        //收集表格选中项
+        function collectSelcet(elm) {
+            var btnType = elm.attr('data-type');
+            if (btnType === '0') {
+                var tableID = elm.attr('data-table'),
+                        inputs = $('#' + tableID).find('input:checked.input-self'),
+                        ids = [];
+                for (var i in inputs) {
+                    if (inputs[i].id) {
+                        ids.push(inputs[i].id)
+                    }
+                }
+                if (ids.length === 0) {
+                    return 0;
+                } else {
+                    sessionStorage.setItem('tableID', ids);
+                    return 1;
+                }
+            } else {
+                var id = elm.parents('tr').find('input').attr('id');
+                sessionStorage.setItem('tableID', id);
+                return 1;
+            }
+        }
+
+        /* ------------------------------------------------------------- 数据MODEL ---------------------------------------------------------------- */
+
+        function getJSONData(typeid, dataArr) {
+            var dataArray = dataArr || {"page": 1, "type": typeid - 1};
+            //console.log(dataArr);
+            // return false;
+            common.getJsonData('api/bossApi/order/ordersSearchForQuery', typeid, dataArray);
+        }
+
+        //弹窗样式
+        var layer_html = '  <div class="layer-begin">' +
+                '<form action=""></form>' +
+                '<div class="layui-form-item">' +
+                '<div class="layui-input-inline">' +
+                '<textarea type="text" name="sendMode" autocomplete="off" class="layui-input" placeholder="" style="width: 400px;height:190px; margin-left: 10px"></textarea>' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+
+    });
+
+    /* ------------------------------------------------------------------- 导出表格 ------------------------------------------------------------------- */
+
+    function exportExcel1() {
+        layer.confirm('您确定要导出当前表格吗？', {
+            btn: ['确定', '取消'] //按钮
+        }, function () {
+            method1('targetTable1');//传入表格ID
+            layer.msg('操作成功', {icon: 1});
+        });
+    }
+    function exportExcel2() {
+        layer.confirm('您确定要导出当前表格吗？', {
+            btn: ['确定', '取消'] //按钮
+        }, function () {
+            method1('targetTable2');//传入表格ID
+            layer.msg('操作成功', {icon: 1});
+        });
+    }
+    function exportExcel3() {
+        layer.confirm('您确定要导出当前表格吗？', {
+            btn: ['确定', '取消'] //按钮
+        }, function () {
+            method1('targetTable3');//传入表格ID
+            layer.msg('操作成功', {icon: 1});
+        });
+    }
+
+    //导出表格方法
+    var idTmr;
+    function getExplorer() {
+        var explorer = window.navigator.userAgent;
+        //ie
+        if (explorer.indexOf("MSIE") >= 0) {
+            return 'ie';
+        }
+        //firefox
+        else if (explorer.indexOf("Firefox") >= 0) {
+            return 'Firefox';
+        }
+        //Chrome
+        else if (explorer.indexOf("Chrome") >= 0) {
+            return 'Chrome';
+        }
+        //Opera
+        else if (explorer.indexOf("Opera") >= 0) {
+            return 'Opera';
+        }
+        //Safari
+        else if (explorer.indexOf("Safari") >= 0) {
+            return 'Safari';
+        }
+    }
+    function method1(tableid) {//整个表格拷贝到EXCEL中
+        if (getExplorer() == 'ie') {
+            var curTbl = document.getElementById(tableid);
+            var oXL = new ActiveXObject("Excel.Application");
+            //创建AX对象excel
+            var oWB = oXL.Workbooks.Add();
+            //获取workbook对象
+            var xlsheet = oWB.Worksheets(1);
+            //激活当前sheet
+            var sel = document.body.createTextRange();
+            sel.moveToElementText(curTbl);
+            //把表格中的内容移到TextRange中
+            sel.select();
+            //全选TextRange中内容
+            sel.execCommand("Copy");
+            //复制TextRange中内容
+            xlsheet.Paste();
+            //粘贴到活动的EXCEL中
+            oXL.Visible = true;
+            //设置excel可见属性
+
+            try {
+                var fname = oXL.Application.GetSaveAsFilename("Excel.xls", "Excel Spreadsheets (*.xls), *.xls");
+            } catch (e) {
+                print("Nested catch caught " + e);
+            } finally {
+                oWB.SaveAs(fname);
+                oWB.Close(savechanges = false);
+                //xls.visible = false;
+                oXL.Quit();
+                oXL = null;
+                //结束excel进程，退出完成
+                //window.setInterval("Cleanup();",1);
+                idTmr = window.setInterval("Cleanup();", 1);
+            }
+        } else {
+            tableToExcel(tableid)
+        }
+    }
+    function Cleanup() {
+        window.clearInterval(idTmr);
+        CollectGarbage();
+    }
+    var tableToExcel = (function () {
+        var uri = 'data:application/vnd.ms-excel;base64,',
+                template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>',
+                base64 = function (s) {
+                    return window.btoa(unescape(encodeURIComponent(s)))
+                },
+                format = function (s, c) {
+                    return s.replace(/{(\w+)}/g,
+                            function (m, p) {
+                                return c[p];
+                            })
+                }
+        return function (table, name) {
+            if (!table.nodeType)
+                table = document.getElementById(table)
+            var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
+            window.location.href = uri + base64(format(template, ctx))
+        }
+    })();
+
+</script>
+
+</body>
+
+</html>

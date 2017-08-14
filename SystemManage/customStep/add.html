@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>添加自定义步骤</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../css/webuploader.css">
+</head>
+<body>
+<div style="margin: 15px;">
+    <fieldset class="layui-elem-field">
+        <legend>添加自定义步骤</legend>
+        <div class="layui-field-box">
+            <form class="layui-form" action="" id="keepinput">
+                <table class="layui-table">
+                    <tr>
+                        <th>步骤集名称：</th>
+                        <td><input type="text" name="setname" lay-verify="required" autocomplete="off"
+                                   placeholder="请输入步骤集名称" class="layui-input self-form-input"></td>
+                    </tr>
+                    <tr>
+                        <th>编号：</th>
+                        <td><input type="text" name="setnumber" lay-verify="number" autocomplete="off"
+                                   placeholder="请输入编号"
+                                   class="layui-input self-form-input"></td>
+                    </tr>
+                </table>
+                <!--第一步-->
+                <table class="layui-table">
+                    <tr>
+                        <td colspan='2' class='step-name'>步骤1</td>
+                    </tr>
+                    <tr>
+                        <th>步骤名称：</th>
+                        <td><input type="text" name="listname" lay-verify="" autocomplete="off"
+                                   placeholder="请输入步骤名称"
+                                   class="layui-input self-form-input"></td>
+                    </tr>
+                    <tr>
+                        <th>步骤编号：</th>
+                        <td><input type="text" name="listnumber" lay-verify="" autocomplete="off" placeholder="请输入步骤编号"
+                                   class="layui-input self-form-input" style="display: inline"><span style="color:red"> （异常步骤填 “555”并全部选“否”，完结步骤填 “666”）</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>是否必须：</th>
+                        <td id="musted">
+                            <input type="radio" name="musted" value="1" title="是" checked lay-filter="unfilter">
+                            <input type="radio" name="musted" value="0" title="否" lay-filter="filter">
+                            <span class="layui-btn additems0 guding">添加</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>是否完结：</th>
+                        <td id="fixed">
+                                    <span id='dianj'> 
+                                        <input type="radio" name="fixed" value="1" title="是" checked>
+                                        <input type="radio" name="fixed" value="0" title="否">
+                                    </span>                                     
+                                    <span id='dianj1' style='display:none'>                                    
+                                        <input type="radio" name="fixed1" value="1" title="是" disabled="">
+                                        <input type="radio" name="fixed1" value="0" title="否" checked>
+                                    </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>约束条件：</th>
+                        <td id="firstremark">
+                            <input type="checkbox" name="remark" value="0" lay-skin="primary" title="必须上传图片">
+                            <input type="checkbox" name="remark" value="1" lay-skin="primary" title="必须填写备注">
+                        </td>
+                    </tr>
+                </table>
+                <!--中间步骤-->
+                <span class="items-list0"></span>
+                <!--完结步骤-->
+                <table class="layui-table" style="display:none">
+                    <tr>
+                        <td colspan='2' class='step-name' id='endstep'>步骤2</td>
+                    </tr>
+                    <tr>
+                        <th>步骤名称：</th>
+                        <td>完结</td>
+                    </tr>
+                    <tr>
+                        <th>是否必须：</th>
+                        <td id="lastmust">
+                            <input type="radio" name="endstep-must" value="1" title="是" checked
+                                   lay-filter="unfilterend">
+                            <input type="radio" name="endstep-must" value="0" title="否" lay-filter="filterend">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>是否固定：</th>
+                        <td id="lastfixed">
+                                    <span id='dianjend'> 
+                                        <input type="radio" name="end-fixed" value="1" title="是" checked>
+                                        <input type="radio" name="end-fixed" value="0" title="否">
+                                    </span>
+                                    <span id='dianjend1' style='display:none'>                                    
+                                        <input type="radio" name="end-fixed1" value="1" title="是" disabled="">
+                                        <input type="radio" name="end-fixed1" value="0" title="否" checked>
+                                    </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>约束条件：</th>
+                        <td id="lastremark">
+                            <input type="checkbox" name="lastremark" value="0" lay-skin="primary" title="必须上传图片"
+                                   checked="">
+                            <input type="checkbox" name="lastremark" value="1" lay-skin="primary" title="必须填写备注">
+                        </td>
+                    </tr>
+                </table>
+                <div class="layui-btn-group self-btn-return">
+                    <button class="layui-btn" lay-submit="" lay-filter="addcustomstep">保存</button>
+                </div>
+            </form>
+        </div>
+    </fieldset>
+</div>
+<script id="orderHandle" type="text/html">
+    <table class="layui-table">
+        <tr>
+            <td colspan='2' class='step-name'></td>
+        </tr>
+        <tr>
+            <th>步骤名称：</th>
+            <td><input type="text" name="name" lay-verify="" autocomplete="off" placeholder="请输入步骤名称"
+                       class="layui-input self-form-input"></td>
+        </tr>
+        <tr>
+            <th>步骤编号：</th>
+            <td><input type="text" name="number" lay-verify="" autocomplete="off" placeholder="请输入步骤编号"
+                       class="layui-input self-form-input" style="display: inline"><span style="color:red"> （异常步骤填 “555”并全部选“否”，完结步骤填 “666”）</span>
+            </td>
+        </tr>
+        <tr>
+            <th>是否必须：</th>
+            <td class="vsmust" tag="flag">
+                <input type="radio" name="must" value="1" title="是" checked lay-filter="yesmust">
+                <input type="radio" name="must" value="0" title="否" lay-filter="nomust">
+                <span class="layui-btn additems1 guding">添加</span>
+            </td>
+        </tr>
+        <tr>
+            <th>是否完结：</th>
+            <td>
+                        <span class='yesfix' tag="flag1"> 
+                            <input type="radio" name="fixblock" value="1" title="是" checked>
+                            <input type="radio" name="fixblock" value="0" title="否">
+                        </span>
+                        <span class="nofix" style='display:none' tag="flag2">                                    
+                            <input type="radio" name="fixnone" value="1" title="是" disabled="">
+                            <input type="radio" name="fixnone" value="0" title="否" checked>
+                        </span>
+                <span class="layui-btn guding layui-btn-danger delitem">删除</span>
+            </td>
+        </tr>
+        <tr>
+            <th>约束条件：</th>
+            <td class="tiaoj">
+                <input type="checkbox" name="isuploadimg" value="1" lay-skin="primary" title="必须上传图片">
+                <input type="checkbox" name="ismustremarks" value="1" lay-skin="primary" title="必须填写备注">
+            </td>
+        </tr>
+    </table>
+    <span class="items-list1"></span>
+</script>
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                orderID = common.getUrlParam("id"),
+                layer = layui.layer;
+        //common.init();
+        common.layTime(); //时间选择
+        //避免input被刷新清空
+        formInStorage.init({
+            formElem: '#keepinput',
+            formSession: 'keepinput'
+        });
+
+        /* ------------------------------------------------------------- 提交表单 ---------------------------------------------------------------- */
+        form.on('submit(addcustomstep)', function (data) {
+            //收集中间步骤
+            var tableVal = $(".items-list0 table");
+            var customsteplist = [];
+            for (var i = 0; i < tableVal.length; i++) {
+                var stepname = tableVal.eq(i).find("input[name='name']").val();
+                var code = tableVal.eq(i).find("input[name='number']").val();
+                var ismust = tableVal.eq(i).find(".vsmust" + i + " .layui-form-radioed").prev().val();
+                var isend = tableVal.eq(i).find(".yesfix" + i + " .layui-form-radioed").prev().val();
+                if (ismust == 0) {
+                    isend = 0;
+                }
+                if (tableVal.eq(i).find(".tiaoj input[name='isuploadimg']").next().hasClass("layui-form-checked")) {
+                    var isuploadimg = 1;
+                    var isuploadimgname = '必须上传图片,';
+                } else {
+                    var isuploadimg = 0;
+                    var isuploadimgname = '';
+                }
+                if (tableVal.eq(i).find(".tiaoj input[name='ismustremarks']").next().hasClass("layui-form-checked")) {
+                    var ismustremarks = 1;
+                    var ismustremarksname = '必须填写备注';
+                } else {
+                    var ismustremarks = 0;
+                    var ismustremarksname = '';
+                }
+                //拼接remarks
+                var remarks = isuploadimgname + ismustremarksname;
+                //中间步骤
+                customsteplist.push({
+                    "customstepid": i + 2,
+                    "stepname": stepname,
+                    "ismust": parseInt(ismust),
+                    "isend": parseInt(isend),
+                    "code": code,
+                    "isuploadimg": isuploadimg,
+                    "ismustremarks": ismustremarks,
+                    "remarks": remarks
+                });
+            }
+
+            //第一步
+            var stepname = $("input[name='listname']").val();
+            var code = $("input[name='listnumber']").val();
+            var ismust = $("#musted .layui-form-radioed").prev().attr('value');
+            var isend = $("#fixed").find("span[style!='']").siblings().find(".layui-form-radioed").prev().val();
+            //console.log(isend)
+            var remarkj = '';
+            var isuploadimg = 0;
+            var ismustremarks = 0;
+            var remark = $("#firstremark .layui-form-checked");
+            for (var i = 0; i < remark.length; i++) {
+                remarkj += remark.eq(i).prev().attr('title') + ',';
+                if (remark.eq(i).prev().attr('value') == '0') {
+                    var isuploadimg = 1;
+                }
+                if (remark.eq(i).prev().attr('value') == '1') {
+                    var ismustremarks = 1;
+                }
+            }
+            remarkj = remarkj.substring(0, remarkj.length - 1);
+            var steplisfirst = {
+                "customstepid": 1,
+                "stepname": stepname,
+                "code": code,
+                "ismust": ismust,
+                "isend": isend,
+                "isuploadimg": isuploadimg,
+                "ismustremarks": ismustremarks,
+                "remarks": remarkj
+            }
+            /*
+             //完结步骤
+             var ismust = $("#lastmust .layui-form-radioed").prev().attr('value');
+             var isend = $("#lastfixed .layui-form-radioed").prev().attr('value');
+             var remarkj = '';
+             var remark = $("#lastremark .layui-form-checked");
+             for (var i = 0; i < remark.length; i++) {
+             remarkj += remark.eq(i).prev().attr('title') + ',';
+             if (remark.eq(i).prev().attr('value') == '0') {
+             var isuploadimg = 1;
+             }
+             if (remark.eq(i).prev().attr('value') == '1') {
+             var ismustremarks = 1;
+             }
+             }
+             remarkj = remarkj.substring(0, remarkj.length - 1);
+             var steplislast = {
+             "customstepid": tableVal.length + 2,
+             "stepname": '完结',
+             "code": 0,
+             "ismust": ismust,
+             "isend": isend,
+             "isuploadimg": isuploadimg,
+             "ismustremarks": ismustremarks,
+             "remarks": remarkj
+             }
+             */
+            //拼接步骤集
+            customsteplist.unshift(steplisfirst);
+            /* customsteplist.push(steplislast);*/
+            //拼接步骤集名称
+            var setname = $("input[name='setname']").val();
+            var number = $("input[name='setnumber']").val();
+            var dataArr = {
+                "customstepsetid": 0,
+                "setname": setname,
+                "number": number,
+                "customsteplist": customsteplist
+            };
+            var getJSON = common.getJsonData('api/bossApi/step/customStepSetEdit', '', dataArr);
+            // console.log(dataArr);
+            // console.log(getJSON);
+            // return false;
+            if (getJSON["code"] == 1) {
+                layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                    localStorage.removeItem("keepinput");
+                    history.go(-1);
+                });
+            } else {
+                layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                    history.go(0);
+                });
+            }
+            return false;
+        });
+
+
+        /* ------------------------------------------------------------- 样式控制 ---------------------------------------------------------------- */
+
+        form.on('radio(filter)', function (data) {
+            $("#dianj").css('display', 'none');
+            $("#dianj1").css('display', '');
+        });
+        form.on('radio(unfilter)', function (data) {
+            $("#dianj").css('display', '');
+            $("#dianj1").css('display', 'none');
+        });
+
+        form.on('radio(filterend)', function (data) {
+            $("#dianjend").css('display', 'none');
+            $("#dianjend1").css('display', 'block');
+        });
+        form.on('radio(unfilterend)', function (data) {
+            $("#dianjend").css('display', 'block');
+            $("#dianjend1").css('display', 'none');
+        });
+
+        var data = {"tag": "0", "name": "jack"};
+        //第一次添加步骤的时候
+        $(".additems0").on('click', function (data) {
+            renderTpl(0, data);
+            freshStepname();
+            form.render();
+        });
+        //非第一次添加步骤的时候
+        $(document).on('click', '.additems1', function () {
+            var tplid = document.getElementById('orderHandle');
+            var getTpl = tplid.innerHTML;
+            var obj = $(this).parent().parent().parent().parent().next();//table的下一个标签<span class="items-list1"></span>
+            laytpl(getTpl).render(data, function (html) {
+                obj.prepend(html);
+            });
+            freshStepname();
+            form.render();
+        });
+        //删除一个步骤
+        $(document).on('click', '.delitem', function () {
+            var obj = $(this).parent().parent().parent().parent();
+            obj.remove();
+            freshStepname();
+            form.render();
+        });
+        //刷新步骤名称
+        function freshStepname() {
+            var jihe = $(".layui-form table").find('.step-name');
+            jihe.each(function (index) {
+                $(this).html('步骤' + (index + 1));
+                form.render();
+            });
+
+            $("td[tag='flag']").each(function (index) {
+                $(this).find('input').attr('name', 'must' + index);
+                $(this).find('input[title="是"]').attr('lay-filter', 'yesmust' + index);
+                $(this).find('input[title="否"]').attr('lay-filter', 'nomust' + index);
+                $(this).attr('class', 'vsmust' + index);
+            });
+
+            console.log($("td[tag='flag']").find('input[title="是"]').length);
+
+            $("span[tag='flag1']").each(function (index) {
+                $(this).find('input[title="是"]').attr('name', 'fixblock' + index);
+                $(this).find('input[title="否"]').attr('name', 'fixblock' + index);
+                $(this).attr('class', 'yesfix' + index);
+            });
+
+            $("span[tag='flag2']").each(function (index) {
+                $(this).find('input[title="是"]').attr('name', 'fixnone' + index);
+                $(this).find('input[title="否"]').attr('name', 'fixnone' + index);
+                $(this).attr('class', 'nofix' + index);
+            });
+        }
+
+        /*
+         * 单选联动
+         */
+        radiocheck();
+        function radiocheck() {
+            form.on('radio(yesmust0)', function (data) {
+                $(".nofix0").css('display', 'none');
+                $(".yesfix0").css('display', '');
+            });
+            form.on('radio(nomust0)', function (data) {
+                $(".nofix0").css('display', '');
+                $(".yesfix0").css('display', 'none');
+            });
+            form.on('radio(yesmust1)', function (data) {
+                $(".nofix1").css('display', 'none');
+                $(".yesfix1").css('display', '');
+            });
+            form.on('radio(nomust1)', function (data) {
+                $(".nofix1").css('display', '');
+                $(".yesfix1").css('display', 'none');
+            });
+
+            form.on('radio(yesmust2)', function (data) {
+                $(".nofix2").css('display', 'none');
+                $(".yesfix2").css('display', '');
+            });
+            form.on('radio(nomust2)', function (data) {
+                $(".nofix2").css('display', '');
+                $(".yesfix2").css('display', 'none');
+            });
+
+            form.on('radio(yesmust3)', function (data) {
+                $(".nofix3").css('display', 'none');
+                $(".yesfix3").css('display', '');
+            });
+            form.on('radio(nomust3)', function (data) {
+                $(".nofix3").css('display', '');
+                $(".yesfix3").css('display', 'none');
+            });
+
+            form.on('radio(yesmust4)', function (data) {
+                $(".nofix4").css('display', 'none');
+                $(".yesfix4").css('display', '');
+            });
+            form.on('radio(nomust4)', function (data) {
+                $(".nofix4").css('display', '');
+                $(".yesfix4").css('display', 'none');
+            });
+
+            form.on('radio(yesmust5)', function (data) {
+                $(".nofix5").css('display', 'none');
+                $(".yesfix5").css('display', '');
+            });
+            form.on('radio(nomust5)', function (data) {
+                $(".nofix5").css('display', '');
+                $(".yesfix5").css('display', 'none');
+            });
+
+            form.on('radio(yesmust6)', function (data) {
+                $(".nofix6").css('display', 'none');
+                $(".yesfix6").css('display', '');
+            });
+            form.on('radio(nomust6)', function (data) {
+                $(".nofix6").css('display', '');
+                $(".yesfix6").css('display', 'none');
+            });
+
+            form.on('radio(yesmust7)', function (data) {
+                $(".nofix7").css('display', 'none');
+                $(".yesfix7").css('display', '');
+            });
+            form.on('radio(nomust7)', function (data) {
+                $(".nofix7").css('display', '');
+                $(".yesfix7").css('display', 'none');
+            });
+        }
+
+        /*
+         for(var i=0; i<100; i++){
+         form.on('radio(yesmust' + i + ')', function (data) {
+         $(".nofix"+i).css('display', 'none');
+         $(".yesfix"+ i).css('display', '');
+         });
+         form.on('radio(nomust' + i + ')', function (data) {
+         $(".nofix"+ i).css('display', '');
+         $(".yesfix"+ i).css('display', 'none');
+         });
+         form.render();
+         }
+         */
+        //映射模版
+        function renderTpl(tag, data) {
+            var tplid = document.getElementById('orderHandle'),
+                    viewid = document.getElementsByClassName('items-list' + tag);
+            var getTpl = tplid.innerHTML;
+            laytpl(getTpl).render(data, function (html) {
+                var $viewid = $(viewid); //jQuery 对象
+                $viewid.prepend(html);
+            });
+        }
+
+    });
+</script>
+</body>
+</html>

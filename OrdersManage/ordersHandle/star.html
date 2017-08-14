@@ -1,0 +1,39 @@
+<script type="text/javascript" src="../../js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript" src="../../js/rating_simple.js"></script>
+<link href="../../css/rating_simple.css" rel="stylesheet" type="text/css">
+
+
+<div class="layer-begin" style="margin: 15px 0 0 15px">
+    <form action="">
+        <div class="layui-form-item">
+            <div class="layui-input-inline">
+                    <textarea type="text" name="sendMode" id="content" autocomplete="off" class="layui-input" placeholder=""
+                              style="width:390px;height:100px"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <table style="margin: 20px 0 0 0">
+                <tr>
+                    <td><label class="layui-form-label left">星级评价： </label></td>
+                    <td>
+                        <div class="layui-input-inline right">
+
+                            <input name="my_input" value="5" id="rating_simple1" type="text" style="display: none"
+                                   class="">
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </form>
+</div>
+<script language="javascript" type="text/javascript">
+    $(function () {
+        $("#rating_simple1").webwidget_rating_simple({
+            rating_star_length: '5',
+            rating_initial_value: '5',
+            rating_function_name: '', //this is function name for click
+            directory: '../../images/'
+        });
+    });
+</script>

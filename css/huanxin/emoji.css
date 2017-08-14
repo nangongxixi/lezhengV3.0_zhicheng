@@ -1,0 +1,16 @@
+#imgdiv{
+    background-color:white;
+    width: 308px;
+    height: 210px;
+    border: solid black;
+    float: left;
+    z-index: 55;
+    position: absolute;
+    left: 10%;
+    top: 46%;
+    border-radius:6%;
+}
+.myEmoji{
+    width: 40px;
+    height: 38px;
+}

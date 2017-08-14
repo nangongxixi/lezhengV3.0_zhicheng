@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>商家对账</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="format-detection" content="telephone=no">
+
+  <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+  <link rel="stylesheet" href="../../css/global.css" media="all">
+  <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+  <style>
+    .layui-field-box {
+      padding: 0;
+    }
+
+    .layui-field-box .layui-table {
+      margin: 0;
+      border: 0;
+    }
+
+    .layui-input-inline {
+      width: 200px;
+    }
+
+    .layui-form-item .layui-input-inline {
+      width: 300px;
+    }
+
+    .order-form-title {
+      padding-left: 20px;
+      height: 38px;
+      line-height: 38px;
+      border: 1px solid #e2e2e2;
+      font-size: 15px;
+    }
+
+    .order-form-block {
+      margin-bottom: 15px;
+      border: 1px solid #e2e2e2;
+      border-top: 0;
+      padding: 20px 0;
+    }
+
+    .layui-form-item {
+      margin-top: 0;
+    }
+
+    .layui-form-item:nth-child(1) {
+      margin-top: 0;
+    }
+
+    .layui-input-inline {
+      padding: 9px 0;
+    }
+
+    .layui-form-label {
+      width: 90px;
+    }
+  </style>
+</head>
+
+<body>
+<div style="margin: 15px;">
+  <fieldset class="layui-elem-field layui-field-title">
+    <legend>商家对账</legend>
+  </fieldset>
+  <span id="items-list1"></span>
+
+  <div class="admin-table-page">
+    <div id="page1" class="page"></div>
+  </div>
+</div>
+<script id="orderHandle1" type="text/html">
+  <div class="layui-field-box">
+    <div class="order-form-title">结账详情</div>
+    <div class="order-form-block">
+      <div class="layui-form-item">
+        <div class="layui-inline">
+          <label class="layui-form-label">结账状态：</label>
+
+          <div class="layui-input-inline">
+           {{#  if(d.data.checkbillinfodata.isbill == 0){ }}未结账{{#  }else{ }}已结账{{#  } }}
+          </div>
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <div class="layui-inline">
+          <label class="layui-form-label">结账金额：</label>
+
+          <div class="layui-input-inline">
+            {{d.data.checkbillinfodata.paybleprice}}
+          </div>
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <div class="layui-inline">
+          <label class="layui-form-label">结账时间：</label>
+
+          <div class="layui-input-inline">
+            {{d.data.checkbillinfodata.billtime}}
+          </div>
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <div class="layui-inline">
+          <label class="layui-form-label">结账商家：</label>
+
+          <div class="layui-input-inline">
+            {{d.data.checkbillinfodata.businessname}}
+          </div>
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <div class="layui-inline">
+          <label class="layui-form-label">操作员：</label>
+          <input type="checkbox" name="checkAll" lay-skin="primary" title="全选">
+
+          <div class="layui-input-inline">
+            {{d.data.checkbillinfodata.adminname}}
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--订单详情-->
+    <div class="order-form-title">订单详情</div>
+    <div class="order-form-block">
+      <div class="layui-form-item">
+        <div class="layui-inline">
+          <label class="layui-form-label">订单状态：</label>
+
+          <div class="layui-input-inline">
+            {{d.data.orderinfodata.orderstatu}}
+          </div>
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <div class="layui-inline">
+          <label class="layui-form-label">订单编号：</label>
+
+          <div class="layui-input-inline">
+            {{d.data.orderinfodata.ordercode}}
+          </div>
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <div class="layui-inline">
+          <label class="layui-form-label">下单时间：</label>
+
+          <div class="layui-input-inline">
+            {{d.data.orderinfodata.ordercreatetime}}
+          </div>
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <div class="layui-inline">
+          <label class="layui-form-label">付款时间：</label>
+
+          <div class="layui-input-inline">
+            {{d.data.orderinfodata.paytime}}
+          </div>
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <div class="layui-inline">
+          <label class="layui-form-label">付款方式：</label>
+
+          <div class="layui-input-inline">
+            {{d.data.orderinfodata.paytypename}}
+          </div>
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <div class="layui-inline">
+          <label class="layui-form-label">付款金额：</label>
+
+          <div class="layui-input-inline">
+            {{d.data.orderinfodata.payamount}}
+          </div>
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <div class="layui-inline">
+          <label class="layui-form-label">服务类型：</label>
+
+          <div class="layui-input-inline">
+            {{d.data.orderinfodata.servicetypename}}
+          </div>
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <div class="layui-inline">
+          <label class="layui-form-label">下单人：</label>
+
+          <div class="layui-input-inline">
+            {{d.data.orderinfodata.username}}
+          </div>
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <div class="layui-inline">
+          <label class="layui-form-label">手机号：</label>
+
+          <div class="layui-input-inline">
+            {{d.data.orderinfodata.userphone}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</script>
+
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+
+<script>
+  layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common'], function () {
+    var form = layui.form(),
+            layer = layui.layer,
+            layedit = layui.layedit,
+            laydate = layui.laydate,
+            $ = layui.jquery,
+            laytpl = layui.laytpl,
+            element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+            laypage = layui.laypage,
+            common = layui.common,
+            apiUrl = common.apiUrl,
+            editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+            serviceIndex = localStorage.getItem('serviceIndex'),
+            paymentid = common.getUrlParam("paymentid"),
+            infotype = common.getUrlParam("infotype"),
+            layer = layui.layer;
+    common.saveTabIndex('serviceIndex');
+    common.init();
+    //common.layTime(); //时间选择
+
+    var dataArr = {
+      "paymentid": paymentid,
+      "infotype": infotype
+    }
+    common.getJsonData('api/bossApi/paymentrecord/paymentinfo', 1, dataArr);
+  });
+
+</script>
+</body>
+
+</html>

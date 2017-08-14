@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>区域管理</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/table.css"/>
+
+    <style type="text/css">
+        .layui-nav-itemed > a {
+            background-color: #f1f1f1 !important;
+            color: #4E5465 !important;
+        }
+
+        .layui-nav {
+            background-color: #f1f1f1 !important;
+        }
+
+        .layui-nav-itemed > a {
+            background-color: #d2d2d2 !important;
+        }
+
+        .layui-nav-tree .layui-nav-child a {
+            color: #4E5465 !important;
+        }
+
+        .layui-nav .layui-nav-item a {
+            color: #4E5465 !important;
+        }
+
+        .layui-nav-child dd.layui-this a {
+            color: #fff !important;
+        }
+
+    </style>
+
+</head>
+<body>
+<div style="margin: 15px;">
+    <div class="layui-tab layui-tab-card" lay-filter="rolemanage">
+        <ul class="layui-tab-title">
+            <li>区域管理</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item">
+                <div class="layui-field-box">
+                    <form class="layui-form" action="" id="keepinput">
+                        <table class="layui-table self-site-table left">
+                            <tr>
+                                <th class="self-form-title">编辑资料：</th>
+                                <td>
+                                    <div class="layui-input-block right">
+                                        <button class="layui-btn" lay-submit="" lay-filter="addarea" parcode=""
+                                                areaid="">保存
+                                        </button>
+                                        <button class="layui-btn  layui-btn-danger" lay-filter="delarea" areaid=""
+                                                id="delarea">
+                                            删除
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="self-form-title">区域名称：</th>
+                                <td>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="name" lay-verify="required" autocomplete="off"
+                                               placeholder="请输入区域名称" maxlength="50" class="layui-input self-form-input">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>区域编号：</th>
+                                <td>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="number" lay-verify="required" autocomplete="off"
+                                               placeholder="请输入区域编号" class="layui-input self-form-input">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>父级名称：</th>
+                                <td>
+                                    <div class="layui-input-inline area">
+                                        <select name="parentcode">
+                                            <option level="1" value=""> —— 默认顶级目录 ——</option>
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <table class="site-table table-hover selected-css right">
+                            <thead>
+                            <tr>
+                                <th>
+                                    <i class="fa fa-folder-open-o" aria-hidden="true"></i> 区域维护
+                                    <!-- <span class="right weih">添加</span>-->
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody class="selsect-content">
+                            <tr>
+                                <td class="select_input-items">
+                                    <ul class="layui-nav layui-nav-tree arealist" lay-filter="demo"
+                                        style="width:100% !important;">
+                                        <!--
+                                        <li class="layui-nav-item layui-nav-itemed">
+                                            <a href="javascript:;">默认展开</a>
+                                            <dl class="layui-nav-child">
+                                                <dd><a href="javascript:;">选项一</a></dd>
+                                                <dd><a href="javascript:;">选项二</a></dd>
+                                                <dd><a href="javascript:;">选项三</a></dd>
+                                                <dd><a href="">跳转项</a></dd>
+                                            </dl>
+                                        </li>
+                                        -->
+                                    </ul>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="clear"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!---焦色列表-->
+<script id="orderHandle2" type="text/html">
+    {{# layui.each(d.data, function(index, item){ }}
+    <h2 class="self-input itemname" roleid="{{ item.roleid }}"><i class="fa fa-id-card-o" aria-hidden="true"></i> <span>{{ item.name }}</span>
+    </h2>
+    {{# }); }}
+</script>
+
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+    //搜索表单
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('rolemanage'),
+                orderID = common.getUrlParam("id"),
+                layer = layui.layer;
+        common.saveTabIndex('rolemanage');
+        common.init();
+        common.layTime(); //时间选择
+        //复选框样式
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_flat-green'
+        });
+
+        /* ------------------------------------------------------------- 数据列表显示 ---------------------------------------------------------------- */
+
+        //区域下拉列表
+        var dataArr = {"id": 0};
+        var areaBig = common.getJsonData('api/bossApi/service/areaSearch', '', dataArr);
+        $.each(areaBig.datalist, function (index, item) {
+            $(".area select").append('<option value="' + item.areaid + '">' + item.areaname + '</option>');
+            if (item.areaid == 1) {
+                $(".arealist").append(' <li class="layui-nav-item layui-nav-itemed"><a href="javascript:;">' + item.areaname + '</a><dl class="layui-nav-child ddlist' + item.areaid + '"></dl></li>');
+            } else {
+                $(".arealist").append(' <li class="layui-nav-item"><a href="javascript:;">' + item.areaname + '</a><dl class="layui-nav-child ddlist' + item.areaid + '"></dl></li>');
+            }
+            var dataArr = {"id": item.areaid};
+            var areaSmall = common.getJsonData('api/bossApi/service/areaSearch', '', dataArr);
+            for (var i = 0; i < areaSmall.datalist.length; i++) {
+                /*    $("optgroup[oid='" + item.areaid + "']").append('<option level="2" value="' + areaSmall.datalist[i].areaid + '">' + areaSmall.datalist[i].areaname + '</option>');
+                 */
+                $(".ddlist" + item.areaid).append('<dd title="' + areaSmall.datalist[i].areaid + '" slot="' + areaSmall.datalist[i].areaname + '" lang="' + areaSmall.datalist[i].areaid + '" accessKey="' + areaSmall.datalist[i].parentcode + '"><a href="javascript:;" style="margin-left:35px; display:block"> ├ ' + areaSmall.datalist[i].areaname + '</a></dd>');
+            }
+        });
+        form.render();
+
+        // console.log($(".layui-nav-item")[0].find('dd'));
+
+        //.addClass(".layui-nav-itemed")
+
+        element.init();
+
+        /* ------------------------------------------------------------- 其他操作 ---------------------------------------------------------------- */
+
+
+        //监听导航点击
+        element.on('nav(demo)', function (elem) {
+            console.log(elem)
+            layer.msg(elem.text());
+            $('input[name="name"]').val(elem[0].slot)
+            $('input[name="number"]').val(elem[0].title)
+            $('button[lay-filter="addarea"]').attr("parcode", elem[0].accessKey);
+            $('button[lay-filter="addarea"],button[lay-filter="delarea"]').attr("areaid", elem[0].lang); //区域id
+        });
+
+        form.on('submit(addarea)', function (data) {
+            $(this).attr('disabled', "true");
+            if (data.field.parentcode) {
+                data.field.level = 2
+            } else {
+                data.field.level = 1
+            }
+            var parcode = $('button[lay-filter="addarea"]').attr("parcode");
+            var areaid = $('button[lay-filter="addarea"]').attr("areaid");
+            if (parcode) {
+                //修改
+                var areaid = areaid;
+                data.field.level = 2;
+            } else {
+                //新增
+                areaid = 0;
+                if (!data.field.parentcode) {
+                    data.field.parentcode = 0;
+                }
+            }
+
+            var dataArr = {
+                "areaid": parseInt(areaid),
+                "areaname": data.field.name,
+                "code": parseInt(data.field.number),
+                "level": parseInt(data.field.level),
+                "parentcode": data.field.parentcode
+            }
+            var getJSON = common.getJsonData('api/bossApi/property/areaEdit', '', dataArr);
+           console.log(dataArr);
+             console.log(getJSON);
+             return false;
+
+            if (getJSON["code"] == 1) {
+                layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                    window.location.reload();
+                });
+            } else {
+                layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                    window.location.reload();
+                });
+            }
+            return false;
+        });
+
+        $(document).on('click', '#delarea', function () {
+            var obj = $(this);
+            layer.confirm('您确定要删除本条数据？', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                var areaid = obj.attr("areaid");
+                var APIname = "api/bossApi/property/areaDel";
+                var dataArr = {"id": parseInt(areaid)};
+                var getJSON = common.getJsonData(APIname, '', dataArr);
+                // console.log(dataArr);
+                // return false;
+                if (getJSON["code"] == 1) {
+                    layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                        history.go(0);
+                    });
+                }else{
+                    layer.msg(getJSON["msg"], {icon: 2, time: 3000}, function () {
+                        history.go(0);
+                    });
+                }
+            });
+            return false;
+        });
+
+
+    });
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>积分管理</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/table.css"/>
+    <style>
+        .table-title {
+            height: 50px;
+            line-height: 50px;
+            padding-left: 20px;
+            border: 1px solid #ddd;
+            border-bottom: 0;
+            font-size: 14px;
+        }
+
+        .site-table {
+            margin: 0;
+        }
+
+        .site-text {
+            margin-bottom: 20px;
+        }
+
+        .layui-form-label {
+            width: 60px;
+            text-align: left;
+        }
+
+        .layui-form-label.title {
+            color: #000;
+            font-size: 15px;
+        }
+    </style>
+</head>
+
+<body>
+<div style="margin: 15px;">
+    <div class="layui-tab layui-tab-card" lay-filter="pointsIndex">
+        <ul class="layui-tab-title">
+            <li>积分商城</li>
+            <li>积分记录</li>
+            <li>发放规则</li>
+        </ul>
+        <div class="layui-tab-content">
+            <!--积分商城-->
+            <div class="layui-tab-item">
+                <div class="admin-main">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width:auto">类型</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="type">
+                                        <option value="">—— 请选择 ——</option>
+                                        <option value="1001">优惠券</option>
+                                        <option value="1002">优惠券</option>
+                                        <option value="1003">实物</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label" style="width:auto">状态</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="status">
+                                        <option value="">—— 请选择 ——</option>
+                                        <option value="1">热门</option>
+                                        <option value="1001">上架中</option>
+                                        <option value="1002">已下架</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label">价格区间</label>
+
+                                <div class="layui-input-inline" style="width: 80px;">
+                                    <input type="text" name="minprice" placeholder="￥" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+                                <div class="layui-form-mid">至</div>
+                                <div class="layui-input-inline" style="width: 80px;">
+                                    <input type="text" name="maxprice" placeholder="￥" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+                                <label class="layui-form-label">优惠券</label>
+
+                                <div class="layui-input-inline">
+                                    <input type="text" name="keyword" lay-verify="" autocomplete="off"
+                                           placeholder="请输入商品名称" class="layui-input">
+                                </div>
+                                <button class="layui-btn layui-btn-warm" lay-submit="" lay-filter="sear1">搜索</button>
+                                <button type="reset" class="layui-btn layui-btn-primary reset1">重置</button>
+                            </div>
+                        </form>
+                    </blockquote>
+                </div>
+                <div class="layui-field-box">
+                    <div class="site-text">
+                        <a href="exchangeRecord.html" class="layui-btn" style="color: #fff;">兑换记录</a>
+                        <a href="goodslibs.html" class="layui-btn" style="color: #fff;">商品库</a>
+                    </div>
+                    <div class="table-title">上架商品</div>
+                    <span id="items-list1"></span>
+
+                    <div class="admin-table-page">
+                        <div id="page1" class="page"></div>
+                    </div>
+                </div>
+            </div>
+            <!--积分记录-->
+            <div class="layui-tab-item">
+                <div class="layui-field-box">
+                    <div class="table-title">积分记录</div>
+                    <span id="items-list2"></span>
+
+                    <div class="admin-table-page">
+                        <div id="page2" class="page"></div>
+                    </div>
+                </div>
+            </div>
+            <!--发放规则-->
+            <div class="layui-tab-item">
+                <div class="layui-field-box">
+                    <div class="table-title">
+                        设定积分获取规则
+                        <span style="margin: 6px 20px !important; display: inline-flex;  float: right;">
+                            <button class="layui-btn pull-right edit">编辑
+                            </button>
+                            <button class="layui-btn pull-right save" style="display: none">保存
+                            </button>
+                        </span>
+                    </div>
+                    <div class="" style="border: 1px solid #e1e1e1;padding: 20px">
+                        <span id="items-list3"></span>
+
+                        <div class="admin-table-page">
+                            <div id="page3" class="page"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="admin-table-page">
+                    <div id="page3" class="page"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!--积分商城-->
+<script id="orderHandle1" type="text/html">
+    <table class="site-table table-hover"  style="margin-bottom: 50px !important;">
+        <thead>
+        <tr>
+            <th>编号</th>
+            <th>名称</th>
+            <th>类型</th>
+            <th>价格</th>
+            <th>上架数量</th>
+            <th>已兑换</th>
+            <th>剩余</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# layui.each(d.datalist, function(index, item){ }}
+        <tr id="order4">
+            <td class="title">{{ item.number }}</td>
+            <td>{{ item.productname }}</td>
+            <td>{{ item.typename }}</td>
+            <td>{{ item.price }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.convertedquantity }}</td>
+            <td>{{ item.quantity-item.convertedquantity }}</td>
+            <td>{{ item.statuname }}</td>
+            <td>
+        <span class="layui-breadcrumb" lay-separator="|">
+            <a href="goodsDetail.html?commodityid={{ item.commodityid }}">详情</a>
+            {{# if(item.ishot == 1){ }}
+                <a href=":;" class="xiajia" commodityid="{{ item.commodityid }}" flag="2">取消热门</a>
+            {{# }else{ }}
+                <a href=":;" class="xiajia" commodityid="{{ item.commodityid }}" flag="1">添加热门</a>
+            {{# } }}
+
+            {{# if(item.status == 1){ }}
+                <a href=":;" class="xiajia" commodityid="{{ item.commodityid }}" flag="2">取消热门</a>
+            {{# }else if(item.status == '1001'){ }}
+                <a href=":;" class="xiajia" commodityid="{{ item.commodityid }}" flag="0">下架</a>
+            {{# }else if(item.status == '0' || item.quantity-item.convertedquantity==0){ }}
+                <a href=":;" class="xiajia" commodityid="{{ item.commodityid }}" flag="1001">上架</a>
+            {{# }else{ }}
+
+            {{# } }}
+
+
+        </span>
+            </td>
+        </tr>
+        {{# }); }}
+        </tbody>
+    </table>
+
+</script>
+<!--积分记录 -->
+<script id="orderHandle2" type="text/html">
+    <table class="site-table table-hover">
+        <thead>
+        <tr>
+            <th>时间</th>
+            <th>事件</th>
+            <th>用户</th>
+            <th>积分变更</th>
+            <th>结余</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# layui.each(d.datalist, function(index, item){ }}
+        <tr id="">
+            <td class="title">{{ item.createtime }}</td>
+            <td>{{ item.description }}</td>
+            <td>{{ item.username }}</td>
+            <td>{{ item.changenumber }}</td>
+            <td>{{ item.allcount }}</td>
+        </tr>
+        {{# }); }}
+        </tbody>
+    </table>
+</script>
+
+<script id="orderHandle3" type="text/html">
+    <form action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label title" style="width:auto">基本任务</label>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">签到</label>
+
+            <div class="layui-input-inline">
+                <input type="text" name="antudate[1]" disabled autocomplete="off" class="layui-input"
+                       placeholder="" value="{{d.data[0].integralvalue}}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">消费</label>
+
+            <div class="layui-input-inline">
+                <input type="text" name="antudate[2]" disabled autocomplete="off" class="layui-input"
+                       placeholder="" value="{{d.data[1].integralvalue}}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label title" style="width:auto">活动任务</label>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">扫码</label>
+
+            <div class="layui-input-inline">
+                <input type="text" name="antudate[3]" disabled autocomplete="off" class="layui-input"
+                       placeholder="" value="{{d.data[2].integralvalue}}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">输入电话</label>
+
+            <div class="layui-input-inline">
+                <input type="text" name="antudate[4]" disabled autocomplete="off" class="layui-input"
+                       placeholder="" value="{{d.data[3].integralvalue}}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label title" style="width:auto">会员等级</label>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">03级</label>
+
+            <div class="layui-input-inline">
+                <input type="text" name="antudate[5]" disabled autocomplete="off" class="layui-input"
+                       placeholder="" value="{{d.data[4].integralvalue}}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">02级</label>
+
+            <div class="layui-input-inline">
+                <input type="text" name="antudate[6]" disabled autocomplete="off" class="layui-input"
+                       placeholder="" value="{{d.data[5].integralvalue}}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">01级</label>
+
+            <div class="layui-input-inline">
+                <input type="text" name="antudate[7]" disabled autocomplete="off" class="layui-input"
+                       placeholder="" value="{{d.data[6].integralvalue}}">
+            </div>
+        </div>
+    </form>
+</script>
+
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                pointsIndex = localStorage.getItem('pointsIndex'),
+                orderID = common.getUrlParam("id"),
+                layer = layui.layer;
+        common.saveTabIndex('pointsIndex');
+        common.init();
+        common.layTime(); //时间选择
+
+        /* ------------------------------------------------------------- 数据列表显示 ---------------------------------------------------------------- */
+
+        //重置 、 搜索 、列表
+        getJSONData(1, '');
+        getJSONData(2, '');
+        getJSONData(3, '');
+        $(".reset1").on('click', function () {
+            getJSONData(1, '');
+        });
+        form.on('submit(sear1)', function (data) {
+            var dataArr = {
+                "type": data.field.type,
+                "status": data.field.status,
+                "minprice": parseInt(data.field.minprice),
+                "maxprice": parseInt(data.field.maxprice),
+                "keyword": data.field.keyword,
+                "pageindex": 1
+            };
+            console.log(dataArr)
+            getJSONData(1, dataArr);
+            return false;
+        });
+
+        /* ------------------------------------------------------------- 操作 ---------------------------------------------------------------- */
+
+        $(".edit").on('click', function () {
+            $('.save').removeAttr("style");
+            $(this).css("display", "none");
+            $("input").removeAttr("disabled");
+        });
+        $(".save").on('click', function () {
+            var antudate1 = parseInt($('input[name="antudate[1]"]').val());
+            var antudate2 = parseInt($('input[name="antudate[2]"]').val());
+            var antudate3 = parseInt($('input[name="antudate[3]"]').val());
+            var antudate4 = parseInt($('input[name="antudate[4]"]').val());
+            var antudate5 = parseInt($('input[name="antudate[5]"]').val());
+            var antudate6 = parseInt($('input[name="antudate[6]"]').val());
+            var antudate7 = parseInt($('input[name="antudate[7]"]').val());
+
+            var dataArr = [
+                {
+                    "interalruleid": 1,
+                    "integralvalue": antudate1
+                },
+                {
+                    "interalruleid": 2,
+                    "integralvalue": antudate2
+                },
+                {
+                    "interalruleid": 3,
+                    "integralvalue": antudate3
+                },
+                {
+                    "interalruleid": 4,
+                    "integralvalue": antudate4
+                },
+                {
+                    "interalruleid": 5,
+                    "integralvalue": antudate5
+                },
+                {
+                    "interalruleid": 6,
+                    "integralvalue": antudate6
+                },
+                {
+                    "interalruleid": 7,
+                    "integralvalue": antudate7
+                }
+            ]
+
+            var dataString = {
+                "text": JSON.stringify(dataArr)
+            };
+            var getJSON = common.getJsonData('api/bossApi/interalRule/interalRuleSet', '', dataString);
+            // console.log(dataString);
+            // console.log(getJSON);
+            // return false;
+            if (getJSON["code"] == 1) {
+                layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                    location.reload()
+                });
+            }
+        });
+
+
+        /* ------------------------------------------------------------- 数据MODEL ---------------------------------------------------------------- */
+
+        function getJSONData(typeid, dataArr) {
+            var dataArray = dataArr || {"pageindex": 1};
+            if (typeid == 1) {
+                common.getJsonData('api/bossApi/product/getlist', typeid, dataArray);//优惠卷领取名单
+            } else if (typeid == 2) {
+                common.getJsonData('api/bossApi/memberrecord/getlist', typeid, dataArray); //优惠卷库列表
+            } else if (typeid == 3) {
+                common.getJsonData('api/bossApi/interalRule/interalRuleSearch', typeid, dataArray); //优惠卷库列表
+            } else {
+
+            }
+            return false;
+        }
+
+        $(document).on('click', '.xiajia', function () {
+            var obj = $(this);
+            var commodityid = obj.attr("commodityid");
+            var flag = obj.attr("flag");
+            if (flag == '0') { //下架
+                var dataArr = {"commodityid": commodityid, "status": 0};
+            } else if (flag == '1') { //热门
+                var dataArr = {"commodityid": commodityid, "status": 1};
+            } else if (flag == '2') { //取消热门
+                var dataArr = {"commodityid": commodityid, "status": 2};
+            } else if (flag == '1001') { //上架
+                var dataArr = {"commodityid": commodityid, "status": 1001};
+            }
+            var APIname = "api/bossApi/product/updatestatu";
+            var getJSON = common.getJsonData(APIname, '', dataArr);
+            if (getJSON["code"] == 1) {
+                layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                    history.go(0);
+                });
+            }
+            return false;
+        });
+
+    });
+</script>
+</body>
+</html>

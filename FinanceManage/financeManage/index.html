@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>财务管理</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/table.css"/>
+    <style>
+        .table-title {
+            height: 50px;
+            line-height: 50px;
+            padding-left: 20px;
+            border: 1px solid #ddd;
+            border-bottom: 0;
+            font-size: 14px;
+        }
+
+        .site-table {
+            margin: 0;
+        }
+
+        .site-text {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+<div style="margin: 15px;">
+    <div class="layui-tab layui-tab-card" lay-filter="financeIndex">
+        <ul class="layui-tab-title">
+            <li class="">订单对账</li>
+            <li>商家对账</li>
+        </ul>
+        <div class="layui-tab-content">
+            <!--订单对账-->
+            <div class="layui-tab-item">
+                <div class="admin-main">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width:auto">区域</label>
+
+                                <div class="layui-input-inline" id="area">
+                                    <select name="area">
+                                        <option value="">—— 请选择 ——</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label">支付方式</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="payment">
+                                        <option value="">—— 请选择 ——</option>
+                                        <option value="0">支付宝</option>
+                                        <option value="1">微信</option>
+                                    </select>
+                                </div>
+
+                                <label class="layui-form-label">选择时间</label>
+
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="开始日" id="LAY_demorange_s1"
+                                           name="begintime">
+                                </div>
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="截止日" id="LAY_demorange_e1"
+                                           name="endtime">
+                                </div>
+
+                                <div class="self-form-time">
+                                    <label class="layui-form-label" style="width:auto">金额区间</label>
+
+                                    <div class="layui-input-inline" style="width: 82px;">
+                                        <input type="text" name="minprice" placeholder="￥" autocomplete="off"
+                                               class="layui-input">
+                                    </div>
+                                    <div class="layui-form-mid">-</div>
+                                    <div class="layui-input-inline" style="width: 82px;">
+                                        <input type="text" name="maxprice" placeholder="￥" autocomplete="off"
+                                               class="layui-input">
+                                    </div>
+
+                                    <label class="layui-form-label" style="width:auto">事项名称</label>
+
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="keyword" lay-verify="" autocomplete="off"
+                                               placeholder="请输入标题" class="layui-input">
+                                    </div>
+                                    <button class="layui-btn" lay-submit="" lay-filter="sear1"
+                                            style="margin-left: 40px">搜索
+                                    </button>
+                                    <button type="reset" class="layui-btn layui-btn-primary reset1">重置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </blockquote>
+                </div>
+                <div class="layui-field-box">
+                    <div class="site-text">
+                        <a href="refund.html" class="layui-btn" style="color: #fff;">退款管理</a>
+                    </div>
+                    <div class="table-title">收款记录</div>
+                    <span id="items-list1"></span>
+
+                    <div class="admin-table-page">
+                        <div id="page1" class="page"></div>
+                    </div>
+                </div>
+            </div>
+            <!--商家对账-->
+            <div class="layui-tab-item">
+                <div class="admin-main">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width:auto">区域</label>
+
+                                <div class="layui-input-inline" id="area">
+                                    <select name="area">
+                                        <option value="">—— 请选择 ——</option>
+                                    </select>
+                                </div>
+
+                                <label class="layui-form-label">状态</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="status">
+                                        <option value="">—— 请选择 ——</option>
+                                        <option value="0">已结账</option>
+                                        <option value="1">未结账</option>
+                                    </select>
+                                </div>
+
+                                <label class="layui-form-label" style="width:auto">选择时间</label>
+
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="开始日" id="LAY_demorange_s2"
+                                           name="begintime">
+                                </div>
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="截止日" id="LAY_demorange_e2"
+                                           name="endtime">
+                                </div>
+                                <div class="self-form-time">
+                                    <label class="layui-form-label" style="width:auto">金额区间</label>
+
+                                    <div class="layui-input-inline" style="width: 82px;">
+                                        <input type="text" name="minprice" placeholder="￥" autocomplete="off"
+                                               class="layui-input">
+                                    </div>
+                                    <div class="layui-form-mid">-</div>
+                                    <div class="layui-input-inline" style="width: 82px;">
+                                        <input type="text" name="maxprice" placeholder="￥" autocomplete="off"
+                                               class="layui-input">
+                                    </div>
+
+                                    <label class="layui-form-label">事项名称</label>
+
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="keyword" lay-verify="" autocomplete="off"
+                                               placeholder="请输入标题" class="layui-input">
+                                    </div>
+                                    <button class="layui-btn" lay-submit="" lay-filter="sear2"
+                                            style="margin-left: 40px">搜索
+                                    </button>
+                                    <button type="reset" class="layui-btn layui-btn-primary reset2">重置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </blockquote>
+                </div>
+                <div class="layui-field-box">
+                    <div class="site-text">
+                        <a href="checkout.html" class="layui-btn" style="color: #fff;">结账日志</a>
+                        <a href="javascript:;" class="layui-btn js_checkout" style="color: #fff;" data-type="0"
+                           data-table="items-list2">结账</a>
+                    </div>
+                    <table class="site-table table-hover">
+                        <thead>
+                        <tr>
+                            <th><input type="checkbox" class="table_selected_all"></th>
+                            <th>流水号</th>
+                            <th>金额</th>
+                            <th>时间</th>
+                            <th>订单名称</th>
+                            <th>下单人</th>
+                            <th>商家</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="items-list2"></tbody>
+                    </table>
+                    <div class="admin-table-page">
+                        <div id="page2" class="page"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--订单对账-->
+<script id="orderHandle1" type="text/html">
+    <table class="site-table table-hover">
+        <thead>
+        <tr>
+            <th>流水号</th>
+            <th>金额</th>
+            <th>时间</th>
+            <th>费用种类</th>
+            <th>订单名称</th>
+            <th>下单人</th>
+            <th>商家</th>
+            <th>支付方式</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# layui.each(d.datalist, function(index, item){ }}
+        <tr id="order4">
+            <td class="title">{{ item.paymentcode }}</td>
+            <td>{{ item.paybleprice }}</td>
+            <td>{{ item.createtime }}</td>
+            <td>{{ item.feetypename }}</td>
+            <td>{{ item.ordername }}</td>
+            <td>{{ item.username }}</td>
+            <td>{{ item.businessname }}</td>
+            <td>{{ item.paytypename }}</td>
+            <td>
+        <span class="layui-breadcrumb" lay-separator="|">
+            <a href="collectDetail.html?paymentid={{ item.paymentid }}&infotype=0">详情</a>
+        </span>
+            </td>
+        </tr>
+        {{# }); }}
+        </tbody>
+    </table>
+</script>
+<!--商家对账-->
+<script id="orderHandle2" type="text/html">
+    {{# layui.each(d.datalist, function(index, item){ }}
+    <tr id="">
+        <td><input type="checkbox" class="input-self" id="{{ item.paymentid }}" alt="{{item.businessid}}"
+                   align="{{item.paybleprice}}" {{# if(item.isbill== 1){ }}disabled="1" {{# } }}><label
+                for="{{ item.paymentid }}"></label></td>
+        <td class="title">{{ item.paymentcode }}</td>
+        <td>{{ item.paybleprice }}</td>
+        <td>{{ item.createtime }}</td>
+        <td>{{ item.ordername }}</td>
+        <td>{{ item.username }}</td>
+        <td>{{ item.businessname }}</td>
+        <td>{{# if(item.isbill == 0){ }}未结账{{# }else{ }}已结账{{# } }}</td>
+        <td>
+        <span class="layui-breadcrumb" lay-separator="|">
+						<a href="checkoutdetail.html?paymentid={{ item.paymentid }}&infotype=2">详情</a>
+            {{# if(item.isbill == 0){ }}
+                <a href="javascript:;" class="js_checkout" data-type="1" paymentid="{{ item.paymentid }}"
+                   businessid="{{ item.businessid }}" paybleprice="{{ item.paybleprice }}">结账</a>
+            {{# } }}
+
+						<input type="hidden" id="{{item.id}}">
+				</span>
+        </td>
+    </tr>
+    {{# }); }}
+</script>
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('rolemanage'),
+                orderID = common.getUrlParam("id"),
+                layer = layui.layer;
+        common.saveTabIndex('financeIndex');
+        common.init();
+        common.layTime(); //时间选择
+
+        /* ------------------------------------------------------------- 数据列表显示 ---------------------------------------------------------------- */
+        //重置 、 搜索 、列表
+        for (var i = 1; i < 3; i++) {
+            getJSONData(i, '');
+            $(".reset" + i).on('click', function () {
+                getJSONData(i, '');
+            });
+            form.on('submit(sear' + i + ')', function (data) {
+                var dataArr = {
+                    "begintime": data.field.begintime,
+                    "endtime": data.field.endtime,
+                    "paytype": parseInt(data.field.payment),
+                    "minprice": parseInt(data.field.minprice),
+                    "maxprice": parseInt(data.field.maxprice),
+                    "areaid": parseInt(data.field.area),
+                    "keyword": data.field.keyword,
+                    "page": 1
+                };
+                getJSONData(i, dataArr);
+                return false;
+            });
+        }
+        /* ------------------------------------------------------------- 数据MODEL ---------------------------------------------------------------- */
+
+        function getJSONData(typeid, dataArr) {
+            var dataArray = dataArr || {"pageindex": 1, "feetype": typeid, "status": 0};
+            console.log(dataArr);
+            // return false;
+            common.getJsonData('api/bossApi/paymentrecord/getlist', typeid, dataArray);
+        }
+
+        /* ------------------------------------------------------------- 搜索列表 ---------------------------------------------------------------- */
+        //区域下拉列表
+        var dataArr = {"id": 0};
+        var areaBig = common.getJsonData('api/bossApi/service/areaSearch', '', dataArr);
+        $.each(areaBig.datalist, function (index, item) {
+            $("#area select").append('<optgroup label="' + item.areaname + '" oid="' + item.areacode + '"></optgroup>');
+            var dataArr = {"id": item.areacode};
+            var areaSmall = common.getJsonData('api/bossApi/service/areaSearch', '', dataArr);
+            for (var i = 0; i < areaSmall.datalist.length; i++) {
+                $("optgroup[oid='" + item.areaid + "']").append('<option value="' + areaSmall.datalist[i].areaid + '">' + areaSmall.datalist[i].areaname + '</option>');
+            }
+        });
+        //商家下拉列表
+        var dataArr = {"page": 1};
+        var areaBig = common.getJsonData('api/bossApi/businessMain/businessMainSearch', '', dataArr);
+        $.each(areaBig.datalist, function (index, item) {
+            $("#shangjia select").append('<option value="' + item.businessid + '">' + item.businessname + '</option>');
+
+        });
+        //服务大类下拉列表
+        var dataArr = {"page": 1};
+        var areaBig = common.getJsonData('api/bossApi/service/serviceTypeList', '', dataArr);
+        $.each(areaBig.datalist, function (index, item) {
+            $("#fuwudalei select").append('<option value="' + item.id + '">' + item.title + '</option>');
+
+        });
+        form.render();
+
+        //收集表格选中项
+        function collectSelcet(elm) {
+            var btnType = elm.attr('data-type');
+            if (btnType === '0') {
+                var tableID = elm.attr('data-table'),
+                        inputs = $('#' + tableID).find('input:checked.input-self'),
+                        ids = [];
+                for (var i in inputs) {
+                    if (inputs[i].id) {
+                        ids.push(inputs[i].id + ',' + inputs[i].alt + ',' + inputs[i].align)
+                    }
+                }
+                if (ids.length === 0) {
+                    return 0;
+                } else {
+                    return ids;
+                }
+            } else {
+                var id = elm.parents('tr').find('input').attr('id');
+                sessionStorage.setItem('tableID', id);
+                return 1;
+            }
+        }
+
+        //结账
+        $(document).on('click', '.js_checkout', function () {
+            var flag = collectSelcet($(this));
+            if (flag) {
+                var amount = 0;
+                var checkoutOrders = [];
+                if (flag == '1') {
+                    //点击单个结账时
+                    var paymentid = $(this).attr('paymentid');
+                    var businessid = $(this).attr('businessid');
+                    var amount = $(this).attr('paybleprice');
+                    var checkoutOrders = [{"paymentid": paymentid, "businessid": businessid}];
+                } else {
+                    //选择多个结账时
+                    for (var i = 0; i < flag.length; i++) {
+                        var ids = flag[i].split(',');
+                        checkoutOrders.push({"paymentid": ids[0], "businessid": ids[1]});
+                        amount += parseInt(ids[2]);
+                    }
+                }
+                layer.prompt({
+                            title: '结账',
+                            formType: 2,
+                            shadeClose: true
+                        },
+                        function (content, index) {
+                            var dataArr = {
+                                "adminid": 1,
+                                "remarks": content,
+                                "amount": amount,
+                                "ids": checkoutOrders
+                            }
+                            console.log(dataArr);
+                            var getJSON = common.getJsonData('api/bossApi/checkbilllog/overbill', '', dataArr);//商家结账
+                            console.log(getJSON);
+                            if (getJSON["code"] == 1) {
+                                layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                                    localStorage.removeItem("adduser");
+                                    var index = parent.layer.getFrameIndex(window.name);
+                                    parent.layer.close(index);
+                                    window.parent.location.reload();
+                                });
+                            } else {
+                                layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                                    history.go(-1);
+                                });
+                            }
+                            return false;
+                            layer.close(index);
+                        });
+            } else {
+                layer.msg('至少勾选一个哇！');
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

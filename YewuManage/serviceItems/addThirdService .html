@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>添加事项</title>
+        <meta name="renderer" content="webkit">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="format-detection" content="telephone=no">
+        <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all" />
+        <link rel="stylesheet" href="../../css/global.css" media="all">        
+    </head>
+    <body>
+        <div style="margin: 15px;">			
+            <fieldset class="layui-elem-field">
+                <legend>添加第三方服务</legend>
+                <div class="layui-field-box">
+                    <form class="layui-form" action="">	
+                        <table class="layui-table">
+                            <tr><th class="self-form-title">事项图标：</th>
+                                <td>                               
+                                    <div class="site-demo-upload">
+                                        <img id="LAY_demo_upload" src="../../images/upimg.png">
+                                        <div class="site-demo-upbar">
+                                          <input name="file" class="layui-upload-file self-layui-upload-file" id="test" type="file">
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr><th class="self-form-title">事项名称：</th>
+                                <td>                               
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="title" lay-verify="title|required" autocomplete="off" placeholder="请输入事项名称" class="layui-input self-form-input">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr><th>事项编号：</th>
+                                <td>                               
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="number" lay-verify="number|required" autocomplete="off" placeholder="请输入事项编号" class="layui-input self-form-input">
+                                    </div>
+                                </td>
+                            </tr>                        
+                            <tr><th>服务大类：</th>
+                                <td>                               
+                                    <div class="layui-input-inline self-form-input">                                        
+                                        <select name="dalei" lay-verify="required">
+                                            <option value="">—— 请选择 ——</option>
+                                            <option value="服务大类1">服务大类1</option>
+                                            <option value="服务大类2">服务大类2</option>                                          
+                                        </select>                                       
+                                    </div>
+                                </td>
+                            </tr>                           
+                            <tr><th>办理须知：</th>
+                                <td>                               
+                                    <div class="layui-input-block edit_box self-edit-margin">
+                                        <textarea class="layui-textarea layui-hide" name="content" lay-verify="content|required" id="LAY_demo_editor"></textarea>
+                                    </div>
+                                </td>
+                            </tr>											
+                        </table>                       
+                        <div class="layui-input-block self-btn-return">
+                            <button class="layui-btn" lay-submit="" lay-filter="demo1">保存</button>                           
+                        </div>                       
+                    </form>
+
+                </div>
+            </fieldset>	
+        </div>
+        <script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+        <script type="text/javascript" src="../../js/config.js"></script>
+        <script>
+            layui.use(['form', 'layedit', 'laydate', 'common', 'upload'], function () {
+                var $ = layui.jquery,
+                        form = layui.form(),
+                        layer = layui.layer,
+                        layedit = layui.layedit,
+                        common = layui.common,
+                        laydate = layui.laydate;
+
+                //创建一个编辑器
+                var editIndex = layedit.build('LAY_demo_editor');
+                //非添加的时候就根据id回填信息
+                var orderid = common.getUrlParam("id");
+                if (orderid != null) {
+                    $.ajax({  
+                        
+                        url: "http://221.10.2.222:5680/api/wx/News/"+orderid+"/0",
+                        type: "get",
+                        dataType: "json",
+                        success: function (data) {
+                            $("input[name='title']").attr("value",data.title);
+                            $("input[name='number']").attr("value",data.id);
+                            $("#LAY_demo_editor").val(data.content);
+                        }
+                    });
+                }  
+                
+                //图片上传              
+                layui.upload({
+                  url: 'http://221.10.2.222:5680/api/wx/Files?filetypekey=W3siZGVzYyI6ICIiLCJtb2R1bGUiOjEwMDYsInJlbGF0ZWlkIjowLCJyZW1hcmsiOiAiIiwic2l6ZSI6ICIiLCAidGltZSI6ICIifV0='//上传接口
+                  ,success: function(res){ //上传成功后的回调
+                    console.log(res);
+                  }
+                });
+                
+                //自定义验证规则
+                form.verify({
+                    title: function (value) {                       
+                        if (value.length < 5) {
+                            return '标题不能为空且不小于5';
+                        }
+                    },
+                    number: function (value) {
+                        if (value.length < 5) {
+                            return '编号不能为空且不小于5';
+                        }
+                    },
+                    dalei: function (value) {
+                        alert(value);
+                        if (value.length < 5) {
+                            return '请选择大类';
+                        }
+                    },                  
+                    content: function (value) {
+                        layedit.sync(editIndex);
+                        var contentvalue = layedit.getContent(editIndex);
+                        if (contentvalue.length < 5) {
+                            return '内容不能为空且不小于5';
+                        }
+                    }
+                });
+                //监听提交
+                form.on('submit(demo1)', function (data) {                 
+                                   
+                    layer.alert('提交的数据：' + JSON.stringify(data.field), {
+                    });
+                    return false;
+                });               
+            });
+        </script>
+    </body>
+</html>

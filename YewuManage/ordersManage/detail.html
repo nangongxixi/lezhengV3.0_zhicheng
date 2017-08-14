@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>工单详情</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+
+    <!--富文本编辑器
+    <script src="../../plugins/ckeditor/ckeditor.js"></script>
+    <script src="../../plugins/ckeditor/samples/js/sample.js"></script>
+    -->
+</head>
+
+<body>
+<div style="margin: 15px;">
+    <span id="items-list1"></span>
+    <fieldset class="layui-elem-field" id="huifu-box" style="display:none">
+        <legend id="titl"></legend>
+        <table class="layui-table">
+            <tr>
+                <td><textarea style="width:100%;height:100px" id="TextArea1" cols="20" rows="2" class="ckeditor"></textarea></td>
+            </tr>
+        </table>
+        <div class="self-btn-return">
+            <button class="layui-btn layui-btn-big btn-send" id="sendorder"><i class="fa fa-send-o" data-icon="fa-reply"
+                                                                               aria-hidden="true"></i> 发送
+            </button>
+        </div>
+    </fieldset>
+</div>
+<a href="javascript:history.go(-1);" class="return-go"><i class="fa fa-reply" data-icon="fa-reply"
+                                                          aria-hidden="true"></i> 返回</a>
+
+<script id="orderHandle1" type="text/html">
+    <fieldset class="layui-elem-field">
+        <legend>工单详情</legend>
+        <div class="layui-field-box">
+            <table class="layui-table">
+                <tr>
+                    <th class="self-form-title">来件标题：</th>
+                    <td>{{ d.worklisttitle}}</td>
+                </tr>
+                <tr>
+                    <th>来件编号：</th>
+                    <td>{{ d.worklistcode}}</td>
+                </tr>
+                <tr>
+                    <th>来件人：</th>
+                    <td>{{ d.sender}}</td>
+                </tr>
+                <tr>
+                    <th>来件时间：</th>
+                    <td>{{ d.sendtime}}</td>
+                </tr>
+                <tr>
+                    <th>事件详情：</th>
+                    <td class="self-content-img">
+                        {{ d.details}}
+                    </td>
+                </tr>
+                <tr>
+                    <th>相关图片：</th>
+                    <td class="suoluetu">
+                        {{# if(d.imglist.length>0){ }}
+                        {{# layui.each(d.imglist, function(index, item){ }}
+                        <img src="{{ item}}">
+                        {{# }) }}
+                        {{# }else{ }}
+                        <img src="../../upload/0.jpg">
+                        {{# } }}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </fieldset>
+    {{#  if(d.replyid === '1'){ }}
+    <fieldset class="layui-elem-field">
+        <legend>回复详情</legend>
+        <div class="layui-field-box">
+            <table class="layui-table">
+                <tr>
+                    <th class="self-form-title">回复时间：</th>
+                    <td>{{ d.replytime}}</td>
+                </tr>
+                <tr>
+                    <th>回复内容：</th>
+                    <td>{{ d.replycontent}}</td>
+                </tr>
+            </table>
+    </fieldset>
+    {{#  } }}
+</script>
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+   // var editor = CKEDITOR.replace('TextArea1');//实例化富文本编辑框
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('serviceIndex'),
+                orderID = common.getUrlParam("id"),
+                replyID = common.getUrlParam("replyid"),//事项id
+                layer = layui.layer;
+        common.saveTabIndex('serviceIndex');
+        common.init();
+        common.layTime(); //时间选择
+        common.saveTabIndex('businessMangeaIndex');
+
+        //给标题赋值
+        var typeid = common.getUrlParam('typeid');
+        if (typeid == 0) {
+            $("#titl").html("意见回复");
+            $("#huifu-box").css("display", "block");
+        } else {
+            $("#titl").html("售后回复");
+            $("#huifu-box").css("display", "block");
+        }
+
+        //图片放大
+        $(document).on('click', '.suoluetu img', function () {
+            layer.open({
+                type: 1,
+                title: false,
+                closeBtn: 0,
+                area: ['700'],
+                skin: 'layui-layer-nobg', //没有背景色
+                shadeClose: true,
+                content: '<img src="' + $(this).attr("src") + '">'
+            });
+        });
+
+        //是显示回复还是显示详情
+        var replyid = common.getUrlParam('replyid');
+        if (replyid == 0) {
+            $("#huifu-box").css("display", "block");
+        } else {
+            $("#huifu-box").css("display", "none");
+        }
+
+        //0
+        var dataArr = {"id": orderID}
+        var getJson = common.getJsonData('api/bossApi/order/workOrderDetail', '', dataArr);
+        getJson.data["replyid"] = replyID;
+        var tplid = document.getElementById('orderHandle1'),
+                viewid = document.getElementById('items-list1');
+        var getTpl = tplid.innerHTML;
+        laytpl(getTpl).render(getJson.data, function (html) {
+            viewid.innerHTML = html;
+            element.init();
+        });
+
+        $("#sendorder").on('click', function () {
+            //var editorcontent = editor.document.getBody().getHtml();//获取富文本编辑框的值
+            var editorcontent = $("#TextArea1").val();
+            var dataArr = {
+                "workorderid": orderID,
+                "replycontent": editorcontent
+            };
+            var getJSON = common.getJsonData('api/bossApi/order/workOrderReply', '', dataArr);
+
+            //console.log(dataArr);
+           // console.log(getJSON);
+           // return false;
+
+            if (getJSON["code"] == 1) {
+                layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                    localStorage.removeItem("addshangjia");
+                    localStorage.removeItem("textarea");
+                    location.href = "index.html";
+                });
+            } else {
+                layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                    // history.go(-1);
+                });
+            }
+            return false;
+        });
+
+        $(document).on('click', '.self-cursor', function () {
+            parent.layer.closeAll();
+        });
+
+    });
+
+</script>
+</body>
+</html>
+

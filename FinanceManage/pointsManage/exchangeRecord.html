@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>兑换记录</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/table.css"/>
+    <style>
+        .table-title {
+            height: 50px;
+            line-height: 50px;
+            padding-left: 20px;
+            border: 1px solid #ddd;
+            border-bottom: 0;
+            font-size: 14px;
+        }
+
+        .site-table {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+<div style="margin: 15px;">
+    <div class="layui-tab layui-tab-card">
+        <div class="layui-tab-item layui-show">
+            <div class="admin-main">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>积分商城</legend>
+                </fieldset>
+                <blockquote class="layui-elem-quote">
+                    <form class="layui-form" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="width:auto">状态</label>
+
+                            <div class="layui-input-inline">
+                                <select name="status">
+                                    <option value="">—— 请选择 ——</option>
+                                    <option value="0">未发货</option>
+                                    <option value="1">已发货</option>
+                                </select>
+                            </div>
+                            <label class="layui-form-label" style="width:auto">类型</label>
+
+                            <div class="layui-input-inline">
+                                <select name="type">
+                                    <option value="">—— 请选择 ——</option>
+                                    <option value="1001">优惠卷</option>
+                                    <option value="1002">虚拟卡</option>
+                                    <option value="1003">实物</option>
+                                </select>
+                            </div>
+                            <label class="layui-form-label" style="width:auto">兑换时间</label>
+
+                            <div class="layui-input-inline" style="width: 90px;">
+                                <input class="layui-input" placeholder="开始日" name="begintime" id="LAY_demorange_s1">
+                            </div>
+                            <div class="layui-input-inline" style="width: 90px;">
+                                <input class="layui-input" placeholder="截止日" name="endtime" id="LAY_demorange_e1">
+                            </div>
+                            <label class="layui-form-label" style="width:auto">价格区间</label>
+
+                            <div class="layui-input-inline" style="width: 82px;">
+                                <input type="text" name="minprice" placeholder="￥" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                            <div class="layui-form-mid">-</div>
+                            <div class="layui-input-inline" style="width: 82px;">
+                                <input type="text" name="maxprice" placeholder="￥" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                            <button class="layui-btn layui-btn-warm" lay-submit="" lay-filter="sear1">搜索</button>
+                            <button type="reset" class="layui-btn layui-btn-primary reset1">重置</button>
+                        </div>
+                    </form>
+                </blockquote>
+            </div>
+            <div class="layui-field-box">
+                <div class="table-title">兑换记录</div>
+                <span id="items-list1"></span>
+
+                <div class="admin-table-page">
+                    <div id="page1" class="page"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="layer-begin" style="display:none">
+    <form action=""></form>
+    <div class="layui-form-item"><label class="layui-form-label">发货方式</label>
+
+        <div class="layui-input-inline"><input type="text" name="antudate" readonly="" autocomplete="off"
+                                               class="layui-input" placeholder=""></div>
+    </div>
+    <div class="layui-form-item"><label class="layui-form-label">邮件编号</label>
+
+        <div class="layui-input-inline"><input type="text" name="antudate" readonly="" autocomplete="off"
+                                               class="layui-input" placeholder=""></div>
+    </div>
+    <div class="layui-form-item">
+        <button class="layui-btn">提交</button>
+        <button class="layui-btn">取消</button>
+    </div>
+</div>
+<!--订单对账-->
+<script id="orderHandle1" type="text/html">
+    <table class="site-table table-hover" style="margin-bottom: 50px !important;">
+        <thead>
+        <tr>
+            <th>兑换时间</th>
+            <th>编号</th>
+            <th>名称</th>
+            <th>类型</th>
+            <th>价格</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# layui.each(d.datalist, function(index, item){ }}
+        <tr id="order4">
+            <td class="title">{{ item.createtime }}</td>
+            <td>{{ item.number }}</td>
+            <td>{{ item.productname }}</td>
+            <td>{{ item.producttypename }}</td>
+            <td>{{ item.price }}</td>
+            <td>{{ item.statuname }}</td>
+            <td>
+        <span class="layui-breadcrumb" lay-separator="|">
+            <a href="goodsDetail.html?exchangeid={{ item.exchangeid }}" class="js_tab1_preview">详情</a>
+            {{# if(item.producttype == '1003' ){ }}
+                {{# if(item.status == '0' ){ }}
+                    <a href="javascript:;" class="js_tab1_begin" exchangeid="{{item.exchangeid}}">发货</a>
+                {{# } }}
+            {{# } }}
+
+            <input type="hidden" data-id="{{item.id}}">
+        </span>
+            </td>
+        </tr>
+        {{# }); }}
+        </tbody>
+    </table>
+</script>
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                pointsIndex = localStorage.getItem('pointsIndex'),
+                orderID = common.getUrlParam("id"),
+                layer = layui.layer;
+        common.saveTabIndex('pointsIndex');
+        common.init();
+        common.layTime(); //时间选择
+
+        /* ------------------------------------------------------------- 数据列表显示 ---------------------------------------------------------------- */
+
+        //重置 、 搜索 、列表
+        getJSONData(1, '');
+        $(".reset1").on('click', function () {
+            getJSONData(1, '');
+        });
+        form.on('submit(sear1)', function (data) {
+            var dataArr = {
+                "type": data.field.type,
+                "status": data.field.status,
+                "minprice": parseInt(data.field.minprice),
+                "maxprice": parseInt(data.field.maxprice),
+                "begintime": data.field.begintime,
+                "endtime": data.field.endtime,
+                "pageindex": 1
+            };
+            console.log(dataArr)
+            getJSONData(1, dataArr);
+            return false;
+        });
+
+        /* ------------------------------------------------------------- 数据MODEL ---------------------------------------------------------------- */
+
+        function getJSONData(typeid, dataArr) {
+            var dataArray = dataArr || {"pageindex": 1};
+            common.getJsonData('api/bossApi/exchang/getlist', typeid, dataArray); //优惠卷库列表
+            return false;
+        }
+
+        var layer_html = '  <div class="layer-begin">' +
+                '<form action=""></form>' +
+                '<div class="layui-form-item">' +
+                '<label class="layui-form-label">发货方式</label>' +
+                '<div class="layui-input-inline" style="width: 240px;">' +
+                '<input type="text" name="sendMode" autocomplete="off" class="layui-input" placeholder="">' +
+                '</div>' +
+                '</div>' +
+                '<div class="layui-form-item">' +
+                '<label class="layui-form-label">邮件编号</label>' +
+                '<div class="layui-input-inline" style="width: 240px;">' +
+                '<input type="text" name="zipCode" autocomplete="off" class="layui-input" placeholder="">' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+
+        //发货
+        $(document).on('click', '.js_tab1_begin', function () {
+            var id = $(this).siblings('input').attr('data-id');
+            var obj = $(this);
+            layer.open({
+                type: 1,
+                area: ['420px', '210px'],
+                shadeClose: true,
+                title: '发货信息',
+                content: layer_html,
+                btn: ['提交', '取消'],
+                btn1: function (index, layero) {
+                    var exchangeid = obj.attr('exchangeid');
+                    var dataArr = {
+                        "typename": document.getElementsByName('sendMode')[0].value,
+                        "zipcode": document.getElementsByName('zipCode')[0].value,
+                        "exchangeid": exchangeid
+                    };
+                    var getJSON = common.getJsonData('api/bossApi/exchang/delivery', '', dataArr);
+                    //console.log(dataArr);
+                    //console.log(getJSON);
+                    //return false;
+                    if (getJSON["code"] == 1) {
+                        layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                            localStorage.removeItem("deids");
+                            localStorage.removeItem("productdata");
+                            localStorage.removeItem("addCoupon_form");
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                           // window.parent.location.reload();
+                            location.href="exchangerecord.html";
+                        });
+                    } else {
+                        layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                            history.go(-1);
+                        });
+                    }
+                    return false;
+
+                    //layer.msg('提交成功')
+                    layer.close(index)
+                }
+            });
+        });
+
+    });
+</script>
+</body>
+</html>

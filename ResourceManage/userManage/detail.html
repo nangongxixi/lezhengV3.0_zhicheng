@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>用户详情</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+<fieldset class="layui-elem-field">
+    <legend>用户详情</legend>
+    <div class="layui-field-box">
+        <table class="layui-table" id="items-list5"></table>
+        <!--操作日志-->
+        <table class="layui-table">
+            <tr>
+                <td>
+                    <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                        <ul class="layui-tab-title">
+                            <li class="layui-this">会员权益</li>
+                            <li>优惠券</li>
+                            <li>乐豆商城</li>
+                            <li>注册信息</li>
+                            <li>备注</li>
+                        </ul>
+                        <div class="layui-tab-content" style="padding:0">
+                            <div class="layui-tab-item layui-show">
+                                <div class="chengzhangzhi">
+                                    <span>会员头衔：<span class="user-detail-tag" id="touxian">0</span></span>
+                                    <span style="padding-left:150px">成长值：<span class="user-detail-tag"
+                                                                               id="chengzhangzhi">0</span></span>
+                                </div>
+                                <fieldset class="layui-elem-field layui-field-title">
+                                    <legend>成长值记录</legend>
+                                </fieldset>
+                                <span id="items-list1"></span>
+
+                                <div class="admin-table-page">
+                                    <div id="page1" class="page"></div>
+                                </div>
+                            </div>
+                            <div class="layui-tab-item">
+                                <div class="chengzhangzhi">
+                                    <span>优惠券数量：<span class="user-detail-tag" id="youhuiquan">0</span> 张</span>
+                                </div>
+                                <fieldset class="layui-elem-field layui-field-title">
+                                    <legend>优惠券列表</legend>
+                                </fieldset>
+                                <span id="items-list2"></span>
+
+                                <div class="admin-table-page">
+                                    <div id="page2" class="page"></div>
+                                </div>
+                            </div>
+                            <div class="layui-tab-item">
+                                <span style="position: absolute;width: 100px;line-height: 60px;margin-left: 20px;">乐豆值: <span
+                                        class="user-detail-tag" id="ledouzhi">0</span></span>
+
+                                <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                                    <ul class="layui-tab-title right"
+                                        style="width:200px !important; margin-bottom: 15px; margin-right: 10px">
+                                        <li class="layui-this">积分记录</li>
+                                        <li>兑换记录</li>
+                                    </ul>
+                                    <div class="layui-tab-content">
+                                        <div class="layui-tab-item layui-show">
+                                            <span id="items-list3"></span>
+
+                                            <div id="page3" class="page"></div>
+                                        </div>
+                                        <div class="layui-tab-item">
+                                            <span id="items-list4"></span>
+
+                                            <div id="page4" class="page"></div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="layui-tab-item">
+                                <div class="chengzhangzhi-kong"></div>
+                                注册时间：<span id="registertime" style="color:red">0</span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;注册来源：<span id="registerorigin" style="color:red">0</span>
+                            </div>
+                            <div class="layui-tab-item">
+                                <div class="chengzhangzhi-kong"></div>
+                                <span id="blackreason"></span>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div class="self-btn-return self-user-btn-return">
+            <button class="layui-btn layui-btn-big" id="return"><i class="fa fa-reply" data-icon="fa-reply"
+                                                                   aria-hidden="true"></i> 返回
+            </button>
+        </div>
+    </div>
+</fieldset>
+
+<!---会员详情-->
+<script id="orderHandle5" type="text/html">
+    <tr>
+        <th class="self-form-title">头像：</th>
+        <td class="suoluetu">
+            {{# if(d.data.username == null){ }}
+            <img src="../../upload/0.jpg">
+            {{# }else{ }}
+            <img src="{{d.data.imgurl}}">
+            {{# } }}
+        </td>
+    </tr>
+    <tr>
+        <th>乐政号：</th>
+        <td>{{# if(d.data.username == null){ }}/{{# }else{ }}{{d.data.username}}{{# } }}</td>
+    </tr>
+    <tr>
+        <th>手机号：</th>
+        <td>{{ d.data.phonenumber}}</td>
+    </tr>
+    <tr>
+        <th>昵称：</th>
+        <td>{{ d.data.nickname}}</td>
+    </tr>
+    <tr>
+        <th>性别：</th>
+        <td class="self-content-img">{{# if(d.data.sex == 1){ }}男{{# }else{ }}女{{# } }}</td>
+    </tr>
+    <tr>
+        <th>常驻地址：</th>
+        <td class="self-content-img">
+            {{# if(d.data.address == null){ }}/{{# }else{ }}{{d.data.address}}{{# } }}
+
+        </td>
+    </tr>
+    <tr>
+        <th>邮箱：</th>
+        <td class="self-content-img">
+            {{# if(d.data.emailadd == null){ }}/{{# }else{ }}{{d.data.emailadd}}{{# } }}
+        </td>
+    </tr>
+    <tr>
+        <th>关注标签：</th>
+        <td class="self-content-img">
+            {{# if(d.data.tagsname == null || d.data.tagsname == ''){ }}/{{# }else{ }}{{d.data.tagsname}}{{# } }}
+        </td>
+    </tr>
+    <tr>
+        <th>操作：</th>
+        <td class="suoluetu">
+            <a href="../../ordersmanage/ordersHandle/index.html">
+                <button class="layui-btn layui-btn-small">查看订单</button>
+            </a>
+            <button class="layui-btn layui-btn-small zixunjl" orderid="{{ d.data.userid}}">查看咨询记录</button>
+        </td>
+    </tr>
+</script>
+
+<!---会员权益-->
+<script id="orderHandle1" type="text/html">
+    <table class="site-table table-hover self-site-table-tab">
+        <thead>
+        <tr>
+            <th>时间</th>
+            <th>事件</th>
+            <th>获取</th>
+            <th>消费</th>
+            <th>余额</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# layui.each(d.datalist, function(index, item){ }}
+        <tr>
+            <td>{{ item.occurrencetime }}</td>
+            <td>{{ item.eventdescription }}</td>
+            <td>{{ item.gain }}</td>
+            <td>{{ item.pay }}</td>
+            <td>{{ item.balance }}</td>
+        </tr>
+        {{# }); }}
+        </tbody>
+    </table>
+</script>
+
+<!---优惠券-->
+<script id="orderHandle2" type="text/html">
+    <table class="site-table table-hover self-site-table-tab">
+        <thead>
+        <tr>
+            <th>编号</th>
+            <th>名称</th>
+            <th>类型</th>
+            <th>有效期</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# layui.each(d.datalist, function(index, item){ }}
+        <tr>
+            <td>{{ item.code }}</td>
+            <td>{{ item.title && item.title.length>18?item.title.substring(0, 18)+
+                "...":item.title }}
+            </td>
+            <td>{{ item.rule }}</td>
+            <td>{{ item.validityperiod }}</td>
+            <td>{{ item.usingstate }}</td>
+            <td style="width:8%">
+                            <span class="layui-breadcrumb" lay-separator=" " orderid="{{ item.couponid }}">
+                                <a href="javascript:;" title="详情"><i class="fa fa-file-text-o"
+                                                                     aria-hidden="true"></i></a>
+                            </span>
+            </td>
+        </tr>
+        {{# }); }}
+        </tbody>
+    </table>
+</script>
+
+<!--- 乐豆商城->积分记录 -->
+<script id="orderHandle3" type="text/html">
+    <table class="site-table table-hover self-site-table-tab">
+        <thead>
+        <tr>
+            <th>时间</th>
+            <th>事件</th>
+            <th>积分变更</th>
+            <th>余额</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# layui.each(d.datalist, function(index, item){ }}
+        <tr>
+            <td>{{ item.occurrencetime }}</td>
+            <td>{{ item.eventdescription && item.eventdescription.length>18?item.eventdescription.substring(0, 18)+
+                "...":item.eventdescription }}
+            </td>
+            <td>{{ item.changenumber }}</td>
+            <td>{{ item.balance }}</td>
+        </tr>
+        {{# }); }}
+        </tbody>
+    </table>
+</script>
+
+<!--- 乐豆商城->兑换记录 -->
+<script id="orderHandle4" type="text/html">
+    <table class="site-table table-hover self-site-table-tab">
+        <thead>
+        <tr>
+            <th>兑换时间</th>
+            <th>编号</th>
+            <th>名称</th>
+            <th>类型</th>
+            <th>价格</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# layui.each(d.datalist, function(index, item){ }}
+        <tr>
+            <td>{{ item.exchangetime }}</td>
+            <td>{{ item.code }}</td>
+            <td>{{ item.title && item.title.length>18?item.title.substring(0, 18)+
+                "...":item.title }}
+            </td>
+            <td>{{ item.type }}</td>
+            <td>{{ item.price }}</td>
+            <td>{{ item.stauts }}</td>
+            <td style="width:8%">
+                            <span class="recordtan" lay-separator=" " id="{{ item.exchangerecordid }}">
+                                <a href="javascript:;" title="详情"><i class="fa fa-file-text-o"
+                                                                     aria-hidden="true"></i></a>
+                            </span>
+            </td>
+        </tr>
+        {{# }); }}
+        </tbody>
+    </table>
+</script>
+
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+                var form = layui.form(),
+                        layer = layui.layer,
+                        layedit = layui.layedit,
+                        laydate = layui.laydate,
+                        $ = layui.jquery,
+                        laytpl = layui.laytpl,
+                        element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                        laypage = layui.laypage,
+                        common = layui.common,
+                        formInStorage = layui.formInStorage,
+                        apiUrl = common.apiUrl,
+                        editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                        serviceIndex = localStorage.getItem('userindex'),
+                        orderID = common.getUrlParam("id"),
+                        layer = layui.layer;
+                common.saveTabIndex('userindex');
+                common.init();
+                common.layTime(); //时间选择
+
+                var userid = JSON.parse(localStorage.getItem("user"));
+                //获取userid
+                if(userid!=null){
+                    var userid = userid.staffid;
+                }
+
+                /* ------------------------------------------------------------- 数据详情显示 ---------------------------------------------------------------- */
+
+                //详情数据
+                alluser(5, '');
+                function alluser(typeid, dataArr) {
+                    var dataArray = dataArr || {"id": orderID};
+                    var getJSON = common.getJsonData('api/bossApi/users/usersDetail', '', dataArray);
+                    if (getJSON.data.memberinfo) {
+                        $("#touxian").html(getJSON.data.memberinfo[0].title);
+                    }
+                    $("#chengzhangzhi").html(getJSON.data.currvalue);
+                    $("#registertime").html(getJSON.data.registertime);
+                    if (getJSON.data.registerorigin == null) {
+                        $("#registerorigin").html('平台注册');
+                    } else {
+                        $("#registerorigin").html(getJSON.data.registerorigin);
+                    }
+                    $("#blackreason").html(getJSON.data.blackreason);
+                    $("#ledouzhi").html(getJSON.data.happybeans);
+                    //标签名称处理
+                    var tagsGetJSON = common.getJsonData('api/bossApi/property/tagList', '', '');
+                    if (getJSON.data.interest) {
+                        for (var j = 0; j < getJSON.data.interest.length; j++) {
+                            var dd = getJSON.data.interest;
+                            getJSON.data.tagsname = '';
+                            for (var i = 0; i < dd.length; i++) {
+                                $.each(tagsGetJSON.data, function (index, item) {
+                                    if (dd[i].code == item.tagsid) {
+                                        getJSON.data.tagsname += item.name + ' / ';
+                                    }
+                                });
+                            }
+                            getJSON.data.tagsname = getJSON.data.tagsname.substring(0, getJSON.data.tagsname.length - 2);//去掉最后一个/
+                        }
+                    }
+
+                    //映射模版
+                    var tplid = document.getElementById('orderHandle' + typeid),
+                            viewid = document.getElementById('items-list' + typeid);
+                    var getTpl = tplid.innerHTML;
+                    layui.laytpl(getTpl).render(getJSON, function (html) {
+                        viewid.innerHTML = html;
+                        element.init();
+                    });
+                }
+
+                //会员权益，优惠券，乐豆商城
+                for (var e = 1; e < 5; e++) {
+                    if (e == 1) {
+                        APIname = 'api/bossApi/users/usersGrowthRecord';
+                    }
+                    if (e == 2) {
+                        APIname = 'api/bossApi/users/usersCoupon';
+                    }
+                    if (e == 3) {
+                        APIname = 'api/bossApi/users/usersMemberRecord';
+                    }
+                    if (e == 4) {
+                        APIname = 'api/bossApi/users/usersMemberExchangeRecord';
+                    }
+                    var dataArray = {"id": orderID, "page": 1};
+                    var getJSON = common.getJsonData(APIname, e, dataArray);
+                    if (e == 2) {
+                        $("#youhuiquan").html(getJSON.count);
+                    }
+                    /*
+                    if (e == 3) {
+                        $("#ledouzhi").html(getJSON.count);
+                    }
+                    */
+                }
+
+                /* ------------------------------------------------------------- 其他操作 ---------------------------------------------------------------- */
+
+                //弹出咨询记录
+                $(document).on('click', '.zixunjl', function () {
+                    var orderid = $(this).attr("id");
+                    layer.open({
+                        type: 2,
+                        title: '咨询记录',
+                        shadeClose: true,
+                        shade: 0.8,
+                        area: ['800px', '85%'],
+                        content: 'messagerecords.html?id=' + orderID //iframe的url
+                    });
+                });
+
+                //图片放大
+                $(document).on('click', '.suoluetu img', function () {
+                    layer.open({
+                        type: 1,
+                        title: false,
+                        closeBtn: 0,
+                        area: ['700'],
+                        skin: 'layui-layer-nobg', //没有背景色
+                        shadeClose: true,
+                        content: '<img src="' + $(this).attr("src") + '">'
+                    });
+                });
+
+                //选项卡切换
+                $('.site-demo-active').on('click', function () {
+                    var othis = $(this), type = othis.data('type');
+                    active[type] ? active[type].call(this, othis) : '';
+                });
+
+                //弹出优惠券详情
+                $(document).on('click', '.layui-breadcrumb', function () {
+                    var orderid = $(this).attr("orderid");
+                    layer.open({
+                        type: 2,
+                        title: '优惠券详情',
+                        shadeClose: true,
+                        shade: 0.8,
+                        area: ['85%', '80%'],
+                        content: 'items.html?id=' + orderid //iframe的url
+                    });
+                });
+
+                //弹出积分商城详情
+                $(document).on('click', '.recordtan', function () {
+                    var id = $(this).attr("id");
+                    layer.open({
+                        type: 2,
+                        title: '积分商城详情',
+                        shadeClose: true,
+                        shade: 0.8,
+                        area: ['85%', '80%'],
+                        content: '../../FinanceManage/pointsmanage/goodsdetail.html?commodityid=' + id
+                    });
+                });
+
+
+                $(document).on('click', '.self-cursor', function () {
+                    alert($(this).parent().parent().parent().attr("orderid"));
+                    parent.layer.closeAll();
+                });
+
+                $("#return").on('click', function () {
+                    history.go(-1);
+                });
+
+            }
+    );
+
+
+</script>
+</body>
+</html>
+

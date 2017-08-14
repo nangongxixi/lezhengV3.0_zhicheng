@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>乐政3.0业务支撑系统</title>
+    <link rel="stylesheet" href="plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="css/login.css"/>
+</head>
+
+<body class="beg-login-bg">
+<div class="beg-login-box self-box-shadow">
+    <header>
+        <h1>乐政3.0业务支撑系统</h1>
+    </header>
+    <div class="beg-login-main">
+        <form action="" class="layui-form" method="post" id="login">
+            <div class="layui-form-item selef-layui-form-item">
+                <label class="beg-login-icon">
+                    <i class="layui-icon">&#xe612;</i>
+                </label>
+                <input type="text" name="username" lay-verify="userName|required" autocomplete="off"
+                       placeholder="这里输入登录名" class="layui-input self-layui-input">
+            </div>
+            <div class="layui-form-item selef-layui-form-item">
+                <label class="beg-login-icon">
+                    <i class="layui-icon">&#xe642;</i>
+                </label>
+                <input type="password" name="password" lay-verify="password|required" autocomplete="off"
+                       placeholder="这里输入密码" class="layui-input self-layui-input">
+            </div>
+            <div class="layui-form-item selef-layui-form-item">
+                <div class="beg-pull-right">
+                    <button class="layui-btn layui-btn-primary self-layui-btn self-layui-input" type="submit"
+                            lay-submit="" lay-filter="login">
+                        登录
+                    </button>
+                </div>
+            </div>
+            <!-- <button class="layui-btn layui-btn-normal" id="upload">保存</button>-->
+        </form>
+        <div><img src="images/logo.png" class="logo-img"></div>
+    </div>
+    <footer>
+        <p>Powser by © 四川智美高科</p>
+    </footer>
+</div>
+
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                ordersIndex = localStorage.getItem('ordersIndex'),
+                orderID = common.getUrlParam("id"),
+                layer = layui.layer;
+        common.saveTabIndex('ordersIndex');
+        common.init();
+        common.layTime(); //时间选择
+
+        //避免input被刷新清空
+        formInStorage.init({
+            formElem: '#login',
+            formSession: 'login'
+        });
+
+        form.on('submit(login)', function (data) {
+            var array = {"username": data.field.username, "password": data.field.password}
+            var getJSON = common.getJsonData('api/bossApi/users/staffLogin', '', array);
+            // console.log(getJSON)
+            // console.log(getJSON)
+            // alert(getJSON.data.roleid)
+            // return false;
+            if (getJSON.msg == '登录失败') {
+                layer.msg(getJSON.msg, {icon: 2, time: 1500});
+                return false;
+            } else {
+                getJSON.data.password = data.field.password
+                localStorage.setItem("user", JSON.stringify(getJSON.data));
+                location.href = 'index.html';
+                return false
+            }
+            return false;
+        });
+    });
+</script>
+</body>
+
+</html>

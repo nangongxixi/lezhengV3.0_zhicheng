@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>添加事项</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../css/webuploader.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <style>
+        .file {
+            position: relative;
+            height: 100px;
+            filter: alpha(opacity:0);
+            opacity: 0;
+            width: 100px
+        }
+
+        #localImag {
+            position: absolute;
+            top: 0
+        }
+    </style>
+</head>
+<body>
+<div style="margin: 15px;">
+    <fieldset class="layui-elem-field">
+        <legend></legend>
+        <div class="layui-field-box">
+            <form class="layui-form" action="" id="addshangjia">
+                <table class="layui-table">
+                    <tr>
+                        <th class="self-form-title">商家名称：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="text" name="businessname" maxlength="50" lay-verify="required"
+                                       autocomplete="off"
+                                       placeholder="请输入商家名称" class="layui-input self-form-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>商家编号：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="text" name="businesscode" lay-verify="required|number" autocomplete="off"
+                                       placeholder="请输入商家编号" class="layui-input self-form-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>子账户前缀：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="text" name="accountprefix" lay-verify="required" maxlength="6" autocomplete="off"
+                                       placeholder="请输入商家子账户前缀" class="layui-input self-form-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>联系人姓名：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="text" name="contacts" lay-verify="required" autocomplete="off"
+                                       placeholder="请输入联系人姓名" class="layui-input self-form-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>联系人电话：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="text" name="phonenumber" lay-verify="required" autocomplete="off"
+                                       placeholder="请输入联系人电话" maxlength="11" class="layui-input self-form-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>商家地址：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="text" name="address" maxlength="200" lay-verify="required"
+                                       autocomplete="off"
+                                       placeholder="请输入商家地址" class="layui-input self-form-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>工商登记号：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="text" name="registrationnum" lay-verify="required|gongshang"
+                                       autocomplete="off"
+                                       placeholder="请输入工商登记号" class="layui-input self-form-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>开户行：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="text" name="bank" lay-verify="required" autocomplete="off"
+                                       placeholder="请输入开户行" class="layui-input self-form-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>开户账号：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="text" name="bankaccount" maxlength="50" lay-verify="required"
+                                       autocomplete="off"
+                                       placeholder="请输入开户账号" class="layui-input self-form-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>公司简介：</th>
+                        <td>
+                            <div class="layui-input-block edit_box self-edit-margin">
+                                <textarea class="layui-textarea self-form-input" maxlength="300" name="introduce"
+                                          lay-verify="required|content"
+                                        ></textarea>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr id="fuwus">
+                        <th>开通部门：</th>
+                        <td>
+                            <div class="layui-btn layui-btn-primary" id="chooseitem"><i class="fa fa-id-card-o"
+                                                                                        aria-hidden="true"></i>&nbsp;&nbsp;管理
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="self-form-title">商家图片：<span class="wenzism">(图片比例16:9)</span></th>
+                        <td>
+                            <div class="site-demo-upload">
+                                <img id="LAY_demo_upload" src="">
+
+                                <div class="site-demo-upbar">
+                                    <div id="localImag"><img id="preview" src="../../images/upimg.png" width="100"
+                                                             height="100" style="display: block"></div>
+                                    <input type="file" name="file" id="doc" onchange="javascript:setImagePreview();"
+                                           class="file">
+                                    <input type="hidden" name="module" lay-verify="required" autocomplete="off"
+                                           class="layui-input" placeholder="" value="7012">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <div class="layui-btn-group self-btn-return">
+                    <button class="layui-btn" lay-submit="" lay-filter="additems" status="10">保存</button>
+                    <button class="layui-btn layui-btn-primary" lay-submit="" lay-filter="additems" status="20">上线
+                    </button>
+                </div>
+            </form>
+        </div>
+    </fieldset>
+</div>
+<a href="javascript:history.go(-1);" class="return-go"><i class="fa fa-reply" data-icon="fa-reply"
+                                                          aria-hidden="true"></i></a>
+
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('serviceIndex'),
+                orderID = common.getUrlParam("id"),
+                type = parseInt(common.getUrlParam("type")),
+                itemID = common.getUrlParam("itemid"),//事项id
+                layer = layui.layer;
+        common.saveTabIndex('serviceIndex');
+        //common.init();
+        common.layTime(); //时间选择
+
+        //避免input被刷新清空
+        formInStorage.init({
+            formElem: '#addshangjia',
+            formSession: 'addshangjia'
+        });
+        $("textarea[name='introduce']").on('keyup', function () {
+            localStorage.setItem("textarea", $(this).html());
+        })
+
+        if (type == 1) {
+            $("#fuwus").hide();//服务商只是企业服务使用，无需选择开通部门
+        }
+
+        //修改的时候
+        if (orderID != null) {
+            //修改时，获取行政审批的详情
+            $("legend").html('编辑商家');
+            var getJSON = common.getJsonData('api/bossApi/businessMain/businessMainDetail', '', {"id": orderID});
+            $("input[name='businessname']").attr("value", getJSON.data.businessname);
+            $("input[name='businesscode']").attr("value", getJSON.data.businesscode);
+            $("input[name='accountprefix']").attr("value", getJSON.data.accountprefix);
+            $("input[name='contacts']").attr("value", getJSON.data.contacts);
+            $("input[name='phonenumber']").attr("value", getJSON.data.phonenumber);
+            $("input[name='address']").attr("value", getJSON.data.address);
+            $("input[name='registrationnum']").attr("value", getJSON.data.registrationnum);
+            $("input[name='bank']").attr("value", getJSON.data.bank);
+            $("input[name='bankaccount']").attr("value", getJSON.data.banknumber);
+            $("textarea[name='introduce']").val(getJSON.data.brief);
+            if(getJSON.data.imgurl){
+                $("#preview").attr("src",getJSON.data.imgurl);
+            }else{
+                $("#preview").attr("src",'../../images/0.jpg');
+            }
+            var ids='';
+            for (var i = 0; i < getJSON.data.departmentlist.length; i++) {
+                ids += getJSON.data.departmentlist[i].departmentid + ',' ;
+            }
+            ids = ids.substr(0,ids.length-1);
+            localStorage.setItem("departmentIds", ids);//保存部门列表
+            var idsarray = localStorage.getItem('departmentIdsbeifen');
+            if(idsarray){
+                localStorage.setItem("departmentIds", idsarray);//保存部门列表
+                localStorage.removeItem('departmentIdsbeifen');
+            }
+        } else {
+            $("legend").html('添加商家');
+        }
+
+        //自定义验证规则
+        form.verify({
+            number: function (value) {
+                if (!value.match(/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{1,100}$/g)) {
+                    return '商家编号为1-100位数字+字母';
+                }
+            },
+            gongshang: function (value) {
+                if (!value.match(/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{10,15}$/g)) {
+                    return '工商登记号为10-15位数字+字母';
+                }
+            },
+            rev: function (value) {
+                if (!value.match(/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{1,6}$/g)) {
+                    return '子账户前缀为1-6位数字+字母';
+                }
+            },
+            tel: function (value) {
+                if (!value.match(/13[0123456789]{1}\d{8}|14[5|7]\d{8}|15[12356789]\d{8}|18[0256789]\d{8}/g)) {
+                    return '请输入正确的手机号';
+                }
+            },
+            /*
+             content: function (value) {
+             layedit.sync(editIndex);
+             var contentvalue = layedit.getContent(editIndex);
+             if (contentvalue.length < 5) {
+             return '公司简介不能为空且不小于5';
+             }
+             }
+             */
+        });
+
+        //弹出添加库
+        $("#chooseitem").on("click", function () {
+            layer.open({
+                type: 2,
+                title: '服务区域',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['95%', '80%'],
+                content: 'partentlibiray.html' //iframe的url
+            });
+        });
+        //console.log(localStorage)
+
+        //监听提交
+        form.on('submit(additems)', function (data) {
+            var imgguid = '';
+            $.ajax({
+                url: apiUrl + 'api/files/fileupload',
+                type: 'POST',
+                cache: false,
+                data: new FormData($('#addshangjia')[0]),
+                processData: false,
+                contentType: false,
+                async: false
+            }).done(function (res) {
+                imgguid = res.data;
+            }).fail(function (res) {
+            });
+            $(this).attr('disabled', "true");
+            var status = $(this).attr('status');
+            //请求接口
+            var guide = $("textarea[name='introduce']").val();//获取富文本编辑框的值
+            var idsarray = localStorage.getItem('departmentIds');
+            if (type == 0 && idsarray == null) {
+                layer.msg('请选择商家');
+                return false;
+            }
+            if (idsarray) {
+                var idsarr = idsarray.split(',');
+                //var dd = [];
+                var dd = '';
+                for (var i = 0; i < idsarr.length; i++) {
+                    var cc = idsarr[i].split('/');
+                    //console.log(cc);
+                    //dd.push({"departmentid": parseInt(cc[0]), "departmentname": cc[1]});
+                    dd += parseInt(cc[0]) + ',';
+                }
+                dd = dd.substr(0, dd.length - 1);
+            }
+
+            if (orderID != null) {
+                var dataArr = {
+                    "businessid": orderID,
+                    "businessname": data.field.businessname,
+                    "businesscode": data.field.businesscode,
+                    "contacts": data.field.contacts,
+                    "phonenumber": data.field.phonenumber,
+                    "address": data.field.address,
+                    "registrationnum": data.field.registrationnum,
+                    "accountprefix": data.field.accountprefix,
+                    "bank": data.field.bank,
+                    "bankaccount": data.field.bankaccount,
+                    "brief": guide,
+                    "type": type,
+                    "images": imgguid,
+                    "departmentlist": dd,
+                    "status": status
+                };
+            } else {
+                var dataArr = {
+                    "businessid": 0,
+                    "businessname": data.field.businessname,
+                    "businesscode": data.field.businesscode,
+                    "contacts": data.field.contacts,
+                    "phonenumber": data.field.phonenumber,
+                    "address": data.field.address,
+                    "registrationnum": data.field.registrationnum,
+                    "accountprefix": data.field.accountprefix,
+                    "bank": data.field.bank,
+                    "bankaccount": data.field.bankaccount,
+                    "brief": guide,
+                    "type": type,
+                    "images": imgguid,
+                    "departmentlist": dd,
+                    "status": status
+                };
+            }
+            var getJSON = common.getJsonData('api/bossApi/businessMain/businessMainEdit', '', dataArr);
+            //console.log(dataArr);
+            // console.log(getJSON);
+            // return false;
+            if (getJSON["code"] == 1) {
+                layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                    localStorage.removeItem("addshangjia");
+                    localStorage.removeItem("textarea");
+                    localStorage.removeItem("departmentIds");
+                    location.href = "index.html";
+                });
+            } else {
+                //return false;
+                layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+
+                });
+            }
+            return false;
+        });
+
+
+
+    });
+
+
+    //下面用于图片上传预览功能
+    function setImagePreview(avalue) {
+        var docObj = document.getElementById("doc");
+        var imgObjPreview = document.getElementById("preview");
+        if (docObj.files && docObj.files[0]) {
+            //火狐下，直接设img属性
+            imgObjPreview.style.display = 'block';
+            imgObjPreview.style.width = '100px';
+            imgObjPreview.style.height = '100px';
+            //imgObjPreview.src = docObj.files[0].getAsDataURL();
+
+            //火狐7以上版本不能用上面的getAsDataURL()方式获取，需要一下方式
+            imgObjPreview.src = window.URL.createObjectURL(docObj.files[0]);
+        } else {
+            //IE下，使用滤镜
+            docObj.select();
+            var imgSrc = document.selection.createRange().text;
+            var localImagId = document.getElementById("localImag");
+            //必须设置初始大小
+            localImagId.style.width = "100px";
+            localImagId.style.height = "100px";
+            //图片异常的捕捉，防止用户修改后缀来伪造图片
+            try {
+                localImagId.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
+                localImagId.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = imgSrc;
+            } catch (e) {
+                alert("您上传的图片格式不正确，请重新选择!");
+                return false;
+            }
+            imgObjPreview.style.display = 'none';
+            document.selection.empty();
+        }
+        return true;
+    }
+</script>
+</body>
+</html>

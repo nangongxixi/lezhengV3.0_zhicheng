@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>banner管理</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/table.css"/>
+    <style>
+        .table-title {
+            height: 50px;
+            line-height: 50px;
+            padding-left: 20px;
+            border: 1px solid #ddd;
+            border-bottom: 0;
+            font-size: 14px;
+        }
+
+        .site-table {
+            margin: 0;
+        }
+
+        .site-text {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+<div style="margin: 15px;">
+    <div class="layui-tab layui-tab-card" lay-filter="financeIndex">
+        <ul class="layui-tab-title">
+            <li>banner管理</li>
+        </ul>
+        <div class="layui-tab-content">
+            <!--订单对账-->
+            <div class="layui-tab-item">
+                <div class="admin-main">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width:auto">位置</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="location">
+                                        <option value="">—— 请选择 ——</option>
+                                        <option value="1001">发现首页</option>
+                                        <option value="1002">首页第一个</option>
+                                        <option value="1003">首页第二个</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label" style="width:auto">状态</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="status">
+                                        <option value="">—— 请选择 ——</option>
+                                        <option value="10">已下线</option>
+                                        <option value="20">待上线</option>
+                                        <option value="30">上线中</option>
+                                    </select>
+                                </div>
+                                <button class="layui-btn" lay-submit="" lay-filter="sear1"
+                                        style="margin-left: 40px">搜索
+                                </button>
+                                <button type="reset" class="layui-btn layui-btn-primary reset1">重置</button>
+                            </div>
+                        </form>
+                    </blockquote>
+                </div>
+                <div class="layui-field-box">
+                    <div class="site-text">
+                        <a href="edit.html" class="layui-btn" style="color: #fff;">新建</a>
+                    </div>
+                    <span id="items-list1"></span>
+                    <div class="admin-table-page">
+                        <div id="page1" class="page"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--订单对账-->
+<script id="orderHandle1" type="text/html">
+    <table class="site-table table-hover">
+        <thead>
+        <tr>
+            <th>编号</th>
+            <th>名称</th>
+            <th>位置</th>
+            <th>装态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# layui.each(d.datalist, function(index, item){ }}
+        <tr id="order4">
+            <td style="display:none">{{ item.bannerid}}</td>
+            <td class="title">{{# if(item.code == '' || item.code == null){ }}/{{# }else{ }} {{ item.code }} {{# } }}</td>
+            <td>{{# if(item.name == '' || item.name == null){ }}/{{# }else{ }} {{ item.name }} {{# } }}</td>
+            <td>{{# if(item.location == 1001){ }}发现首页{{# }else if(item.location == 1002){ }}首页第一个{{# }else if(item.location == 1003){ }}首页第二个{{# }else{ }}暂无{{# } }}</td>
+            <td>{{# if(item.status == 10){ }}已下线{{# }else if(item.status == 20){ }}待上线{{# }else if(item.status == 30){ }}已上线{{# }else{ }}暂无{{# } }}</td>
+            <td style="display:none">{{ item.imgguid}}</td>
+            <td style="display:none">{{ item.linkurl}}</td>
+            <td style="display:none">{{ item.imgurl}}</td>
+            <td>
+        <span class="layui-breadcrumb" lay-separator="|">
+             {{# if(item.status == 10 || item.status == 20){ }} <!--已置顶-->
+                <a href="detail.html?bannerid={{ item.bannerid }}" class="detail1">详情</a>
+                 <a href="edit.html?bannerid={{ item.bannerid }}" class="detail1">编辑</a>
+                <a href="javascript:;" title="上线" class="newsset" bannerid="{{ item.bannerid }}" status="30">上线</a>
+            {{# }else{ }} <!--已关闭-->
+                <a href="detail.html?bannerid={{ item.bannerid }}" class="detail1">详情</a>
+                <a href="javascript:;" title="下线" class="newsset" bannerid="{{ item.bannerid }}" status="10">下线</a>
+            {{# } }}
+        </span>
+            </td>
+        </tr>
+        {{# }); }}
+        </tbody>
+    </table>
+</script>
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                financeIndex = localStorage.getItem('financeIndex'),
+                orderID = common.getUrlParam("id"),
+                layer = layui.layer;
+        common.saveTabIndex('financeIndex');
+        common.init();
+        common.layTime(); //时间选择
+
+        /* ------------------------------------------------------------- 数据列表显示 ---------------------------------------------------------------- */
+        //重置 、 搜索 、列表
+
+        getJSONData(1, '');
+        $(".reset1").on('click', function () {
+            getJSONData(1, '');
+        });
+        form.on('submit(sear1)', function (data) {
+            var dataArr = {
+                "status": parseInt(data.field.status),
+                "location":data.field.location,
+                "pageindex": 1
+            };
+            //console.log(dataArr);
+            getJSONData(1, dataArr);
+            return false;
+        });
+
+        /* ------------------------------------------------------------- 数据MODEL ---------------------------------------------------------------- */
+
+        function getJSONData(typeid, dataArr) {
+            var dataArray = dataArr || {"pageindex": 1};
+            common.getJsonData('api/bossApi/banner/bannerSearch', typeid, dataArray);
+        }
+
+        /* ------------------------------------------------------------- 操作 ---------------------------------------------------------------- */
+
+        $(document).on('click', '.newsset', function () {
+            var status = $(this).attr('status');
+            var bannerid = $(this).attr('bannerid');
+            var dataArr = {"id": bannerid, "status":status};
+            var getJSON = common.getJsonData('api/bossApi/banner/bannerSet', '', dataArr);
+            //console.log(getJSON);
+            //return false;
+            if (getJSON["code"] == 1) {
+                layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                    window.location.reload();
+                });
+            } else {
+                layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                    window.location.reload();
+                });
+            }
+        });
+
+        $(document).on('click', '.detail1', function () {
+            var index = $(this).parent().parent().siblings();
+            //拼凑数组并放到localhost，以便详情使用
+            var arr = {
+                "bannerid": index.eq(0).html(),
+                "code": index.eq(1).html(),
+                "name": index.eq(2).html(),
+                "location": index.eq(3).html(),
+                "status": index.eq(4).html(),
+                "imgguid": index.eq(5).html(),
+                "linkurl": index.eq(6).html(),
+                "imgurl":index.eq(7).html()
+            };
+            localStorage.setItem("interactionmanageDetail", JSON.stringify(arr));
+            location.href = "detail.html";
+        });
+
+
+    });
+</script>
+</body>
+</html>

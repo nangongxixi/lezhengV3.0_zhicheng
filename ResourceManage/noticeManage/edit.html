@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>编辑信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../css/webuploader.css">
+    <!--富文本编辑器-->
+    <script src="../../plugins/ckeditor/ckeditor.js"></script>
+    <script src="../../plugins/ckeditor/samples/js/sample.js"></script>
+</head>
+<body>
+<div style="margin: 15px;">
+    <fieldset class="layui-elem-field" id="edit_message">
+        <legend></legend>
+        <div class="layui-field-box">
+            <form class="layui-form" action="" id="addnotice">
+                <table class="layui-table">
+                    <tr>
+                        <th>标题：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="hidden" name="noticid">
+                                <input type="text" name="title" maxlength="50" lay-verify="required" autocomplete="off"
+                                       placeholder="请输入用户名" class="layui-input self-form-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr style="display:none" id="addnoticedata">
+                        <th>有效期至：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" placeholder="自定义日期格式"
+                                       onclick="layui.laydate({elem: this,  min: laydate.now(), istime: true, format: 'YYYY-MM-DD'})"
+                                       name="validitytime" lay-verify="">
+                            </div>
+                        </td>
+                    </tr>
+                    <!--
+                    <tr>
+                        <th class="self-form-title">推送版本：</th>
+                        <td>
+                            <div class="layui-input-inline" id="version">
+                                <input name="version[person]" lay-skin="primary" datastorage="version" title="个人版"
+                                       type="checkbox" fid="0">
+                                <input name="version[buniess]" lay-skin="primary" datastorage="version" title="企业版"
+                                       type="checkbox" fid="1">
+                            </div>
+                        </td>
+                    </tr>
+                    -->
+                    <tr>
+                        <th>内容：</th>
+                        <td>
+                            <textarea id="TextArea1" cols="20" rows="2" class="ckeditor"></textarea>
+                        </td>
+                    </tr>
+                </table>
+                <div style="margin: 0 auto; text-align: center">
+                    <span class="layui-btn layui-btn-primary testview">预览</span>
+                    <button class="layui-btn" lay-submit="" lay-filter="addnotic" status="1">保存</button>
+                    <button class="layui-btn" lay-submit="" lay-filter="addnotic" status="0">发布</button>
+                </div>
+            </form>
+        </div>
+    </fieldset>
+</div>
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+    var editor = CKEDITOR.replace('TextArea1');//实例化富文本编辑框
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('userindex'),
+                version = common.getUrlParam("version"),
+                type = common.getUrlParam("type"),
+                noticeid = common.getUrlParam("noticeid"),
+                mody = common.getUrlParam("mody"),
+                itemID = common.getUrlParam("itemid"),//事项id
+                layer = layui.layer;
+        common.saveTabIndex('userindex');
+        //common.init();
+        common.layTime(); //时间选择
+
+        console.log(localStorage.getItem("noticmanager"))
+
+        //根据type判断是客户端的新增还是商家版的新增
+        if (type == 0) {
+            $("#addnoticedata").show();
+        }
+        var arr = JSON.parse(localStorage.getItem("noticmanager"));
+        //如果是客户端新建消息，就只显示发布
+        if (type == 1) {
+            $("button[status='1']").css("display", "none")
+        }
+        //非添加的时候就根据id回填信息
+        $("legend").html("添加信息");
+        if (mody != null) {
+            $("legend").html("编辑信息");
+            $("input[name='title']").attr("value", arr.param1);
+            $("input[name='validitytime']").attr("value", arr.param6)
+            $("input[name='noticid']").attr("value", noticeid);
+            if (arr.version) {
+                //选中版本
+                for (var i = 0; i < arr.version.length; i++) {
+                    $("#version input[fid='" + arr.version[i] + "']").next().addClass("layui-form-checked");
+                    $("#version input[fid='" + arr.version[i] + "']").attr("checked", "checked");
+                }
+            }
+            editor.setData(arr.param5);//给富文本区域赋值
+        }
+        form.render();
+
+        /*
+        //避免input被刷新清空
+        formInStorage.init({
+            formElem: '#addnotice',
+            formSession: 'addnotice'
+        });
+        //保存富文本的输入
+        $(window.frames["yuliu_ckedtor"].document).find("body").on('keyup', function () {
+            var textval = $(window.frames["yuliu_ckedtor"].document).find("body").html();
+            localStorage.setItem("textarea", textval);
+            console.log(localStorage.getItem("textarea"));
+        })
+        $(window.frames["yuliu_ckedtor"].document).find("body").html(arr.content);
+        */
+
+        //自定义验证规则
+        form.verify({
+            content: function (value) {
+                layedit.sync(editIndex);
+                var contentvalue = layedit.getContent(editIndex);
+                if (contentvalue.length < 5) {
+                    return '内容不能为空且不小于5';
+                }
+            }
+        });
+
+        //弹出预览
+        $(document).on('click', '.testview', function () {
+            //新增时添加当前输入到local
+            var title = $("input[name='title']").val();
+            var content = editor.document.getBody().getHtml();//获取富文本编辑框的值
+            var validitytime = $("input[name='validitytime']").val();
+            if (mody == null) {
+                var arr = {
+                    "param1": title,
+                    "type": '',
+                    "param11": 10,
+                    "modifytime": '',
+                    "param5": content,
+                    "param6": validitytime,
+                    "version": version,
+                    "tags": '',
+                    "noticid": '0'
+                };
+                localStorage.setItem("noticmanager", JSON.stringify(arr));
+            }
+            layer.open({
+                type: 2,
+                title: '预览信息',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['750px', '85%'],
+                content: 'reviews.html?testview=1&type=' + type //iframe的url
+                //content: 'resourcemanage/noticeManage/detail.html?id='+orderid //iframe的url
+            });
+        });
+
+
+        //监听提交
+        form.on('submit(addnotic)', function (data) {
+            $(this).attr('disabled', "true");
+            var status = $(this).attr('status');//状态
+            //请求接口
+            var guide = editor.document.getBody().getHtml();//获取富文本编辑框的值
+            var APIname = 'api/bossApi/notice/noticeEdit';
+
+            if (mody == '1') {
+                var dataArr = {
+                    "noticeid": data.field.noticid,
+                    "title": data.field.title,
+                    "content": guide,
+                    "validitytime": data.field.validitytime,
+                    "status": status,
+                    "type": type
+                };
+            } else {
+                var dataArr = {
+                    "noticeid": 0,
+                    "title": data.field.title,
+                    "content": guide,
+                    "validitytime": data.field.validitytime,
+                    "status": status,
+                    "version": version,
+                    "type": type
+                };
+            }
+            var getJSON = common.getJsonData(APIname, '', dataArr);
+            //console.log(guide);
+            //console.log(dataArr);
+            // console.log(getJSON);
+            //return false;
+            if (getJSON["code"] == 1) {
+                layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                    localStorage.removeItem("addnotice");
+                    localStorage.removeItem("noticmanager");
+                    localStorage.removeItem("textarea");
+                    location.href = "index.html";
+                });
+            } else {
+                layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+
+                });
+            }
+            return false;
+        });
+
+    });
+
+    //发布
+    function fabu(obj) {
+        var orderid = obj.getAttribute("id");
+        layer.confirm('您想把第' + orderid + '上线？', {
+            btn: ['确定', '取消']
+        }, function () {
+        });
+    }
+
+</script>
+</body>
+</html>

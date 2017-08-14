@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>优惠券管理</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/table.css"/>
+    <style>
+        .table-title {
+            height: 50px;
+            line-height: 50px;
+            padding-left: 20px;
+            border: 1px solid #ddd;
+            border-bottom: 0;
+            font-size: 14px;
+        }
+
+        .site-table {
+            margin: 0;
+        }
+
+        .site-text {
+            margin-bottom: 20px;
+        }
+
+        .layui-form-label {
+            width: 60px;
+        }
+    </style>
+</head>
+
+<body>
+<div style="margin: 15px;">
+    <div class="layui-tab layui-tab-card" lay-filter="financeIndex">
+        <ul class="layui-tab-title">
+            <li>已领取</li>
+            <li>优惠券库</li>
+            <li>发放优惠券</li>
+        </ul>
+        <div class="layui-tab-content">
+            <!--已领取-->
+            <div class="layui-tab-item">
+                <div class="admin-main">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width:auto">类型</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="coupontype">
+                                        <option value="">—— 请选择 ——</option>
+                                        <option value="0">直减</option>
+                                        <option value="1">满减</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label" style="width:auto">状态</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="couponstatus">
+                                        <option value="">—— 请选择 ——</option>
+                                        <option value="0">未使用</option>
+                                        <option value="1">已使用</option>
+                                        <option value="2">已过期</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label" style="width:auto">发放方式</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="getway">
+                                        <option value="">—— 请选择 ——</option>
+                                        <option value="1">系统发放</option>
+                                        <option value="2">扫码领取</option>
+                                        <option value="3">填电话领取</option>
+                                        <option value="4">积分兑换</option>
+                                        <option value="5">等级福利</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label" style="width:auto">有效时长</label>
+
+                                <div class="layui-input-inline" style="width: 80px;">
+                                    <input type="text" name="mintime" placeholder="日" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+                                <div class="layui-form-mid">至</div>
+                                <div class="layui-input-inline" style="width: 80px;">
+                                    <input type="text" name="maxtime" placeholder="日" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+                                <button class="layui-btn layui-btn-warm" lay-submit="" lay-filter="sear1">搜索</button>
+                                <button type="reset" class="layui-btn layui-btn-primary reset1">重置</button>
+                            </div>
+                        </form>
+                    </blockquote>
+                </div>
+                <div class="layui-field-box">
+                    <div class="table-title">已领取</div>
+                    <span id="items-list1"></span>
+
+                    <div class="admin-table-page">
+                        <div id="page1" class="page"></div>
+                    </div>
+                </div>
+            </div>
+            <!--优惠券库-->
+            <div class="layui-tab-item">
+                <div class="admin-main">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width:auto">类型</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="coupontype">
+                                        <option value="">—— 请选择 ——</option>
+                                        <option value="0">直减</option>
+                                        <option value="1">满减</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label" style="width:auto">状态</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="couponstatus">
+                                        <option value="">—— 请选择 ——</option>
+                                        <option value="0">未使用</option>
+                                        <option value="1">已使用</option>
+                                        <option value="2">已过期</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label" style="width:auto">优惠券</label>
+
+                                <div class="layui-input-inline">
+                                    <input type="text" name="keyword" lay-verify="" autocomplete="off"
+                                           placeholder="请输入优惠券名称" class="layui-input">
+                                </div>
+                                <button class="layui-btn layui-btn-warm" lay-submit="" lay-filter="sear2">搜索</button>
+                                <button type="reset" class="layui-btn layui-btn-primary reset2">重置</button>
+                            </div>
+                        </form>
+                    </blockquote>
+                </div>
+                <div class="layui-field-box">
+                    <div class="site-text">
+                        <a href="add.html" class="layui-btn" style="color: #fff;">新建</a>
+                    </div>
+                    <span id="items-list2"></span>
+
+                    <div class="admin-table-page">
+                        <div id="page2" class="page"></div>
+                    </div>
+                </div>
+            </div>
+            <!--发放优惠券-->
+            <div class="layui-tab-item">
+                <div class="layui-field-box">
+                    <div class="site-text">
+                        <a href="grantSystem.html" class="layui-btn" style="color: #fff;">系统发放</a>
+                        <a href="grantQrCode.html" class="layui-btn" style="color: #fff;">扫码领取</a>
+                        <a href="grantTel.html" class="layui-btn" style="color: #fff;">填电话领取</a>
+                        <a href="grantPoints.html" class="layui-btn" style="color: #fff;">积分兑换</a>
+                        <a href="grantLevel.html" class="layui-btn" style="color: #fff;">等级福利</a>
+                    </div>
+                    <span id="items-list3"></span>
+
+                    <div class="admin-table-page">
+                        <div id="page3" class="page"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--已领取-->
+<script id="orderHandle1" type="text/html">
+    <table class="site-table table-hover">
+        <thead>
+        <tr>
+            <th>编号</th>
+            <th>名称</th>
+            <th>类型</th>
+            <th>领取时间</th>
+            <th>有效时长</th>
+            <th>领取人</th>
+            <th>状态</th>
+            <th>发放方式</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# layui.each(d.datalist, function(index, item){ }}
+        <tr id="order4">
+            <td class="title">{{ item.conponcode }}</td>
+            <td>{{ item.couponname }}</td>
+            <td>{{ item.typename }}</td>
+            <td>{{ item.gettime }}</td>
+            <td>{{ item.validtime }}日</td>
+            <td>{{ item.getusername }}</td>
+            <td>{{ item.usingstatename }}</td>
+            <td>{{ item.gettypename }}</td>
+            <td>
+        <span class="layui-breadcrumb" lay-separator="|">
+            <a href="couponDetail.html?couponid={{ item.conponid }}">详情</a>
+        </span>
+            </td>
+        </tr>
+        {{# }); }}
+        </tbody>
+    </table>
+</script>
+<!--优惠券库 -->
+<script id="orderHandle2" type="text/html">
+    <table class="site-table table-hover">
+        <thead>
+        <tr>
+            <th>编号</th>
+            <th>名称</th>
+            <th>类型</th>
+            <th>有效时长</th>
+            <th>上线状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# layui.each(d.datalist, function(index, item){ }}
+        <tr id="">
+            <td class="title">{{ item.number }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{# if(item.type == 0){ }}直减{{# }else{ }}满减{{# } }}</td>
+            <td>{{ item.effectivelength }}</td>
+            <td>{{# if(item.status == 0){ }}未上线{{# }else{ }}已上线{{# } }}</td>
+            <td>
+        <span class="layui-breadcrumb" lay-separator="|">
+              <a href="couponDetail.html?couponlibraryid={{item.couponlibraryid}}" title="详情">详情</a>
+              <a href="add.html?couponlibraryid={{item.couponlibraryid}}">编辑</a>
+            {{# if(item.status == 0){ }}
+            <a href="javascript:;" class="js_outline" status="1" couponlibraryid="{{item.couponlibraryid}}">上线</a>
+            {{# }else{ }}
+            <a href="javascript:;" class="js_outline" status="0" couponlibraryid="{{item.couponlibraryid}}">下线</a>
+            {{# } }}
+
+          </span>
+            </td>
+        </tr>
+        {{# }); }}
+        </tbody>
+    </table>
+</script>
+<!--发放优惠券-->
+<script id="orderHandle3" type="text/html">
+    <table class="site-table table-hover">
+        <thead>
+        <tr>
+            <th>发放编号</th>
+            <th>优惠券名称</th>
+            <th>发放方式</th>
+            <th>发放时间</th>
+            <th>发放数量</th>
+            <th>领取数量</th>
+            <th>剩余数量</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# layui.each(d.datalist, function(index, item){ }}
+        <tr id="">
+            <td class="title">{{ item.conponcode }}</td>
+            <td>{{ item.couponname }}</td>
+            <td>{{ item.gettypename }}</td>
+            <td>{{ item.createtime }}</td>
+            <td>{{# if(item.releasenum==null){ }}/{{# }else{ }}{{item.releasenum}}{{# } }}</td>
+            <td>{{# if(item.getnum==null){ }}/{{# }else{ }}{{item.getnum}}{{# } }}</td>
+            <td>{{ item.releasenum-item.getnum }}</td>
+            <td>
+        <span class="layui-breadcrumb" lay-separator="|">
+              <a href="couponDetail.html?couponlibraryid={{item.conponlibraryid}}">详情</a>
+              <a href="javascript:;" class="getlist" couponroleid="{{item.conponroleid}}">领取名单</a>
+          </span>
+            </td>
+        </tr>
+        {{# }); }}
+        </tbody>
+    </table>
+</script>
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('rolemanage'),
+                orderID = common.getUrlParam("id"),
+                layer = layui.layer;
+        common.saveTabIndex('financeIndex');
+        common.init();
+        common.layTime(); //时间选择
+
+        /* ------------------------------------------------------------- 数据列表显示 ---------------------------------------------------------------- */
+
+
+        //重置 、 搜索 、列表
+        getJSONData(1, '');
+        getJSONData(2, '');
+        getJSONData(3, '');
+        $(".reset1").on('click', function () {
+            getJSONData(1, '');
+        });
+        $(".reset2").on('click', function () {
+            getJSONData(2, '');
+        });
+        form.on('submit(sear1)', function (data) {
+            var dataArr = {
+                "coupontype": data.field.coupontype,
+                "couponstatus": data.field.couponstatus,
+                "getway": data.field.getway,
+                "begintime": data.field.mintime,
+                "endtime": data.field.maxtime,
+                "pageindex": 1
+            };
+            //console.log(dataArr)
+            getJSONData(1, dataArr);
+            return false;
+        });
+        form.on('submit(sear2)', function (data) {
+            var dataArr = {
+                "coupontype": data.field.coupontype,
+                "couponstatus": data.field.couponstatus,
+                "keyword": data.field.keyword,
+                "pageindex": 1
+            };
+            //console.log(dataArr)
+            getJSONData(2, dataArr);
+            return false;
+        });
+
+        /* ------------------------------------------------------------- 数据MODEL ---------------------------------------------------------------- */
+
+        function getJSONData(typeid, dataArr) {
+            var dataArray = dataArr || {"pageindex": 1};
+            if (typeid == 1) {
+                common.getJsonData('api/bossApi/coupon/getlist', typeid, dataArray);//优惠卷领取名单
+            } else if (typeid == 2) {
+                common.getJsonData('api/bossApi/couponlibrary/getlist', typeid, dataArray); //优惠卷库列表
+            } else {
+                common.getJsonData('api/bossApi/couponrole/getrolelist', typeid, dataArray); //优惠卷发放记录列表
+            }
+            return false;
+        }
+
+        /* ------------------------------------------------------------- 搜索列表 ---------------------------------------------------------------- */
+        //区域下拉列表
+        var dataArr = {"id": 0};
+        var areaBig = common.getJsonData('api/bossApi/service/areaSearch', '', dataArr);
+        $.each(areaBig.datalist, function (index, item) {
+            $("#area select").append('<optgroup label="' + item.areaname + '" oid="' + item.areacode + '"></optgroup>');
+            var dataArr = {"id": item.areacode};
+            var areaSmall = common.getJsonData('api/bossApi/service/areaSearch', '', dataArr);
+            for (var i = 0; i < areaSmall.datalist.length; i++) {
+                $("optgroup[oid='" + item.areaid + "']").append('<option value="' + areaSmall.datalist[i].areaid + '">' + areaSmall.datalist[i].areaname + '</option>');
+            }
+        });
+        //商家下拉列表
+        var dataArr = {"page": 1};
+        var areaBig = common.getJsonData('api/bossApi/businessMain/businessMainSearch', '', dataArr);
+        $.each(areaBig.datalist, function (index, item) {
+            $("#shangjia select").append('<option value="' + item.businessid + '">' + item.businessname + '</option>');
+
+        });
+        //服务大类下拉列表
+        var dataArr = {"page": 1};
+        var areaBig = common.getJsonData('api/bossApi/service/serviceTypeList', '', dataArr);
+        $.each(areaBig.datalist, function (index, item) {
+            $("#fuwudalei select").append('<option value="' + item.id + '">' + item.title + '</option>');
+
+        });
+        form.render();
+
+        //收集表格选中项
+        function collectSelcet(elm) {
+            var btnType = elm.attr('data-type');
+            if (btnType === '0') {
+                var tableID = elm.attr('data-table'),
+                        inputs = $('#' + tableID).find('input:checked.input-self'),
+                        ids = [];
+                for (var i in inputs) {
+                    if (inputs[i].id) {
+                        ids.push(inputs[i].id + ',' + inputs[i].alt + ',' + inputs[i].align)
+                    }
+                }
+                if (ids.length === 0) {
+                    return 0;
+                } else {
+                    return ids;
+                }
+            } else {
+                var id = elm.parents('tr').find('input').attr('id');
+                sessionStorage.setItem('tableID', id);
+                return 1;
+            }
+        }
+
+        $(document).on('click', '.js_outline', function () {
+            var obj = $(this);
+            var couponlibraryid = obj.attr("couponlibraryid");
+            var status = obj.attr("status");
+            var dataArr = {"couponlibraryid": couponlibraryid, "status": status};
+            var getJSON = common.getJsonData('api/bossApi/couponlibrary/updatestatus', '', dataArr);
+            //console.log(getJSON);
+            //return false;
+            if (getJSON["code"] == 1) {
+                layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                    location.href = "index.html";
+                });
+            }
+            return false;
+        });
+
+        //弹出添加库
+        $(".getlist").on("click", function () {
+            var couponroleid = $(this).attr('couponroleid')
+            layer.open({
+                type: 2,
+                title: '领取名单',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['1400px', '80%'],
+                content: 'getlist.html?couponroleid=' + couponroleid //iframe的url
+            });
+        });
+
+
+    });
+</script>
+</body>
+</html>

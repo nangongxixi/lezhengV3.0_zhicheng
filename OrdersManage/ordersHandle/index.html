@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>订单处理</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/table.css"/>
+</head>
+
+<body>
+<canvas id="myCanvas" height="13px" weight="10px" name="statusStr"></canvas>
+<div style="margin: 15px;">
+    <div class="layui-tab layui-tab-card" lay-filter="ordersIndex">
+        <ul class="layui-tab-title">
+            <li>待分配 <div class="ordercount" id="dfpcount">0</div></li>
+            <li>待接单 <div class="ordercount" id="djdcount">0</div></li>
+            <li>待审核 <div class="ordercount" id="dshcount">0</div></li>
+            <li>申诉中 <div class="ordercount" id="sszcount">0</div></li>
+            <li>待退款 <div class="ordercount" id="dtkcount">0</div></li>
+            <li>手动处理 <div class="ordercount" style="right:-6px !important;" id="sdclcount">0</div></li>
+        </ul>
+        <div class="layui-tab-content">
+            <!--待分配-->
+            <div class="layui-tab-item">
+                <div class="admin-main">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width:auto">订单来源</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="ordersource">
+                                        <option value="">—— 请选择 ——</option>
+                                        <option value="0">APP</option>
+                                        <option value="1">微信</option>
+                                        <option value="2">业务支撑系统</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label">下单时间</label>
+
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="开始日" id="LAY_demorange_s1" name="begintime">
+                                </div>
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="截止日" id="LAY_demorange_e1" name="endtime">
+                                </div>
+                                <label class="layui-form-label">事项名称</label>
+
+                                <div class="layui-input-inline">
+                                    <input type="text" name="searchtext" lay-verify="title" autocomplete="off"
+                                           placeholder="请输入标题" class="layui-input">
+                                </div>
+                                <button class="layui-btn" lay-submit="" lay-filter="sear1"
+                                        style="margin-left: 40px">搜索
+                                </button>
+                                <button type="reset" class="layui-btn layui-btn-primary reset1">重置</button>
+                            </div>
+                        </form>
+                    </blockquote>
+                </div>
+                <div class="layui-field-box">
+                    <div class="site-text">
+                        <button class="layui-btn layui-btn-normal js_allot" data-table="items-list1" data-type="0">派单
+                        </button>
+                    </div>
+                    <table class="site-table table-hover">
+                        <thead>
+                        <tr>
+                            <th><input type="checkbox" id="selected-all1" class="table_selected_all"></th>
+                            <th>产品编号</th>
+                            <th>事项名称</th>
+                            <th>商家名称</th>
+                            <th>下单人</th>
+                            <th>下单时间</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="items-list1"></tbody>
+                    </table>
+                    <div class="admin-table-page">
+                        <div id="page1" class="page"></div>
+                    </div>
+                </div>
+            </div>
+            <!--待接单-->
+            <div class="layui-tab-item">
+                <div class="admin-main">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width:auto">订单来源</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="ordersource">
+                                        <option value="">—— 请选择 ——</option>
+                                        <option value="0">APP</option>
+                                        <option value="1">微信</option>
+                                        <option value="2">业务支撑系统</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label">下单时间</label>
+
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="开始日" id="LAY_demorange_s2" name="begintime">
+                                </div>
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="截止日" id="LAY_demorange_e2" name="endtime">
+                                </div>
+                                <label class="layui-form-label">事项名称</label>
+
+                                <div class="layui-input-inline">
+                                    <input type="text" name="searchtext" lay-verify="title" autocomplete="off"
+                                           placeholder="请输入标题" class="layui-input">
+                                </div>
+                                <button class="layui-btn" lay-submit="" lay-filter="sear2"
+                                        style="margin-left: 40px">搜索
+                                </button>
+                                <button type="reset" class="layui-btn layui-btn-primary reset2">重置</button>
+                            </div>
+                        </form>
+                    </blockquote>
+                </div>
+                <div class="layui-field-box">
+                    <div class="site-text">
+                        <button class="layui-btn layui-btn-warm js_tab2_close closeorder" data-table="items-list2"
+                                data-type="0">
+                            关闭
+                        </button>
+                    </div>
+                    <table class="site-table table-hover">
+                        <thead>
+                        <tr>
+                            <th><input type="checkbox" id="selected-all1" class="table_selected_all"></th>
+                            <th>产品编号</th>
+                            <th>事项名称</th>
+                            <th>商家名称</th>
+                            <th>下单人</th>
+                            <th>下单时间</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="items-list2"></tbody>
+                    </table>
+                    <div class="admin-table-page">
+                        <div id="page2" class="page"></div>
+                    </div>
+                </div>
+            </div>
+            <!--tab 3-->
+            <div class="layui-tab-item">
+                <div class="admin-main">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width:auto">订单来源</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="ordersource">
+                                        <option value="">—— 请选择 ——</option>
+                                        <option value="0">APP</option>
+                                        <option value="1">微信</option>
+                                        <option value="2">业务支撑系统</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label">下单时间</label>
+
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="开始日" id="LAY_demorange_s3" name="begintime">
+                                </div>
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="截止日" id="LAY_demorange_e3" name="endtime">
+                                </div>
+                                <label class="layui-form-label">事项名称</label>
+
+                                <div class="layui-input-inline">
+                                    <input type="text" name="searchtext" lay-verify="title" autocomplete="off"
+                                           placeholder="请输入标题" class="layui-input">
+                                </div>
+                                <button class="layui-btn" lay-submit="" lay-filter="sear3"
+                                        style="margin-left: 40px">搜索
+                                </button>
+                                <button type="reset" class="layui-btn layui-btn-primary reset3">重置</button>
+                            </div>
+                        </form>
+                    </blockquote>
+                </div>
+                <div class="layui-field-box">
+                    <div class="site-text">
+                        <button class="layui-btn layui-btn-normal tongguo" data-table="items-list3" data-type="0">
+                            通过
+                        </button>
+                        <button class="layui-btn layui-btn-danger bohui" data-table="items-list3" data-type="0">
+                            驳回
+                        </button>
+                        <button class="layui-btn layui-btn-warm daishclose" data-table="items-list3" data-type="0">
+                            关闭
+                        </button>
+                    </div>
+                    <table class="site-table table-hover">
+                        <thead>
+                        <tr>
+                            <th><input type="checkbox" id="selected-all1" class="table_selected_all"></th>
+                            <th>产品编号</th>
+                            <th>事项名称</th>
+                            <th>商家名称</th>
+                            <th>下单人</th>
+                            <th>下单时间</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="items-list3"></tbody>
+                    </table>
+                    <div class="admin-table-page">
+                        <div id="page3" class="page"></div>
+                    </div>
+                </div>
+            </div>
+            <!--tab 4-->
+            <div class="layui-tab-item">
+                <div class="admin-main">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width:auto">订单来源</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="ordersource">
+                                        <option value="">—— 请选择 ——</option>
+                                        <option value="0">APP</option>
+                                        <option value="1">微信</option>
+                                        <option value="2">业务支撑系统</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label">下单时间</label>
+
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="开始日" id="LAY_demorange_s4" name="begintime">
+                                </div>
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="截止日" id="LAY_demorange_e4" name="endtime">
+                                </div>
+                                <label class="layui-form-label">事项名称</label>
+
+                                <div class="layui-input-inline">
+                                    <input type="text" name="searchtext" lay-verify="title" autocomplete="off"
+                                           placeholder="请输入标题" class="layui-input">
+                                </div>
+                                <button class="layui-btn" lay-submit="" lay-filter="sear4"
+                                        style="margin-left: 40px">搜索
+                                </button>
+                                <button type="reset" class="layui-btn layui-btn-primary reset4">重置</button>
+                            </div>
+                        </form>
+                    </blockquote>
+                </div>
+                <div class="layui-field-box">
+                    <table class="site-table table-hover">
+                        <thead>
+                        <tr>
+                            <th>产品编号</th>
+                            <th>事项名称</th>
+                            <th>商家名称</th>
+                            <th>下单人</th>
+                            <th>下单时间</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="items-list4"></tbody>
+                    </table>
+                    <div class="admin-table-page">
+                        <div id="page4" class="page"></div>
+                    </div>
+                </div>
+            </div>
+            <!--tab 5-->
+            <div class="layui-tab-item">
+                <div class="admin-main">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width:auto">订单来源</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="ordersource">
+                                        <option value="">—— 请选择 ——</option>
+                                        <option value="0">APP</option>
+                                        <option value="1">微信</option>
+                                        <option value="2">业务支撑系统</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label">下单时间</label>
+
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="开始日" id="LAY_demorange_s5" name="begintime">
+                                </div>
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="截止日" id="LAY_demorange_e5" name="endtime">
+                                </div>
+                                <label class="layui-form-label">事项名称</label>
+
+                                <div class="layui-input-inline">
+                                    <input type="text" name="searchtext" lay-verify="title" autocomplete="off"
+                                           placeholder="请输入标题" class="layui-input">
+                                </div>
+                                <button class="layui-btn" lay-submit="" lay-filter="sear5"
+                                        style="margin-left: 40px">搜索
+                                </button>
+                                <button type="reset" class="layui-btn layui-btn-primary reset5">重置</button>
+                            </div>
+                        </form>
+                    </blockquote>
+                </div>
+                <div class="layui-field-box">
+                    <table class="site-table table-hover">
+                        <thead>
+                        <tr>
+                            <th>产品编号</th>
+                            <th>事项名称</th>
+                            <th>商家名称</th>
+                            <th>下单人</th>
+                            <th>下单时间</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="items-list5"></tbody>
+                    </table>
+                    <div class="admin-table-page">
+                        <div id="page5" class="page"></div>
+                    </div>
+                </div>
+            </div>
+            <!--tab 6-->
+            <div class="layui-tab-item">
+                <div class="admin-main">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width:auto">订单来源</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="ordersource">
+                                        <option value="">—— 请选择 ——</option>
+                                        <option value="0">APP</option>
+                                        <option value="1">微信</option>
+                                        <option value="2">业务支撑系统</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label">下单时间</label>
+
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="开始日" id="LAY_demorange_s6" name="begintime">
+                                </div>
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="截止日" id="LAY_demorange_e6" name="endtime">
+                                </div>
+                                <label class="layui-form-label">事项名称</label>
+
+                                <div class="layui-input-inline">
+                                    <input type="text" name="searchtext" lay-verify="title" autocomplete="off"
+                                           placeholder="请输入标题" class="layui-input">
+                                </div>
+                                <button class="layui-btn" lay-submit="" lay-filter="sear6"
+                                        style="margin-left: 40px">搜索
+                                </button>
+                                <button type="reset" class="layui-btn layui-btn-primary reset6">重置</button>
+                            </div>
+                        </form>
+                    </blockquote>
+                </div>
+                <div class="layui-field-box">
+                    <table class="site-table table-hover">
+                        <thead>
+                        <tr>
+                            <th>产品编号</th>
+                            <th>事项名称</th>
+                            <th>商家名称</th>
+                            <th>下单人</th>
+                            <th>下单时间</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="items-list6"></tbody>
+                    </table>
+                    <div class="admin-table-page">
+                        <div id="page6" class="page"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--待分配-->
+<script id="orderHandle1" type="text/html">
+    {{# layui.each(d.datalist, function(index, item){ }}
+    <tr id="order1">
+        <td><input type="checkbox" class="input-self" id="{{ item.orderid }}"><label for="{{ item.orderid }}"></label>
+        </td>
+        <td>{{ item.ordercode }}</td>
+        <td class="title">{{# if(item.servicecode=='' || item.servicecode == null){ }}一键委托{{# }else{ }}{{
+            item.servicecode }}{{# }}}
+        </td>
+        <td>{{# if(item.businessname=='' || item.businessname == null){ }}/{{# }else{ }}{{ item.businessname }}{{# }}}</td>
+        <td>{{# if(item.username=='' || item.username == null){ }}/{{# }else{ }}{{ item.username }}{{# }}}</td>
+        <td>{{ item.ordertime }}</td>
+        <td>{{ item.orderstatusname }}</td>
+        <td>
+        <span class="layui-breadcrumb" lay-separator="|">
+            <a href="../ordersHandle/detail.html?id={{ item.orderid }}">详情</a>
+            <a href="javascript:;" class="js_allot" data-type="1" orderid="{{ item.orderid }}">派单</a>
+        </span>
+        </td>
+    </tr>
+    {{# }); }}
+</script>
+<!--待接单-->
+<script id="orderHandle2" type="text/html">
+    {{# layui.each(d.datalist, function(index, item){ }}
+    <tr id="order2">
+        <td><input type="checkbox" class="input-self" id="{{ item.orderid }}"><label for="{{ item.orderid }}"></label>
+        </td>
+        <td>{{ item.ordercode }}</td>
+        <td class="title">{{# if(item.servicecode=='' || item.servicecode == null){ }}一键委托{{# }else{ }}{{
+            item.servicecode }}{{# }}}
+        </td>
+        <td>{{# if(item.businessname=='' || item.businessname == null){ }}/{{# }else{ }}{{ item.businessname }}{{# }}}</td>
+        <td>{{# if(item.username=='' || item.username == null){ }}/{{# }else{ }}{{ item.username }}{{# }}}</td>
+        <td>{{ item.ordertime }}</td>
+        <td>{{ item.orderstatusname }}</td>
+        <td>
+        <span class="layui-breadcrumb" lay-separator="|">
+             <a href="../ordersHandle/detail.html?id={{ item.orderid }}">详情</a>
+             <a href="javascript:;" class="jiedan" orderid="{{ item.orderid }}">接单</a>
+             <a href="javascript:;" class="closeorder" data-type="1" orderid="{{ item.orderid }}">关闭</a>
+        </span>
+        </td>
+    </tr>
+    {{# }); }}
+</script>
+<!--待审核-->
+<script id="orderHandle3" type="text/html">
+    {{# layui.each(d.datalist, function(index, item){ }}
+    <tr id="order3">
+        <td><input type="checkbox" class="input-self" id="{{ item.orderid }}"><label for="{{ item.orderid }}"></label>
+        </td>
+        <td>{{ item.ordercode }}</td>
+        <td class="title">{{# if(item.servicecode=='' || item.servicecode == null){ }}一键委托{{# }else{ }}{{
+            item.servicecode }}{{# }}}
+        </td>
+        <td>{{# if(item.businessname=='' || item.businessname == null){ }}/{{# }else{ }}{{ item.businessname }}{{# }}}</td>
+        <td>{{# if(item.username=='' || item.username == null){ }}/{{# }else{ }}{{ item.username }}{{# }}}</td>
+        <td>{{ item.ordertime }}</td>
+        <td>{{ item.orderstatusname }}</td>
+        <td>
+        <span class="layui-breadcrumb" lay-separator="|">
+            <a href="../ordersHandle/detail.html?id={{ item.orderid }}">详情</a>
+             <a href="javascript:;" class="tongguo" orderid="{{ item.orderid }}" data-type="1">通过</a>
+             <a href="javascript:;" class="bohui" orderid="{{ item.orderid }}" data-type="1">驳回</a>
+             <a href="javascript:;" class="daishclose" data-type="1" orderid="{{ item.orderid }}">关闭</a>
+        </span>
+        </td>
+    </tr>
+    {{# }); }}
+</script>
+<!--申诉中-->
+<script id="orderHandle4" type="text/html">
+    {{# layui.each(d.datalist, function(index, item){ }}
+    <tr id="order4">
+        <td>{{ item.ordercode }}</td>
+        <td class="title">{{# if(item.servicecode=='' || item.servicecode == null){ }}一键委托{{# }else{ }}{{
+            item.servicecode }}{{# }}}
+        </td>
+        <td>{{# if(item.businessname=='' || item.businessname == null){ }}/{{# }else{ }}{{ item.businessname }}{{# }}}</td>
+        <td>{{# if(item.username=='' || item.username == null){ }}/{{# }else{ }}{{ item.username }}{{# }}}</td>
+        <td>{{ item.ordertime }}</td>
+        <td>{{ item.orderstatusname }}</td>
+        <td>
+        <span class="layui-breadcrumb" lay-separator="|">
+            <a href="../ordersHandle/detail.html?id={{ item.orderid }}">详情</a>
+            <a href="../ordersHandle/detail.html?id={{ item.orderid }}&chuli=1" class="chuli" data-type="1">处理</a>
+        </span>
+        </td>
+    </tr>
+    {{# }); }}
+</script>
+<!--待退款-->
+<script id="orderHandle5" type="text/html">
+    {{# layui.each(d.datalist, function(index, item){ }}
+    <tr id="order5">
+        <td>{{ item.ordercode }}</td>
+        <td class="title">{{# if(item.servicecode=='' || item.servicecode == null){ }}一键委托{{# }else{ }}{{
+            item.servicecode }}{{# }}}
+        </td>
+        <td>{{# if(item.businessname=='' || item.businessname == null){ }}/{{# }else{ }}{{ item.businessname }}{{# }}}</td>
+        <td>{{# if(item.username=='' || item.username == null){ }}/{{# }else{ }}{{ item.username }}{{# }}}</td>
+        <td>{{ item.ordertime }}</td>
+        <td>{{ item.orderstatusname }}</td>
+        <td>
+        <span class="layui-breadcrumb" lay-separator="|">
+           <a href="../ordersHandle/detail.html?id={{ item.orderid }}&wancheng=1">详情</a>
+           <a href="javascript:;" class="wancheng" data-type="1" orderid="{{ item.orderid }}">完成</a>
+        </span>
+        </td>
+    </tr>
+    {{# }); }}
+</script>
+<!--手动处理	-->
+<script id="orderHandle6" type="text/html">
+    {{# layui.each(d.datalist, function(index, item){ }}
+    <tr id="order6">
+        <td>{{ item.ordercode }}</td>
+        <td class="title">{{# if(item.servicecode=='' || item.servicecode == null){ }}一键委托{{# }else{ }}{{
+            item.servicecode }}{{# }}}
+        </td>
+        <td>{{# if(item.businessname=='' || item.businessname == null){ }}/{{# }else{ }}{{ item.businessname }}{{# }}}</td>
+        <td>{{# if(item.username=='' || item.username == null){ }}/{{# }else{ }}{{ item.username }}{{# }}}</td>
+        <td>{{ item.ordertime }}</td>
+        <td>{{ item.orderstatusname }}</td>
+        <td>
+            <!--1011,1012,1013,1014,1015,1017,1018,1019-->
+        <span class="layui-breadcrumb" lay-separator="|">
+             <a href="../ordersHandle/detail.html?id={{ item.orderid }}">详情</a>
+             <!--取消订单-->
+            {{# if(item.orderstatus == 1001 || item.orderstatus == 1002  || item.orderstatus == 1003  || item.orderstatus == 1004  || item.orderstatus == 1005  || item.orderstatus == 1006  || item.orderstatus == 1007  || item.orderstatus == 1020  || item.orderstatus == 1016){ }}
+                <a href="javascript:;" class="quxiao" data-type="1" orderid="{{ item.orderid }}">取消订单</a>
+            {{# } }}
+             <!--申请退款-->
+             {{# if(item.orderstatus == 10091 || item.orderstatus == 10092){ }}
+                <a href="javascript:;" class="tuikuan" data-type="1" orderid="{{ item.orderid }}">申请退款</a>
+            {{# } }}
+            <!--去评价-->
+            {{# if(item.orderstatus == 10101){ }}
+                <a href="javascript:;" class="pingjia" data-type="1" orderid="{{ item.orderid }}">评价订单</a>
+            {{# } }}
+             <!--申诉-->
+            {{# if(item.orderstatus == 10096){ }}
+                 <a href="../ordersHandle/detail.html?id={{ item.orderid }}&chuli=1" class="chuli" data-type="1">申诉</a>
+            {{# } }}
+            <!--发起售后-->
+            {{# if(item.orderstatus == 10101 || item.orderstatus == 10102){ }}
+                <a href="javascript:;" class="shouhou" data-type="1" orderid="{{ item.orderid }}">发起售后</a>
+            {{# } }}
+        </span>
+        </td>
+    </tr>
+    {{# }); }}
+</script>
+<!--申请退款	-->
+<script id="tuikuan" type="text/html">
+    <div class="layer-begin" style="margin: 15px 0 0 15px">
+        <form action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">退款金额：</label>
+
+                <div class="layui-input-inline" style="width: 240px;">
+                    <input type="text" name="sendMode" autocomplete="off" class="layui-input" placeholder="请填写退款金额">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">账户名称：</label>
+
+                <div class="layui-input-inline" style="width: 240px;">
+                    <input type="text" name="sendMode" autocomplete="off" class="layui-input" placeholder="请填写账户名称">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">开户银行：</label>
+
+                <div class="layui-input-inline" style="width: 240px;">
+                    <input type="text" name="sendMode" autocomplete="off" class="layui-input" placeholder="请填写开户银行">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">银行卡号：</label>
+
+                <div class="layui-input-inline" style="width: 240px;">
+                    <input type="text" name="sendMode" autocomplete="off" class="layui-input" placeholder="请填写银行卡号">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">退款原因：</label>
+
+                <div class="layui-input-inline" style="width: 240px;">
+                    <textarea type="text" name="sendMode" autocomplete="off" class="layui-input" placeholder=""
+                              style="width: 240px;height:100px"></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+</script>
+
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                ordersIndex = localStorage.getItem('ordersIndex'),
+                orderID = common.getUrlParam("id");
+        layer = layui.layer;
+        common.saveTabIndex('ordersIndex');
+        common.init();
+        common.layTime(); //时间选择
+
+        var user = localStorage.getItem("user");
+        if (user) {
+            var userid = JSON.parse(localStorage.getItem("user")).staffid;
+        }
+
+
+        /* ------------------------------------------------------------- 列表显示 ---------------------------------------------------------------- */
+        //重置 、 搜索 、列表
+        getJSONData(1, ''); //待分配
+        getJSONData(2, ''); //待接单
+        getJSONData(3, ''); //待审核
+        getJSONData(4, ''); //申诉中
+        getJSONData(5, ''); //待退款
+        getJSONData(6, ''); //手动处理
+
+        $(".reset1").on('click', function () {
+            getJSONData(1, '');
+        });
+        $(".reset2").on('click', function () {
+            getJSONData(2, '');
+        });
+        $(".reset3").on('click', function () {
+            getJSONData(3, '');
+        });
+        $(".reset4").on('click', function () {
+            getJSONData(4, '');
+        });
+        $(".reset5").on('click', function () {
+            getJSONData(5, '');
+        });
+        $(".reset6").on('click', function () {
+            getJSONData(6, '');
+        });
+
+        /* ------------------------------------------------------------- 操作 ---------------------------------------------------------------- */
+
+        //待分配-派单
+        $(document).on('click', '.js_allot', function () {
+            var flag = collectSelcet($(this));
+            var orderid = $(this).attr('orderid');
+            if (flag) {
+                layer.open({
+                    type: 2,
+                    title: '订单处理-派单',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['1200px', '90%'],
+                    content: 'allot.html?orderid' + orderid
+                });
+            } else {
+                layer.msg('至少勾选一个哇！');
+            }
+        });
+
+        //待接单-接单
+        $(document).on('click', '.jiedan', function () {
+            var obj = $(this);
+            layer.confirm('您确定要接单？', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                var orderid = obj.attr("orderid");
+                var dataArr = {"orderid": orderid, "istakeorder": true};
+                var getJSON = common.getJsonData('api/bossApi/order/ordersEditTakeOrder', '', dataArr);
+                //console.log(getJSON);
+                //return false;
+                if (getJSON["code"] == 1) {
+                    layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                        location.href = 'index.html';
+                    });
+                }
+            });
+            return false;
+        });
+
+        //待接单-关闭
+        $(document).on('click', '.closeorder', function () {
+            var obj = $(this);
+            var flag = collectSelcet($(this));
+            if (flag) {
+                layer.open({
+                    type: 1,
+                    area: ['420px', '310px'],
+                    shadeClose: true,
+                    title: '关闭原因',
+                    content: layer_html,
+                    btn: ['提交', '取消'],
+                    btn1: function (index, layero) {
+                        var orderid = obj.attr('orderid');
+                        var ids = sessionStorage.getItem('tableID');
+                        var dataArr = {
+                            "orderid": ids,
+                            "cancelcause": document.getElementsByName('sendMode')[0].value,
+                            "orderstatus": 1
+                        };
+                        var getJSON = common.getJsonData('api/bossApi/order/updateOrderStatus', '', dataArr);
+                        //  console.log(ids);
+                        // console.log(dataArr);
+                        // console.log(getJSON);
+                        // return false;
+                        if (getJSON["code"] == 1) {
+                            layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                                var index = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(index);
+                                location.href = 'index.html';
+                            });
+                        } else {
+                            layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                                location.href = 'index.html';
+                            });
+                        }
+                        return false;
+                        layer.close(index)
+                    }
+                });
+            } else {
+                layer.msg('至少勾选一个哇！');
+            }
+        });
+
+        //待审核-通过
+        $(document).on('click', '.tongguo', function () {
+            $(this).removeClass("tongguo");
+            var flag = collectSelcet($(this));
+            var ids = sessionStorage.getItem('tableID');
+            var obj = $(this);
+            if (flag) {
+                layer.confirm('您确定要通过？', {
+                    btn: ['确定', '取消'] //按钮
+                }, function () {
+                    var dataArr = {"orderid": ids, "isthroughauditorclose": 1, "reason": ''};
+                    var getJSON = common.getJsonData('api/bossApi/order/ordersEditThroughAudit', '', dataArr);
+                    // console.log(ids);
+                    // console.log(dataArr);
+                    // console.log(getJSON);
+                    // return false;
+                    if (getJSON["code"] == 1) {
+                        layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                            location.href = 'index.html';
+                        });
+                    }
+                });
+            } else {
+                layer.msg('至少勾选一个哇！');
+            }
+            return false;
+        })
+
+        //待审核-驳回
+        $(document).on('click', '.bohui', function () {
+            var obj = $(this);
+            var flag = collectSelcet($(this));
+            var ids = sessionStorage.getItem('tableID');
+            if (flag) {
+                layer.open({
+                    type: 1,
+                    area: ['420px', '310px'],
+                    shadeClose: true,
+                    title: '驳回原因',
+                    content: layer_html,
+                    btn: ['提交', '取消'],
+                    btn1: function (index, layero) {
+                        var dataArr = {
+                            "orderid": ids,
+                            "isthroughauditorclose": 0,
+                            "reason": document.getElementsByName('sendMode')[0].value
+                        };
+                        var getJSON = common.getJsonData('api/bossApi/order/ordersEditThroughAudit', '', dataArr);
+                        //console.log(ids);
+                        // console.log(dataArr);
+                        // console.log(getJSON);
+                        //return false;
+                        if (getJSON["code"] == 1) {
+                            layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                                var index = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(index);
+                                location.href = 'index.html';
+                            });
+                        } else {
+                            layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+
+                            });
+                        }
+                        return false;
+                        layer.close(index)
+                    }
+                });
+            } else {
+                layer.msg('至少勾选一个哇！');
+            }
+        });
+
+        //待审核-关闭
+        $(document).on('click', '.daishclose', function () {
+            var obj = $(this);
+            var flag = collectSelcet($(this));
+            var ids = sessionStorage.getItem('tableID');
+            if (flag) {
+                layer.open({
+                    type: 1,
+                    area: ['420px', '310px'],
+                    shadeClose: true,
+                    title: '关闭原因',
+                    content: layer_html,
+                    btn: ['提交', '取消'],
+                    btn1: function (index, layero) {
+                        var dataArr = {
+                            "orderid": ids,
+                            "isthroughauditorclose": 2,
+                            "reason": document.getElementsByName('sendMode')[0].value
+                        };
+                        var getJSON = common.getJsonData('api/bossApi/order/ordersEditThroughAudit', '', dataArr);
+                        // console.log(ids);
+                        // console.log(dataArr);
+                        //  console.log(getJSON);
+                        //return false;
+                        if (getJSON["code"] == 1) {
+                            layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                                var index = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(index);
+                                location.href = 'index.html';
+                            });
+                        } else {
+                            layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                                location.href = 'index.html';
+                            });
+                        }
+                        return false;
+                        layer.close(index)
+                    }
+                });
+            } else {
+                layer.msg('至少勾选一个哇！');
+            }
+        });
+
+        //待退款-完成
+        $(document).on('click', '.wancheng', function () {
+            var obj = $(this);
+            var orderid = $(this).attr('orderid');
+            layer.open({
+                type: 1,
+                area: ['420px', '450px'],
+                shadeClose: true,
+                title: '备注',
+                content: layer_wancheng_html,
+                btn: ['提交', '取消'],
+                success: function () {
+                    var getJSON = common.getJsonData('api/bossApi/order/ordersPaymentDetail', '', {"id": orderid});
+                    if (getJSON["code"] == 1) {
+                        $("#wancheng1").html(getJSON.data.payable);
+                        $("#wancheng2").html(getJSON.data.discount);
+                        $("#wancheng3").html(getJSON.data.paid);
+                        $("#wancheng4").html(getJSON.data.amount);
+                    } else {
+                        layer.msg(getJSON["msg"], {icon: 2, time: 2500});
+                        return false;
+                    }
+                },
+                btn1: function (index, layero) {
+                    var dataArr = {
+                        "orderid": orderid,
+                        "baseFee": document.getElementsByName('sendMode')[0].value,
+                        "increamentFee": document.getElementsByName('sendMode')[1].value,
+                        "remark": document.getElementsByName('sendMode')[2].value
+                    };
+                    var getJSON = common.getJsonData('api/bossApi/order/ordersEditRefund', '', dataArr);
+                    //console.log(dataArr);
+                    //console.log(getJSON);
+                    //return false;
+                    if (getJSON["code"] == 1) {
+                        layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                            //history.go(-1);
+                            location.href = "index.html";
+                        });
+                    } else {
+                        layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                            // history.go(-1);
+                        });
+                    }
+                    return false;
+                    layer.close(index)
+                }
+            });
+        });
+
+        //手动处理 - 发起售后
+        $(document).on('click', '.shouhou', function () {
+            var obj = $(this);
+            var orderid = $(this).attr('orderid');
+            layer.open({
+                type: 1,
+                area: ['420px', '320px'],
+                shadeClose: true,
+                title: '售后原因',
+                content: layer_html,
+                btn: ['提交', '取消'],
+                btn1: function (index, layero) {
+                    var dataArr = {
+                        "orderid": parseInt(orderid),
+                        "reason": document.getElementsByName('sendMode')[0].value
+                    };
+                    var getJSON = common.getJsonData('api/bossApi/order/ordersEditAfterSale', '', dataArr);
+                    // console.log(dataArr);
+                    //console.log(getJSON);
+                    // return false;
+                    if (getJSON["code"] == 1) {
+                        layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                            location.href = 'index.html';
+                        });
+                    } else {
+                        layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+
+                        });
+                    }
+                    return false;
+                    layer.close(index)
+                }
+            });
+        });
+
+        //手动处理 - 取消订单
+        $(document).on('click', '.quxiao', function () {
+            var obj = $(this);
+            var orderid = $(this).attr('orderid');
+            layer.open({
+                type: 1,
+                area: ['420px', '320px'],
+                shadeClose: true,
+                title: '取消原因',
+                content: layer_html,
+                btn: ['提交', '取消'],
+                btn1: function (index, layero) {
+                    var dataArr = {
+                        "orderid": parseInt(orderid),
+                        "cancelcause": document.getElementsByName('sendMode')[0].value,
+                        "orderstatus": 0
+                    };
+                    var getJSON = common.getJsonData('api/bossApi/business/updateOrderStatus', '', dataArr);
+                    // console.log(dataArr);
+                    //console.log(getJSON);
+                    // return false;
+                    if (getJSON["code"] == 1) {
+                        layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                            location.href = 'index.html';
+                        });
+                    } else {
+                        layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+
+                        });
+                    }
+                    return false;
+                    layer.close(index)
+                }
+            });
+        });
+
+        //手动处理 - 申请退款
+        $(document).on('click', '.tuikuan', function () {
+            var obj = $(this);
+            var orderid = $(this).attr('orderid');
+            layer.open({
+                type: 1,
+                area: ['420px', '450px'],
+                shadeClose: true,
+                title: '申请退款',
+                content: $("#tuikuan").html(),
+                btn: ['提交', '取消'],
+                btn1: function (index, layero) {
+                    if (!userid) {
+                        layer.confirm('该功能必须登录操作！你想现在去登录吗？', {
+                            btn: ['确定', '取消'] //按钮
+                        }, function () {
+                            location.href = "../../login.html";
+                        }, function () {
+                        });
+                    }
+                    var dataArr = {
+                        "orderid": parseInt(orderid),
+                        "userid": userid,
+                        "amount": document.getElementsByName('sendMode')[0].value,
+                        "username": document.getElementsByName('sendMode')[1].value,
+                        "bankname": document.getElementsByName('sendMode')[2].value,
+                        "banknumber": document.getElementsByName('sendMode')[3].value,
+                        "content": document.getElementsByName('sendMode')[4].value
+                    };
+                    var getJSON = common.getJsonData('api/bossApi/order/orderrefund', '', dataArr);
+                    // console.log(dataArr);
+                    // console.log(getJSON);
+                    // return false;
+                    if (getJSON["code"] == 1) {
+                        layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                            location.href = "index.html";
+                        });
+                    } else {
+                        layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+
+                        });
+                    }
+                    return false;
+                    layer.close(index)
+                }
+            });
+        });
+
+        //手动处理 - 评价订单
+        $(document).on('click', '.pingjia', function () {
+            var obj = $(this);
+            var orderid = $(this).attr('orderid');
+            layer.open({
+                type: 2,
+                area: ['435px', '300px'],
+                shadeClose: true,
+                title: '评价订单',
+                content: 'star.html',
+                btn: ['提交', '取消'],
+                btn1: function (index, layero) {
+                    var obj = layer.getChildFrame('body', index); //巧妙的地方在这里哦(建立父子关系)
+                    if (!userid) {
+                        layer.confirm('该功能必须登录操作！你想现在去登录吗？', {
+                            btn: ['确定', '取消'] //按钮
+                        }, function () {
+                            location.href = "../../login.html";
+                        }, function () {
+                        });
+                    }
+                    var dataArr = {
+                        "userid": userid,
+                        "orderid": parseInt(orderid),
+                        "content": obj.contents().find("#content").val(),
+                        "starvalue": obj.contents().find("#rating_simple1").val()
+                    };
+                    var getJSON = common.getJsonData('api/bossApi/order/orderevaluate', '', dataArr);
+                    // console.log(dataArr);
+                    //console.log(getJSON);
+                    //return false;
+                    if (getJSON["code"] == 1) {
+                        layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                            location.href = "index.html";
+                        });
+                    } else {
+                        layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                        });
+                    }
+                    return false;
+                    layer.close(index)
+                }
+            });
+        });
+
+        /* ------------------------------------------------------------- 列表搜索 ---------------------------------------------------------------- */
+
+        //待分配
+        form.on('submit(sear1)', function (data) {
+            var dataArr = {
+                "orderstatustype": 8101,
+                "ordersource": data.field.ordersource,
+                "begintime": data.field.begintime,
+                "endtime": data.field.endtime,
+                "searchtext": data.field.searchtext,
+                "pageindex": 1
+            };
+            //console.log(dataArr);
+            getJSONData(1, dataArr);
+            return false;
+        });
+        //待接单
+        form.on('submit(sear2)', function (data) {
+            var dataArr = {
+                "orderstatustype": 8102,
+                "ordersource": data.field.ordersource,
+                "begintime": data.field.begintime,
+                "endtime": data.field.endtime,
+                "searchtext": data.field.searchtext,
+                "pageindex": 1
+            };
+            //console.log(dataArr);
+            getJSONData(2, dataArr);
+            return false;
+        });
+        //待审核
+        form.on('submit(sear3)', function (data) {
+            var dataArr = {
+                "orderstatustype": 8103,
+                "ordersource": data.field.ordersource,
+                "begintime": data.field.begintime,
+                "endtime": data.field.endtime,
+                "searchtext": data.field.searchtext,
+                "pageindex": 1
+            };
+            //console.log(dataArr);
+            getJSONData(3, dataArr);
+            return false;
+        });
+        //申诉中
+        form.on('submit(sear4)', function (data) {
+            var dataArr = {
+                "orderstatustype": 8104,
+                "ordersource": data.field.ordersource,
+                "begintime": data.field.begintime,
+                "endtime": data.field.endtime,
+                "searchtext": data.field.searchtext,
+                "pageindex": 1
+            };
+            //console.log(dataArr);
+            getJSONData(4, dataArr);
+            return false;
+        });
+        //待退款
+        form.on('submit(sear5)', function (data) {
+            var dataArr = {
+                "orderstatustype": 8105,
+                "ordersource": data.field.ordersource,
+                "begintime": data.field.begintime,
+                "endtime": data.field.endtime,
+                "searchtext": data.field.searchtext,
+                "pageindex": 1
+            };
+            //console.log(dataArr);
+            getJSONData(5, dataArr);
+            return false;
+        });
+        //手动处理
+        form.on('submit(sear6)', function (data) {
+            var dataArr = {
+                "orderstatustype": 8106,
+                "ordersource": data.field.ordersource,
+                "begintime": data.field.begintime,
+                "endtime": data.field.endtime,
+                "searchtext": data.field.searchtext,
+                "pageindex": 1
+            };
+            //console.log(dataArr);
+            getJSONData(6, dataArr);
+            return false;
+        });
+
+        /* ------------------------------------------------------------- 数据MODEL ---------------------------------------------------------------- */
+
+        //获取数据
+        function getJSONData(typeid, dataArr) {
+            if (typeid == 1) {//待分配
+                var dataArray = dataArr || {"page": 1, "orderstatustype": 8101};
+                var count = common.getJsonData('api/bossApi/order/ordersSearch', '', dataArray);
+                if(count.count>0){
+                    $("#dfpcount").show();
+                    $("#dfpcount").html(count.count);
+                }
+            } else if (typeid == 2) {//待接单
+                var dataArray = dataArr || {"page": 1, "orderstatustype": 8102};
+                var count = common.getJsonData('api/bossApi/order/ordersSearch', '', dataArray);
+                if(count.count>0){
+                    $("#djdcount").show();
+                    $("#djdcount").html(count.count);
+                }
+            } else if (typeid == 3) {//待审核
+                var dataArray = dataArr || {"page": 1, "orderstatustype": 8103};
+                var count = common.getJsonData('api/bossApi/order/ordersSearch', '', dataArray);
+                if(count.count>0){
+                    $("#dshcount").show();
+                    $("#dshcount").html(count.count);
+                }
+            } else if (typeid == 4) {//申诉中
+                var dataArray = dataArr || {"page": 1, "orderstatustype": 8104};
+                var count = common.getJsonData('api/bossApi/order/ordersSearch', '', dataArray);
+                if(count.count>0){
+                    $("#sszcount").show();
+                    $("#sszcount").html(count.count);
+                }
+            } else if (typeid == 5) {//待退款
+                var dataArray = dataArr || {"page": 1, "orderstatustype": 8105};
+                var count = common.getJsonData('api/bossApi/order/ordersSearch', '', dataArray);
+                if(count.count>0){
+                    $("#dtkcount").show();
+                    $("#dtkcount").html(count.count);
+                }
+            } else if (typeid == 6) {//手动处理(取消订单1017，退款中1011，退款审核通过1012，退款完成1015，申诉中1013，申诉完成1014，售后中1018，售后完成1019)
+                var dataArray = dataArr || {"page": 1, "orderstatustype": 8106};
+                var count = common.getJsonData('api/bossApi/order/ordersSearch', '', dataArray);
+                if(count.count>0){
+                    $("#sdclcount").show();
+                    $("#sdclcount").html(count.count);
+                }
+            } else {
+            }
+            common.getJsonData('api/bossApi/order/ordersSearch', typeid, dataArray);
+
+        }
+
+        //收集表格选中项
+        function collectSelcet(elm) {
+            var btnType = elm.attr('data-type');
+            if (btnType === '0') {
+                var tableID = elm.attr('data-table'),
+                        inputs = $('#' + tableID).find('input:checked.input-self'),
+                        ids = [];
+                for (var i in inputs) {
+                    if (inputs[i].id) {
+                        ids.push(inputs[i].id)
+                    }
+                }
+                if (ids.length === 0) {
+                    return 0;
+                } else {
+                    sessionStorage.setItem('tableID', ids);
+                    return 1;
+                }
+            } else {
+                var id = elm.parents('tr').find('input').attr('id');
+                sessionStorage.setItem('tableID', id);
+                return 1;
+            }
+        }
+
+        //弹窗样式
+        var layer_html = '  <div class="layer-begin">' +
+                '<form action=""></form>' +
+                '<div class="layui-form-item">' +
+                '<div class="layui-input-inline">' +
+                '<textarea type="text" name="sendMode" autocomplete="off" class="layui-input" placeholder="" style="width: 400px;height:190px; margin-left: 10px"></textarea>' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+
+        //待退款- 》 完成 操作的样式
+        var layer_wancheng_html = '  <div class="layer-begin">' +
+                '<form action=""></form>' +
+                '<div class="layui-form-item">' +
+                '<div class="layui-input-inline" style="width: 240px;margin-left: 25px">' +
+                '应付金额： &nbsp;&nbsp;&nbsp;&nbsp;￥<span id="wancheng1">0</span>' +
+                '</div>' +
+                '</div>' +
+                '<div class="layui-form-item">' +
+                '<div class="layui-input-inline" style="width: 240px;margin-left: 25px">' +
+                '优惠金额： &nbsp;&nbsp;&nbsp;&nbsp;￥<span id="wancheng2">0</span>' +
+                '</div>' +
+                '</div>' +
+                '<div class="layui-form-item">' +
+                '<div class="layui-input-inline" style="width: 240px;margin-left: 25px">' +
+                '实付金额： &nbsp;&nbsp;&nbsp;&nbsp;￥<span id="wancheng3">0</span>' +
+                '</div>' +
+                '</div>' +
+                '<div class="layui-form-item">' +
+                '<div class="layui-input-inline" style="width: 240px;margin-left: 25px">' +
+                '退款金额： &nbsp;&nbsp;&nbsp;&nbsp;￥<span id="wancheng4">0</span>' +
+                '</div>' +
+                '</div>' +
+
+                '<div class="layui-form-item">' +
+                '<label class="layui-form-label">基础服务费: &nbsp;&nbsp;&nbsp;&nbsp;</label>' +
+                '<div class="layui-input-inline" style="width: 240px;">' +
+                '<input type="text" name="sendMode" autocomplete="off" class="layui-input" placeholder="">' +
+                '</div>' +
+                '</div>' +
+                '<div class="layui-form-item">' +
+                '<label class="layui-form-label">增值服务费： &nbsp;&nbsp;&nbsp;&nbsp;</label>' +
+                '<div class="layui-input-inline" style="width: 240px;">' +
+                '<input type="text" name="sendMode" autocomplete="off" class="layui-input" placeholder="">' +
+                '</div>' +
+                '</div>' +
+                '<div class="layui-form-item">' +
+                '<label class="layui-form-label">备注： &nbsp;&nbsp;&nbsp;&nbsp;</label>' +
+                '<div class="layui-input-inline" style="width: 240px;">' +
+                '<textarea type="text" name="sendMode" autocomplete="off" class="layui-input" placeholder="" style="width: 240px;height:100px"></textarea>' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+
+    });
+
+
+</script>
+</body>
+</html>

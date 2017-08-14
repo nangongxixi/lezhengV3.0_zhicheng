@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title> 编辑banner</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/table.css"/>
+    <style>
+        .file {
+            position: relative;
+            height: 100px;
+            filter: alpha(opacity:0);
+            opacity: 0;
+            width: 100px
+        }
+
+        #localImag {
+            position: absolute;
+            top: 0
+        }
+    </style>
+</head>
+
+<body>
+<div style="margin: 15px;">
+    <fieldset class="layui-elem-field">
+        <legend></legend>
+        <div class="layui-field-box">
+            <form class="layui-form" action="" id="addactive">
+                <table class="layui-table" id="addactive">
+                </table>
+                <table class="layui-table">
+                    <tr>
+                        <th class="self-form-title">标题：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="text" name="name" lay-verify="required" autocomplete="off"
+                                       placeholder="请输入标题" class="layui-input self-form-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="self-form-title">编号：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="text" name="code" lay-verify="required" autocomplete="off"
+                                       placeholder="请输入编号" class="layui-input self-form-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr id="newsimg">
+                        <th class="self-form-title"> 位置：</th>
+                        <td>
+                            <div class="layui-input-inline" id="location">
+                                <select name="location">
+                                    <option value="">—— 请选择 ——</option>
+                                    <option value="1001">发现首页</option>
+                                    <option value="1002">首页第一个</option>
+                                    <option value="1003">首页第二个</option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="self-form-title">封面：</th>
+                        <td>
+                            <div class="site-demo-upload">
+                                <img id="LAY_demo_upload" src="">
+                                <div class="site-demo-upbar">
+                                    <div id="localImag"><img id="preview" src="../../images/upimg.png" width="100"
+                                                             height="100" style="display: block"></div>
+                                    <input type="file" name="file" id="doc" onchange="javascript:setImagePreview();"
+                                           class="file">
+                                    <input type="hidden" name="module" lay-verify="required" autocomplete="off"
+                                           class="layui-input" placeholder="" value="7012">
+                                </div>
+                            </div>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="self-form-title">链接网页：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="text" name="linkurl" lay-verify="required" autocomplete="off"
+                                       placeholder="请输入链接网页（'http://www.xxx.com'）" class="layui-input self-form-input">
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <div class="layui-btn-group self-btn-return">
+                    <!-- <a href="http://www.layui.com" class="layui-btn layui-btn-warm">预览</a>-->
+                    <button class="layui-btn" lay-submit="" lay-filter="contro" status="20">保存</button>
+                    <button class="layui-btn layui-btn-primary" lay-submit="" lay-filter="contro" status="30">上线
+                    </button>
+                </div>
+                <a href="javascript:history.go(-1);" class="return-go"><i class="fa fa-reply" data-icon="fa-reply"
+                                                                          aria-hidden="true"></i> 返回</a>
+            </form>
+        </div>
+    </fieldset>
+</div>
+
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage', 'upload'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('serviceIndex'),
+                bannerid = common.getUrlParam("bannerid"),
+                layer = layui.layer;
+        common.saveTabIndex('serviceIndex');
+        //common.init();
+        common.layTime(); //时间选择
+
+
+        //全选
+        form.on('checkbox(allChoose)', function (data) {
+            var child = $(data.elem).parents('table').find('#tags input');
+            child.each(function (index, item) {
+                item.checked = data.elem.checked;
+            });
+            form.render('checkbox');
+        });
+        form.render();
+
+        //避免input被刷新清空
+        formInStorage.init({
+            formElem: '#addactive',
+            formSession: 'addactive'
+        });
+
+        //修改的时候
+        if (bannerid != null) {
+            //修改时，获取行政审批的详情
+            $("legend").html('编辑banner');
+            var getJSON = JSON.parse(localStorage.getItem("interactionmanageDetail"));
+            console.log(getJSON);
+            $("input[name='name']").attr("value", getJSON.name);
+            $("input[name='code']").attr("value", getJSON.code);
+            $("input[name='linkurl']").attr("value", getJSON.linkurl);
+            $("#preview").attr("src",getJSON.imgurl)
+            //选中位置
+            $("#location input").attr("placeholder", getJSON.location);
+
+        } else {
+            //新增时
+            $("legend").html('添加banner');
+        }
+
+        //监听提交
+        form.on('submit(contro)', function (data) {
+            $(this).attr("disabled",'')
+            var imgguid='';
+            $.ajax({
+                url: apiUrl + 'api/files/fileupload',
+                type: 'POST',
+                cache: false,
+                data: new FormData($('#addactive')[0]),
+                processData: false,
+                contentType: false,
+                async: false
+            }).done(function (res) {
+                imgguid = res.data;
+            }).fail(function (res) {
+            });
+            //请求接口
+            var status = $(this).attr('status');
+            var dataArr = {
+                "id": bannerid,
+                "name": data.field.name,
+                "code": data.field.code,
+                "location": data.field.location,
+                "linkurl": data.field.linkurl,
+                "imgguid": imgguid,
+                "status": status   //上线中30 待上线20 已下线10
+            };
+            var getJSON = common.getJsonData('api/bossApi/banner/bannerEdit', '', dataArr);
+            // console.log(dataArr);
+            // console.log(getJSON);
+            //return false;
+            if (getJSON["code"] == 1) {
+                layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                    localStorage.removeItem("interactionmanageDetail");
+                    localStorage.removeItem("addactive");
+                    history.go(-1);
+                });
+            } else {
+                layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                    history.go(-1);
+                });
+            }
+            return false;
+        });
+
+    });
+
+    //下面用于图片上传预览功能
+    function setImagePreview(avalue) {
+        var docObj = document.getElementById("doc");
+        var imgObjPreview = document.getElementById("preview");
+        if (docObj.files && docObj.files[0]) {
+            //火狐下，直接设img属性
+            imgObjPreview.style.display = 'block';
+            imgObjPreview.style.width = '100px';
+            imgObjPreview.style.height = '100px';
+            //imgObjPreview.src = docObj.files[0].getAsDataURL();
+
+            //火狐7以上版本不能用上面的getAsDataURL()方式获取，需要一下方式
+            imgObjPreview.src = window.URL.createObjectURL(docObj.files[0]);
+        } else {
+            //IE下，使用滤镜
+            docObj.select();
+            var imgSrc = document.selection.createRange().text;
+            var localImagId = document.getElementById("localImag");
+            //必须设置初始大小
+            localImagId.style.width = "100px";
+            localImagId.style.height = "100px";
+            //图片异常的捕捉，防止用户修改后缀来伪造图片
+            try {
+                localImagId.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
+                localImagId.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = imgSrc;
+            } catch (e) {
+                alert("您上传的图片格式不正确，请重新选择!");
+                return false;
+            }
+            imgObjPreview.style.display = 'none';
+            document.selection.empty();
+        }
+        return true;
+    }
+</script>
+</body>
+</html>

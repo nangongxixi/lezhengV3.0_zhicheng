@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>服务商</title>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/table.css"/>
+
+</head>
+
+<body>
+<div style="margin: 15px;">
+
+    <table class="site-table table-hover" id="itemstab">
+        <thead>
+        <tr>
+            <th><input type="checkbox" class="table_selected_all"></th>
+            <th class="self-form-title">商家编号</th>
+            <th>商家名称</th>
+        </tr>
+        </thead>
+        <tbody id="items-list1"></tbody>
+    </table>
+    <div class="self-btn-return"  style="margin-bottom: 50px">
+        <button class="layui-btn" id="additem" data-table="itemstab" data-type="0"><i class="layui-icon"
+                                                                                      data-icon="&#xe605;">&#xe605;</i>&nbsp;确定
+        </button>
+    </div>
+    <div class="admin-table-page">
+        <div id="page1" class="page"></div>
+    </div>
+</div>
+<script id="orderHandle1" type="text/html">
+    {{# layui.each(d.datalist, function(index, item){ }}
+    <tr orderid="{{ item.businessid }}">
+        <td><input type="checkbox" class="input-self" id="{{ item.businessid }}" name="{{ item.businessname }}"><label
+                for="{{ item.businessid }}" class="self-cursor"></label></td>
+        <td>{{ item.businesscode }}</td>
+        <td class="title">{{ item.businessname }}</td>
+    </tr>
+    {{# }); }}
+</script>
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+    layui.use(['form', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                laypage = layui.laypage,
+                common = layui.common,
+                layer = layui.layer;
+
+        common.init();
+        //全选
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_flat-green'
+        });
+
+
+        var APIname = "api/bossApi/businessMain/businessMainSearch";
+        var orderHandleId = 1;
+        var dataArr = {"page": 1};
+        common.getJsonData(APIname, orderHandleId, dataArr);
+
+        $("#additem").on("click", function () {
+            collectSelcet($(this));
+            parent.layer.closeAll(); //关闭浮窗
+            window.parent.location.reload(); //刷新父窗口
+        });
+
+        //收集表格选中项
+        function collectSelcet(elm) {
+            var btnType = elm.attr('data-type');
+            if (btnType === '0') {
+                var tableID = elm.attr('data-table'),
+                        inputs = $('#' + tableID).find('input:checked.input-self'),
+                        ids = [];
+                for (var i in inputs) {
+                    if (inputs[i].id) {
+                        ids.push('"' + inputs[i].id + '":' + '"' + inputs[i].name + '"');
+                    }
+                }
+                if (ids.length === 0) {
+                    return 0;
+                } else {
+                    localStorage.setItem('ids', "{" + ids + "}");
+                    return 1;
+                }
+            } else {
+                var id = elm.parents('tr').find('input').attr('id');
+                localStorage.setItem('ids', "{" + id + "}");
+                return 1;
+            }
+        }
+
+
+    });
+</script>
+
+</body>
+
+</html>

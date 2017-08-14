@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>编辑/添加优惠券</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <style>
+        .layui-field-box {
+            padding: 0;
+        }
+
+        .layui-field-box .layui-table {
+            margin: 0;
+            border: 0;
+        }
+
+        .layui-input-inline {
+            width: 200px;
+        }
+
+        .layui-form-item .layui-input-inline {
+            width: 300px;
+        }
+
+        .order-form-title {
+            padding-left: 20px;
+            height: 38px;
+            line-height: 38px;
+            background: #e2e2e2;
+            font-size: 15px;
+        }
+
+        .order-form-block {
+            border: 1px solid #e2e2e2;
+            border-top: 0;
+            padding: 20px 0;
+        }
+
+        .layui-form-item:nth-child(1) {
+            margin-top: 0;
+        }
+
+        .upload-img {
+            margin: 10px auto;
+            width: 200px;
+            height: auto;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+<div style="margin: 15px;">
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>添加优惠券</legend>
+    </fieldset>
+    <div class="layui-field-box">
+        <div class="order-form-title">编辑信息</div>
+        <div class="order-form-block">
+            <form class="layui-form" action="" id="addCoupon_form">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">优惠券名称</label>
+
+                        <div class="layui-input-inline">
+                            <input type="text" name="couponname" lay-verify="required" autocomplete="off"
+                                   class="layui-input" placeholder="">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">优惠券编号</label>
+
+                        <div class="layui-input-inline">
+                            <input type="text" name="conponcode" lay-verify="required|conponcode" autocomplete="off"
+                                   class="layui-input" placeholder="">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">优惠券类型</label>
+
+                        <div class="layui-input-inline" id="typename">
+                            <select name="typename" lay-filter="typename">
+                                <option value="">请选择</option>
+                                <option value="0">直减</option>
+                                <option value="1">满减</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-item2">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">满减金额</label>
+
+                        <div class="layui-input-inline">
+                            <input type="text" name="fullamount" lay-verify="fullamount" autocomplete="off"
+                                   class="layui-input" placeholder="" value="0.00">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">优惠金额</label>
+
+                        <div class="layui-input-inline">
+                            <input type="text" name="discountamount" lay-verify="required|discountamount"
+                                   autocomplete="off"
+                                   class="layui-input" placeholder="">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">有效时长</label>
+
+                        <div class="layui-input-inline">
+                            <input type="text" name="libraryvalidtime" lay-verify="required|libraryvalidtime"
+                                   autocomplete="off"
+                                   class="layui-input" placeholder="">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">使用说明</label>
+
+                        <div class="layui-input-inline">
+                            <textarea name="descript" lay-verify="required" placeholder="请输入"
+                                      class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">适用产品</label>
+
+                        <div class="layui-input-inline">
+                            <a href="javascript:void(0)" class="layui-btn layui-btn-primary js_choose">管理</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="baocun" status="0">保存
+                        </button>
+                        <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="baocun" status="1">上线
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('serviceIndex'),
+                couponlibraryid = common.getUrlParam("couponlibraryid"),
+                itemID = common.getUrlParam("itemid"),//事项id
+                layer = layui.layer;
+        common.saveTabIndex('serviceIndex');
+        //common.init();
+        common.layTime(); //时间选择
+
+        //避免input被刷新清空
+        formInStorage.init({
+            formElem: '#addCoupon_form',
+            formSession: 'addCoupon_form'
+        });
+
+        form.on('select(typename)', function (data) {
+            if (data.value === '0') {
+                $('.layui-form-item2').hide()
+            } else {
+                $('.layui-form-item2').show()
+            }
+        });
+
+        $(document).on('click', '.js_choose', function () {
+            layer.open({
+                type: 2,
+                title: '适用产品',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['1200px', '90%'],
+                content: 'chooseGoods.html'
+            });
+        });
+
+        //修改的时候
+        if (couponlibraryid != null) {
+            //修改时，获取行政审批的详情
+            $("legend").html('编辑优惠券');
+            var dataArr = {"couponlibraryid": couponlibraryid}
+            var getJSON = common.getJsonData('api/bossApi/coupon/getinfo', '', dataArr);
+            $("input[name='couponname']").attr("value", getJSON.data.couponname);
+            $("input[name='conponcode']").attr("value", getJSON.data.conponcode);
+            $("#typename option[name=" + getJSON.data.typename + "]").attr("selected", "selected");
+            //选中优惠券类型
+            // $("#typename input").attr("placeholder", getJSON.data.typename);
+            $("#typename option[value=" + getJSON.data.typename + "]").attr("selected", "selected");
+            if (getJSON.data.typename == '0') {
+                $('.layui-form-item2').hide()
+            } else {
+                $('.layui-form-item2').show()
+            }
+            $("input[name='fullamount']").attr("value", getJSON.data.fullamount);
+            $("input[name='discountamount']").attr("value", getJSON.data.discountamount);
+            $("input[name='libraryvalidtime']").attr("value", getJSON.data.libraryvalidtime);
+            $("textarea[name='descript']").html(getJSON.data.descript);
+            //保存产品数据到local
+            var productdata = [];
+            if (getJSON.data.productdata) {
+                $.each(getJSON.data.productdata, function (index, item) {
+                    productdata.push(item.producttype + '_' + item.productid);
+                });
+            }
+            var productdata = JSON.stringify(productdata);
+            localStorage.setItem("productdata", productdata);//保存部门列表
+            var idsarray = localStorage.getItem('productdatabeifen');
+            if (idsarray) {
+                localStorage.setItem("productdata", idsarray);//保存部门列表
+                localStorage.removeItem('productdatabeifen');
+            }
+            form.render();
+        }
+
+        //自定义验证规则
+        form.verify({
+            conponcode: function (value) {
+                if (!value.match(/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{5,10}$/g)) {
+                    return '优惠券编号只能是5-10位的字母+数字';
+                }
+            },
+            fullamount: function (value) {
+                if (!value.match(/^\d+(\.\d{1,2})?$/g)) {
+                    return '金额只能是整数或整数后两位的数';
+                }
+            },
+            discountamount: function (value) {
+                if (!value.match(/^\d+(\.\d{1,2})?$/g)) {
+                    return '金额只能是整数或整数后两位的数';
+                }
+            },
+            libraryvalidtime: function (value) {
+                if (!value.match(/^\d+$/g)) {
+                    return '有效时长只能是整数';
+                }
+            },
+            /*
+             content: function (value) {
+             layedit.sync(editIndex);
+             var contentvalue = layedit.getContent(editIndex);
+             if (contentvalue.length < 5) {
+             return '公司简介不能为空且不小于5';
+             }
+             }
+             */
+        });
+
+
+        console.log(JSON.parse(localStorage.getItem('productdata')));
+
+        //监听提交
+        form.on('submit(baocun)', function (data) {
+            var status = $(this).attr('status');
+            var productdata = JSON.parse(localStorage.getItem('productdata'));
+            //console.log(productdata);
+            // return false
+            if (!data.field.typename) {
+                layer.msg('必须选择优惠券类型');
+                return false;
+            }
+            var ids = '';
+            if (productdata) {
+                for (var i = 0; i < productdata.length; i++) {
+                    var dd = productdata[i].split('_');
+                    ids += dd[0] + '_' + dd[1] + ',';
+                    // ids.push({"productid": dd[0], "producttype": dd[1]});
+                }
+            } else {
+                layer.msg('必须选择适用产品');
+                return false;
+            }
+            ids = ids.substring(0, ids.length - 1);
+            //请求接口
+            if (couponlibraryid != null) {
+                var dataArr = {
+                    "couponlibraryid": parseInt(couponlibraryid),
+                    "productdata": ids,
+                    "name": data.field.couponname,
+                    "number": data.field.conponcode,
+                    "type": parseInt(data.field.typename),
+                    "discountamount": data.field.discountamount,
+                    "fullamount": data.field.fullamount,
+                    "instructions": data.field.descript,
+                    "effectivelength": data.field.libraryvalidtime,
+                    "status": status
+                };
+            } else {
+                var dataArr = {
+                    "couponlibraryid": 0,
+                    "productdata": ids,
+                    "name": data.field.couponname,
+                    "number": data.field.conponcode,
+                    "type": parseInt(data.field.typename),
+                    "discountamount": data.field.discountamount,
+                    "fullamount": data.field.fullamount,
+                    "instructions": data.field.descript,
+                    "effectivelength": data.field.libraryvalidtime,
+                    "status": status
+                };
+            }
+            $('button').attr('disabled', "true");
+            localStorage.removeItem("addCoupon_form");
+            var getJSON = common.getJsonData('api/bossApi/couponlibrary/addorupdate', '', dataArr);
+            //console.log(dataArr);
+            // console.log(getJSON);
+            //return false;
+            if (getJSON["code"] == 1) {
+                layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                    localStorage.removeItem("deids");
+                    localStorage.removeItem("productdata");
+                    localStorage.removeItem("addCoupon_form");
+                    location.href = "index.html";
+                    /*
+                     var index = parent.layer.getFrameIndex(window.name);
+                     parent.layer.close(index);
+                     window.parent.location.reload();
+                     */
+                });
+            } else {
+                layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                    history.go(-1);
+                });
+            }
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

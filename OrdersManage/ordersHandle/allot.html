@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>订单处理</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/table.css"/>
+    <style>
+        .layui-form-item .layui-input-inline {
+            width: 170px;
+        }
+    </style>
+</head>
+<body>
+<div style="margin: 15px;">
+    <div class="layui-tab layui-tab-card">
+        <div class="layui-tab-content">
+            <div class="admin-main">
+                <blockquote class="layui-elem-quote">
+                    <form class="layui-form" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">星级区域</label>
+
+                            <div class="layui-input-inline">
+                                <input type="text" name="beginlevel" lay-verify="" autocomplete="off"
+                                       placeholder=" 请输入星级区域" class="layui-input">
+                            </div>
+                            <div class="layui-input-inline">
+                                <input type="text" name="endlevel" lay-verify="" autocomplete="off"
+                                       placeholder=" 请输入星级区域" class="layui-input">
+                            </div>
+                            <label class="layui-form-label">接单量</label>
+
+                            <div class="layui-input-inline">
+                                <input type="text" name="beginordernumber" lay-verify="" autocomplete="off"
+                                       placeholder=" 请输入接单量" class="layui-input">
+                            </div>
+                            <div class="layui-input-inline">
+                                <input type="text" name="endordernumber" lay-verify="" autocomplete="off"
+                                       placeholder=" 请输入接单量" class="layui-input">
+                            </div>
+
+                            <label class="layui-form-label">关键字搜索</label>
+
+                            <div class="layui-input-inline">
+                                <input type="text" name="searchtext" lay-verify="" autocomplete="off"
+                                       placeholder=" 请输入关键字搜索" class="layui-input">
+                            </div>
+                            <button class="layui-btn" lay-submit="" lay-filter="sear1"
+                                    style="margin-left: 40px">搜索
+                            </button>
+                            <button type="reset" class="layui-btn layui-btn-primary reset1">重置</button>
+                        </div>
+                    </form>
+                </blockquote>
+            </div>
+
+            <!--派单列表-->
+            <div class="layui-show">
+                <div class="layui-field-box">
+                    <table class="site-table table-hover">
+                        <thead>
+                        <tr>
+                            <th>商家编号</th>
+                            <th>商家名</th>
+                            <th>联系人</th>
+                            <th>联系电话</th>
+                            <th>工商登记号</th>
+                            <th>接单量</th>
+                            <th>星级</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="items-list1"></tbody>
+                    </table>
+                    <div class="admin-table-page">
+                        <div id="page1" class="page"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--派单列表-->
+<script id="orderHandle1" type="text/html">
+    {{# layui.each(d.datalist, function(index, item){ }}
+    <tr id="order4">
+        <td>{{ item.number }}</td>
+        <td>{{ item.businessname }}</td>
+        <td>{{ item.contactname }}</td>
+        <td>{{ item.contactphone }}</td>
+        <td>{{# if(item.registrationno==null){ }}/{{# }else{ }}{{item.registrationno}}{{# } }}</td>
+        <td>{{# if(item.ordernumber==null){ }}/{{# }else{ }}{{item.ordernumber}}{{# } }}</td>
+        <td>{{# if(item.businesslevel==null){ }}/{{# }else{ }}{{item.businesslevel}}{{# } }}</td>
+        <td>
+            <a href="javascript:;" class="js_choose" marketerid="{{ item.businessid }}"
+               marketername="{{ item.businessname }}">选择</a>
+        </td>
+    </tr>
+    {{# }); }}
+</script>
+
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('serviceIndex'),
+                id = common.getUrlParam("id"),
+                layer = layui.layer;
+        common.saveTabIndex('serviceIndex');
+        common.init();
+        //common.layTime(); //时间选择
+
+        getJSONData(1, '');
+        $(".reset1").on('click', function () {
+            getJSONData(1, '');
+        });
+        form.on('submit(sear1)', function (data) {
+            var beginlevel = parseInt(data.field.beginlevel) || '';
+            var endlevel = parseInt(data.field.endlevel) || '';
+            var beginordernumber = parseInt(data.field.beginordernumber) || '';
+            var endordernumber = parseInt(data.field.endordernumber) || '';
+            var dataArr = {
+                "searchtext": data.field.searchtext,
+                "beginlevel": beginlevel,
+                "endlevel": endlevel,
+                "beginordernumber": beginordernumber,
+                "endordernumber": endordernumber,
+                "page": 1
+            };
+            getJSONData(1, dataArr);
+            return false;
+        });
+
+        function getJSONData(typeid, dataArr) {
+            //获取详情
+            var dataArr = dataArr || {"page": 1}
+            common.getJsonData('api/bossApi/order/ordersBusinessSearch', 1, dataArr);
+        }
+
+        //选择商家 并派单
+        var index = parent.layer.getFrameIndex(window.name);
+        $(document).on('click', '.js_choose', function () {
+            var orderid = sessionStorage.getItem('tableID');
+            var marketerid = $(this).attr('marketerid');
+            var marketername = $(this).attr('marketername');
+            if (!orderid) {
+                sessionStorage.setItem("marketerid", marketerid);
+                sessionStorage.setItem("marketername", marketername);
+                parent.layer.close(index);
+                parent.location.reload();
+            }
+            var dataArr = {"orderid": orderid, "marketerid": marketerid, "marketername": marketername};
+            var getJSON = common.getJsonData('api/bossApi/order/ordersEditBusiness', '', dataArr);
+           // console.log(orderid);
+           // console.log(dataArr);
+           // console.log(getJSON);
+            //return false;
+            if (getJSON["code"] == 1) {
+                layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                    parent.layer.close(index);
+                    parent.location.reload();
+                });
+            } else {
+                layer.msg(getJSON["msg"], {icon: 2, time: 1500});
+            }
+        })
+
+    });
+</script>
+</body>
+</html>

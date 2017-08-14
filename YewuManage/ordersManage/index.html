@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>工单管理</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/table.css"/>
+</head>
+<body>
+<div style="margin: 15px;">
+    <div class="layui-tab layui-tab-card" lay-filter="orderIndex">
+        <ul class="layui-tab-title">
+            <li>意见</li>
+            <li>售后</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item">
+                <div class="layui-field-box">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item self-layui-form-item"><label class="layui-form-label"
+                                                                                     style="width:auto">状态</label>
+                                <div class="layui-input-inline"><select name="status">
+                                    <option value="">—— 请选择 ——</option>
+                                    <option value="0">待回复</option>
+                                    <option value="1">已回复</option>
+                                </select></div>
+                                <label class="layui-form-label" style="width:auto">标题</label>
+                                <div class="layui-input-inline"><input type="text" name="keyword" lay-verify="title"
+                                                                       autocomplete="off" placeholder="请输入标题"
+                                                                       class="layui-input"></div>
+                                <button class="layui-btn" lay-submit="" lay-filter="searyijian" style="margin-left: 40px">搜索
+                                </button>
+                                <button type="reset" class="layui-btn layui-btn-primary reset">重置</button>
+                            </div>
+                        </form>
+                    </blockquote>
+                    <table class="site-table table-hover">
+                        <thead>
+                        <tr>
+                            <th>编号</th>
+                            <th>标题</th>
+                            <th>类型</th>
+                            <th>来件人</th>
+                            <th>来件时间</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="items-list1"></tbody>
+                    </table>
+                    <div class="admin-table-page">
+                        <div id="page1" class="page"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="layui-field-box">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item self-layui-form-item"><label class="layui-form-label"
+                                                                                     style="width:auto">状态</label>
+
+                                <div class="layui-input-inline"><select name="status">
+                                    <option value="">—— 请选择 ——</option>
+                                    <option value="0">待回复</option>
+                                    <option value="1">已回复</option>
+                                </select></div>
+                                <label class="layui-form-label" style="width:auto">标题</label>
+
+                                <div class="layui-input-inline"><input type="text" name="keyword" lay-verify="keyword"
+                                                                       autocomplete="off" placeholder="请输入标题"
+                                                                       class="layui-input"></div>
+                                <button class="layui-btn" lay-submit="" lay-filter="searsouhou" style="margin-left: 40px">搜索
+                                </button>
+                                <button type="reset" class="layui-btn layui-btn-primary reset">重置</button>
+                            </div>
+                        </form>
+                    </blockquote>
+                    <table class="site-table table-hover">
+                        <thead>
+                        <tr>
+                            <th>编号</th>
+                            <th>标题</th>
+                            <th>类型</th>
+                            <th>来件人</th>
+                            <th>来件时间</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="items-list2"></tbody>
+                    </table>
+                    <div class="admin-table-page">
+                        <div id="page2" class="page"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!---行政审批-->
+<script id="orderHandle1" type="text/html"> {{#  layui.each(d.datalist, function(index, item){ }}
+<tr>
+    <td>{{ item.worklistcode }}</td>
+    <td title="{{ item.title }}">{{ item.worklisttitle.length>18?item.worklisttitle.substring(0, 18)+ "...":item.worklisttitle }}</td>
+    <td>{{#  if(item.worklisttype == 0){ }}意见{{#  }else{ }}售后{{#  } }}</td>
+    <td>{{item.sender}}</td>
+    <td>{{item.sendtime}}</td>
+    <td>{{#  if(item.status == 0){ }}待回复{{#  }else{ }}已回复{{#  } }}</td>
+    <td><span class="layui-breadcrumb" lay-separator=" ">  {{#  if(item.status == 0){ }}<a
+            href="../ordersManage/detail.html?id={{ item.workorderid }}&replyid=0" title="回复"><i
+            class="fa fa-commenting-o" aria-hidden="true"></i></a> {{#  }else{ }} <a
+            href="../ordersManage/detail.html?id={{ item.workorderid }}&replyid=1" title="详情"><i
+            class="fa fa-file-text-o" aria-hidden="true"></i></a>
+    {{#  } }}
+    </span></td>
+</tr> {{#  }); }}
+</script>
+<!---服务商-->
+<script id="orderHandle2" type="text/html"> {{#  layui.each(d.datalist, function(index, item){ }}
+<tr>
+    <td>{{ item.worklistcode }}</td>
+    <td title="{{ item.title }}">{{ item.worklisttitle.length>18?item.worklisttitle.substring(0, 18)+ "...":item.worklisttitle }}</td>
+    <td>{{#  if(item.worklisttype == 0){ }}意见{{#  }else{ }}售后{{#  } }}</td>
+    <td>{{item.sender}}</td>
+    <td>{{item.sendtime}}</td>
+    <td>{{#  if(item.status == 0){ }}待回复{{#  }else{ }}已回复{{#  } }}</td>
+    <td><span class="layui-breadcrumb" lay-separator=" ">  {{#  if(item.status == 0){ }}<a
+            href="../ordersManage/detail.html?id={{ item.workorderid }}&replyid=0" title="回复"><i
+            class="fa fa-commenting-o" aria-hidden="true"></i></a> {{#  }else{ }} <a
+            href="../ordersManage/detail.html?id={{ item.workorderid }}&replyid=1" title="详情"><i
+            class="fa fa-file-text-o" aria-hidden="true"></i></a>
+    {{#  } }}
+    </span></td>
+</tr> {{#  }); }}
+</script>
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('orderIndex'),
+                orderID = common.getUrlParam("id"),
+                itemID = common.getUrlParam("itemid"),//事项id
+                layer = layui.layer;
+        common.saveTabIndex('orderIndex');
+        common.init();
+        common.layTime(); //时间选择
+
+        //创建一个编辑器
+        var editIndex = layedit.build('LAY_demo_editor');
+
+        //复选框样式
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_flat-green'
+        });
+
+        getJson();
+
+        //点击行政审批的重置
+        $(".reset").on('click', function () {
+            getJson();
+        });
+
+        //意见+售后列表
+        function getJson(){
+            for(var i = 0; i < 2; i++) {
+                var dataArr = {"page": 1,"worklisttype":i};
+                common.getJsonData('api/bossApi/order/workOrderSearch', i+1, dataArr)
+            }
+        }
+
+        //搜索行政审批
+        form.on('submit(searyijian)', function(data) {
+            var dataArr = {
+                "page": 1,
+                "keyword":data.field.keyword,
+                "worklisttype":0,
+                "status":data.field.status
+            }
+            common.getJsonData('api/bossApi/order/workOrderSearch',1, dataArr)
+            return false;
+        });
+
+        //搜索服务商
+        form.on('submit(searsouhou)', function(data) {
+            var dataArr = {
+                "page": 1,
+                "keyword":data.field.keyword,
+                "worklisttype":1,
+                "status":data.field.status
+            }
+            common.getJsonData('api/bossApi/order/workOrderSearch',2, dataArr)
+            console.log(dataArr);
+            return false;
+        });
+
+        //上线和下线（“0”下线的状态，“1”上线的状态），添加热门和取消热门（“0”不热，“1”已热）
+        $(document).on('click','.approvalSet',function(){
+            var orderID = $(this).attr("orderid");
+            var status = $(this).attr("status");
+            var APIname = "api/bossApi/businessMain/businessMainOnline";
+            if(status==0){
+                var dataArr = {"businessId": orderID,"isonline":true};
+            }else{
+                var dataArr = {"businessId": orderID,"isonline":false};
+            }
+            var getJSON = common.getJsonData(APIname, '', dataArr);
+            //console.log(getJSON);
+            //return false;
+            if(getJSON["code"] == 1){
+                layer.msg('操作成功', {icon:1, time:1500},function(){
+                    window.location.reload();
+                });
+            }else{
+                layer.msg(getJSON["msg"], {icon:2, time:1500},function(){
+                    window.location.reload();
+                });
+            }
+        });
+
+
+    });
+</script>
+</body>
+</html>

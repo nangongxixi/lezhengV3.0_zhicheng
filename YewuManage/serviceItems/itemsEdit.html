@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>添加事项</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+
+    <!--富文本编辑器-->
+    <script src="../../plugins/ckeditor/ckeditor.js"></script>
+    <script src="../../plugins/ckeditor/samples/js/sample.js"></script>
+
+</head>
+<body>
+<div style="margin: 15px;">
+    <fieldset class="layui-elem-field">
+        <legend></legend>
+        <div class="layui-field-box">
+            <form class="layui-form" action="" id="additem">
+                <table class="layui-table">
+                    <tr>
+                        <th class="self-form-title">事项名称：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="text" name="title" lay-verify="required" autocomplete="off"
+                                       placeholder="请输入事项名称" class="layui-input self-form-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>事项编号：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="text" name="code" lay-verify="" autocomplete="off"
+                                       placeholder="请输入事项编号" class="layui-input self-form-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>服务主题：</th>
+                        <td>
+                            <div class="layui-input-inline self-form-input" id="theme">
+                                <select name="theme" lay-verify="">
+                                    <option value="">—— 请选择 ——</option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>事项类型：</th>
+                        <td>
+                            <div class="layui-input-inline self-form-input">
+                                <select name="eventType" lay-verify="required">
+                                    <option value="">—— 请选择 ——</option>
+                                    <option value="1">行政审批</option>
+                                    <option value="2">行政服务</option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="detail-title">办理须知：</th>
+                        <td>
+                            <textarea id="TextArea1" cols="20" rows="2" class="ckeditor"></textarea>
+                        </td>
+                    </tr>
+                </table>
+                <div class="layui-input-block self-btn-return">
+                    <button class="layui-btn" lay-submit="" lay-filter="demo1">保存</button>
+                </div>
+            </form>
+        </div>
+    </fieldset>
+</div>
+<!---事项内容-->
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+
+
+<script>
+    var editor = CKEDITOR.replace('TextArea1');//实例化富文本编辑框
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                serviceIndex = localStorage.getItem('serviceIndex'),
+                orderID = common.getUrlParam("id"),
+                layer = layui.layer;
+        common.saveTabIndex('serviceIndex');
+        common.init();
+        common.layTime(); //时间选择
+
+        //服务主题下拉列表
+        var getJSON = common.getJsonData('api/bossApi/property/themeList', '', {"keyword": ""});
+        $.each(getJSON.data, function (index, item) {
+            $("#theme select").append('<option value="' + item.themeid + '">' + item.name + '</option>');
+            $("#theme select").next().find(".layui-anim-upbit").append('<dd lay-value="' + item.themeid + '" class="">' + item.name + '</dd>');
+        });
+        form.render();
+
+        //避免input被刷新清空
+        formInStorage.init({
+            formElem: '#additem',
+            formSession: 'additem'
+        });
+
+        //获取数据
+        if (orderID != null) {
+            $("legend").html('编辑事项');
+            var APItitle = "api/bossApi/service/eventDetail";
+            var dataArr = {"id": orderID};
+            var getJSON = common.getJsonData(APItitle, '', dataArr);
+            $("input[name='title']").attr("value", getJSON.data.title);
+            $("input[name='code']").attr("value", getJSON.data.productcode);
+            //选中相应的服务主题
+            // $("select[name='theme']").next().find("dd[lay-value='" + data.data.theme + "']").attr("class","layui-this");//给隐藏的dd标签添加被选中的样式
+            $("select[name='theme']").next().find("input").val(getJSON.data.theme);//给input赋值，用于显示当前选择的项目
+            $("select[name='theme'] option:contains('" + getJSON.data.theme + "')").attr("selected", "selected").siblings().removeAttr('selected');//给相应的option加上selected属性
+            //选中相应的事项类型
+            // $("select[name='eventType']").next().find("dd[lay-value='" + data.data.type + "']").attr("class","layui-this");
+            $("select[name='eventType']").next().find("input").val(getJSON.data.typename);
+            $("select[name='eventType'] option:contains('" + getJSON.data.typename + "')").attr("selected", "selected").siblings().removeAttr('selected');//给相应的option加上selected属性
+            editor.setData(getJSON.data.guide);//给富文本区域赋值
+        } else {
+            $("legend").html('添加事项');
+        }
+
+        //自定义验证规则
+        form.verify({
+            title: function (value) {
+                if (value.length < 2) {
+                    return '标题不能为空';
+                }
+            },
+            number: function (value) {
+                if (value.length < 5) {
+                    return '编号不能为空';
+                }
+            },
+            zhuti: function (value) {
+                if (value.length < 5) {
+                    return '请选择主题';
+                }
+            },
+            buzhou: function (value) {
+                if (value.length < 5) {
+                    return '请选择步骤';
+                }
+            },
+            content: function (value) {
+                layedit.sync(editIndex);
+                var contentvalue = layedit.getContent(editIndex);
+                if (contentvalue.length < 2) {
+                    return '内容不能为空且不小于5';
+                }
+            }
+        });
+
+        //监听提交
+        form.on('submit(demo1)', function (data) {
+            $(this).attr('disabled', "true");
+            var editorcontent = editor.document.getBody().getHtml();//获取富文本编辑框的值
+            var APIname = 'api/bossApi/service/eventEdit';
+            if (orderID != null) {
+                var dataArr = {
+                    "itemcode": data.field.code,
+                    "theme": data.field.theme,
+                    "eventtype": data.field.eventType,
+                    "title": data.field.title,
+                    "guide": editorcontent,
+                    "id": orderID
+                };
+            } else {
+                var dataArr = {
+                    "itemcode": data.field.code,
+                    "theme": data.field.theme,
+                    "eventtype": data.field.eventType,
+                    "title": data.field.title,
+                    "guide": editorcontent
+                };
+            }
+            var getJSON = common.getJsonData(APIname, '', dataArr);
+            // console.log(dataArr);
+            // return false;
+            if (getJSON["code"] == 1) {
+                layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                    localStorage.removeItem("additem");
+                    history.go(-1);
+                });
+            } else {
+                layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+
+                });
+            }
+            return false;
+        });
+
+        $(document).on('click', '.cke_dialog_ui_button', function () {
+            // alert($("ifrmae[class='cke_dialog_ui_input_file']").html());
+
+
+        });
+
+        $(document).on('click', 'string', function () {
+            // alert($(this).html())
+        });
+
+
+    });
+
+
+</script>
+</body>
+</html>

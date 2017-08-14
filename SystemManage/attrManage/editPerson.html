@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>添加部门</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../css/webuploader.css">
+    <style>
+        .file {
+            position: relative;
+            height: 100px;
+            filter: alpha(opacity:0);
+            opacity: 0;
+            width: 100px
+        }
+
+        #localImag {
+            position: absolute;
+            top: 0
+        }
+    </style>
+</head>
+<body>
+<div style="margin: 15px;">
+    <fieldset class="layui-elem-field">
+        <legend></legend>
+        <div class="layui-field-box">
+            <form class="layui-form" enctype="multipart/form-data" id="serviceIndex">
+                <table class="layui-table">
+                    <tr>
+                        <th class="self-form-title">部门图标：<span class="wenzism">(图片比例16:9)</span></th>
+                        <td>
+                            <div class="site-demo-upload">
+                                <img id="LAY_demo_upload" src="">
+
+                                <div class="site-demo-upbar">
+                                    <div id="localImag"><img id="preview" src="../../images/upimg.png" width="100"
+                                                             height="100" style="display: block"></div>
+                                    <input type="file" name="file" id="doc" onchange="javascript:setImagePreview();"
+                                           class="file">
+                                    <input type="hidden" name="module" lay-verify="required" autocomplete="off"
+                                           class="layui-input" placeholder="" value="7012">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th id="itemsname">部门名称：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="hidden" name="areaid">
+                                <input type="text" name="name" lay-verify="required" maxlength="50" autocomplete="off"
+                                       placeholder="请输入名称" class="layui-input self-form-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="versiontype">
+                        <th class="">推送版本：</th>
+                        <td>
+                            <div class="layui-input-inline" id="version">
+                                <input name="version[person]" lay-skin="primary" datastorage="version" title="个人版"
+                                       type="checkbox" fid="0">
+                                <input name="version[buniess]" lay-skin="primary" datastorage="version" title="企业版"
+                                       type="checkbox" fid="1">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>编号：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="text" name="number" lay-verify="required|number" maxlength="100" autocomplete="off"
+                                       placeholder="请输入编号" class="layui-input self-form-input">
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr id="depratmentstatutype">
+                        <th>业务类型：</th>
+                        <td>
+                            <div class="layui-input-inline" id="depratmentstatutype">
+                                <select name="depratmentstatutype" lay-verify="selecttype">
+                                    <option value="">—— 请选择 ——</option>
+                                    <option value="10">车管业务</option>
+                                    <option value="20">出入境业务</option>
+                                    <option value="30">行政审批业务</option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>描述：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <textarea placeholder="请输入描述" name="note" maxlength="300" class="layui-textarea" lay-verify=""
+                                          style="width:300px"></textarea>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <div class="layui-btn-group self-btn-return">
+                    <button class="layui-btn" lay-submit="" id="upload" lay-filter="formtable">保存</button>
+                </div>
+            </form>
+        </div>
+    </fieldset>
+</div>
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('serviceIndex'),
+                add = common.getUrlParam("add"),
+                edit = common.getUrlParam("edit"),
+                areaid = common.getUrlParam("areaid"),
+                layer = layui.layer;
+        common.saveTabIndex('serviceIndex');
+        //common.init();
+        common.layTime(); //时间选择
+
+        //避免input被刷新清空
+        formInStorage.init({
+            formElem: '#serviceIndex',
+            formSession: 'serviceIndex'
+        });
+
+        //给标题赋值
+        if (add == '1') {
+            $("legend").html("添加部门");
+            $(".self-form-title").html('部门图标');
+            $('#itemsname').html('部门名称');
+            $(".versiontype").hide();
+        }
+        if (add == '2') {
+            $("legend").html("添加主题");
+            $(".self-form-title").html('主题图标');
+            $('#itemsname').html('主题名称');
+            $("#depratmentstatutype").css('display', 'none');
+            $("input[name='areaid']").css('display', 'none');
+            $(".versiontype").show();
+        }
+        if (edit == '1') {
+            $("legend").html("编辑部门");
+            $(".self-form-title").html('部门图标');
+            $('#itemsname').html('部门名称');
+            $(".versiontype").hide();
+        }
+        if (edit == '2') {
+            $("legend").html("编辑主题");
+            $(".self-form-title").html('主题图标');
+            $('#itemsname').html('主题名称');
+            $("#depratmentstatutype").remove();
+            $("input[name='areaid']").css('display', 'none');
+            $(".versiontype").show();
+        }
+
+        //给编辑框负值
+        var arr = JSON.parse(localStorage.getItem("attrmanagerDetail"));
+         console.log(arr);
+        if (arr) {
+            if(arr.param8){
+                $("#preview").attr("src",arr.param8);
+            }else{
+                $("#preview").attr("src",'../../images/0.jpg');
+            }
+            $("input[name='name']").attr("value", arr.param2);
+            $("input[name='areaid']").attr("value", arr.param6);
+            $("input[name='number']").attr("value", arr.param1)
+            $("textarea[name='note']").html(arr.param3);
+            var orderID = arr.param5;
+            $("select option[value='" + arr.param9 + "']").attr('selected', '');
+            $("#depratmentstatutype dd[lay-value='" + arr.param9 + "']").addClass('layui-this').siblings().removeClass('layui-this');
+            $("#depratmentstatutype .layui-unselect").addClass("layui-form-select");
+            $("#depratmentstatutype input").attr("placeholder", $("#depratmentstatutype dd[lay-value='" + arr.param9 + "']").html());
+            //选中版本
+            for (var i = 0; i < arr.param9.length; i++) {
+                $("#version input[fid='" + arr.param9[i] + "']").next().addClass("layui-form-checked");
+                $("#version input[fid='" + arr.param9[i] + "']").attr("checked", "checked");
+            }
+        }
+        //console.log(localStorage)
+
+
+        //自定义验证规则
+        form.verify({
+            number: [/^(?!([a-zA-Z]+|\d+)$)[a-zA-Z\d]{1,100}$/, '编号必须1到100位的数字+字符'],
+            selecttype: function (value) {
+                if (!value) {
+                    return '必须选择业务类型！';
+                }
+            }
+        });
+
+        function versionfn() {
+            var version = $("#version").find(".layui-form-checked").length; //是否选择了版本
+            $("#version").css("border", "0");
+            if (version == 0) {
+                $("#version").css("border", "1px solid red");
+                layer.msg('必须选择推送版本！', {icon: 5, shift: 6});
+                return false;
+            }
+            var version = "";
+            $('input[datastorage="version"]:checked').each(function () { //当前选中的复选框
+                version += $(this).attr('fid') + ",";
+            });
+            version = version.substring(0, version.length - 1);// '1,2,'去掉最后一个逗号
+            return version;
+        }
+
+        //监听提交
+        form.on('submit(formtable)', function (data) {
+            $(this).attr('disabled', "true");
+            var imgguid = '';
+            $.ajax({
+                url: apiUrl + 'api/files/fileupload',
+                type: 'POST',
+                cache: false,
+                data: new FormData($('#serviceIndex')[0]),
+                processData: false,
+                contentType: false,
+                async: false
+            }).done(function (res) {
+                imgguid = res.data;
+            }).fail(function (res) {
+            });
+            console.log(imgguid)
+            //请求接口
+            if (orderID != null) {
+                if (edit == 1) {
+                    var dataArr = {
+                        "departmentid": orderID,
+                        "imgguid": imgguid,
+                        "name": data.field.name,
+                        "number": data.field.number,
+                        "remark": data.field.note,
+                        "areaid": data.field.areaid,
+                        "status": data.field.depratmentstatutype
+                    };
+                } else {
+                    var version = versionfn();
+                    var dataArr = {
+                        "themeid": orderID,
+                        "imgguid": imgguid,
+                        "name": data.field.name,
+                        "number": data.field.number,
+                        "remark": data.field.note,
+                        "versiontype": version
+                    };
+                }
+            } else {
+                if (add == 1) {
+                    var dataArr = {
+                        "departmentid": 0,
+                        "imgguid": imgguid,
+                        "name": data.field.name,
+                        "number": data.field.number,
+                        "remark": data.field.note,
+                        "areaid": areaid,
+                        "status": data.field.depratmentstatutype
+                    };
+                } else {
+                    var version = versionfn();
+                    var dataArr = {
+                        "themeid": 0,
+                        "imgguid": imgguid,
+                        "name": data.field.name,
+                        "number": data.field.number,
+                        "remark": data.field.note,
+                        "versiontype": version
+                    };
+                }
+            }
+
+            // console.log(dataArr);
+
+          // return false;
+            if (edit == 1 || add == 1) {
+                var getJSON = common.getJsonData('api/bossApi/property/departmentEdit', '', dataArr);
+            }
+            if (edit == 2) {
+                var getJSON = common.getJsonData('api/bossApi/property/themeEdit', '', dataArr);
+            }
+            if (add == 2) {
+                //判断名称编号唯一性
+                var getGS = common.getJsonData('api/bossApi/property/themeNameCount', '', {"text": data.field.name});
+                if (getGS.data > 0) {
+                    layer.msg('主题名称已存在');
+                    $(".layui-btn").removeAttr('disabled');
+                    return false;
+                }
+                var getGS = common.getJsonData('api/bossApi/property/themeCodeCount', '', {"text": data.field.number});
+                if (getGS.data > 0) {
+                    layer.msg('主题编号已存在');
+                    $(".layui-btn").removeAttr('disabled');
+                    return false;
+                }
+                var getJSON = common.getJsonData('api/bossApi/property/themeEdit', '', dataArr);
+            }
+           //console.log(dataArr);
+           //console.log(getJSON);
+          // return false;
+            if (getJSON["code"] == 1) {
+                layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                    localStorage.removeItem("serviceIndex");
+                    localStorage.removeItem("attrmanagerDetail");
+                    // alert(6666)
+                    /*
+                     var index = parent.layer.getFrameIndex(window.name);
+                     parent.layer.close(index);
+                     window.parent.location.reload();
+                     */
+                    location.href = "index.html";
+                });
+            } else {
+                layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                    $(".layui-btn").removeAttr('disabled');
+                });
+            }
+            return false;
+        });
+    });
+
+    //下面用于图片上传预览功能
+    function setImagePreview(avalue) {
+        var docObj = document.getElementById("doc");
+        var imgObjPreview = document.getElementById("preview");
+        if (docObj.files && docObj.files[0]) {
+            //火狐下，直接设img属性
+            imgObjPreview.style.display = 'block';
+            imgObjPreview.style.width = '100px';
+            imgObjPreview.style.height = '100px';
+            //imgObjPreview.src = docObj.files[0].getAsDataURL();
+
+            //火狐7以上版本不能用上面的getAsDataURL()方式获取，需要一下方式
+            imgObjPreview.src = window.URL.createObjectURL(docObj.files[0]);
+        } else {
+            //IE下，使用滤镜
+            docObj.select();
+            var imgSrc = document.selection.createRange().text;
+            var localImagId = document.getElementById("localImag");
+            //必须设置初始大小
+            localImagId.style.width = "100px";
+            localImagId.style.height = "100px";
+            //图片异常的捕捉，防止用户修改后缀来伪造图片
+            try {
+                localImagId.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
+                localImagId.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = imgSrc;
+            } catch (e) {
+                alert("您上传的图片格式不正确，请重新选择!");
+                return false;
+            }
+            imgObjPreview.style.display = 'none';
+            document.selection.empty();
+        }
+        return true;
+    }
+</script>
+</body>
+</html>

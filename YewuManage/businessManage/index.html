@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>服务事项</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/table.css"/>
+    <style>
+        .not-found {
+            width: 150px;
+            margin: 30px auto;
+        }
+
+        .not-found img {
+            display: block;
+            width: 30px;
+            margin: 0 auto 10px;
+        }
+
+        .not-found span {
+            color: #4e4d4d;
+        }
+    </style>
+</head>
+
+<body>
+<div style="margin: 15px;">
+    <div class="layui-tab layui-tab-card" lay-filter="businessMangeaIndex">
+        <ul class="layui-tab-title">
+            <li>行政审批</li>
+            <li>服务商</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item">
+                <div class="layui-field-box">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item self-layui-form-item">
+                                <label class="layui-form-label">商家状态</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="businessstatus">
+                                        <option value="">全部</option>
+                                        <option value="20">已上线</option>
+                                        <option value="10">待上线</option>
+                                        <option value="0">已下线</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label">事项名称</label>
+
+                                <div class="layui-input-inline">
+                                    <input type="text" name="keyword" lay-verify="title" autocomplete="off"
+                                           placeholder="请输入标题" class="layui-input">
+                                </div>
+                                <button class="layui-btn" lay-submit="" data-type="1" lay-filter="searxingzheng"
+                                        style="margin-left: 40px">搜索
+                                </button>
+                                <button type="reset" class="layui-btn layui-btn-primary reset">重置</button>
+                            </div>
+                        </form>
+                    </blockquote>
+                    <a href="addItems.html?type=0">
+                        <div class="layui-btn"><i class="layui-icon"></i>&nbsp;新建</div>
+                    </a>
+                    <table class="site-table table-hover">
+                        <thead>
+                        <tr>
+                            <th>产品编号</th>
+                            <th>商家名称</th>
+                            <th>类型</th>
+                            <th>状态</th>
+                            <th>联系人</th>
+                            <th>联系电话</th>
+                            <th>工商登记号</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="items-list1"></tbody>
+                    </table>
+                    <div class="admin-table-page">
+                        <div id="page1" class="page"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="layui-field-box">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item self-layui-form-item">
+                                <label class="layui-form-label">商家状态</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="businessstatus">
+                                        <option value="">全部</option>
+                                        <option value="20">已上线</option>
+                                        <option value="10">待上线</option>
+                                        <option value="0">已下线</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label">事项名称</label>
+
+                                <div class="layui-input-inline">
+                                    <input type="text" name="keyword" lay-verify="title" autocomplete="off"
+                                           placeholder="请输入标题" class="layui-input">
+                                </div>
+                                <button class="layui-btn" lay-submit="" data-type="1" lay-filter="searfuwu"
+                                        style="margin-left: 40px">搜索
+                                </button>
+                                <button type="reset" class="layui-btn layui-btn-primary reset">重置</button>
+                            </div>
+                        </form>
+                    </blockquote>
+                    <a href="addItems.html?type=1">
+                        <div class="layui-btn"><i class="layui-icon"></i>&nbsp;新建</div>
+                    </a>
+                    <table class="site-table table-hover">
+                        <thead>
+                        <tr>
+                            <th>产品编号</th>
+                            <th>商家名称</th>
+                            <th>类型</th>
+                            <th>状态</th>
+                            <th>联系人</th>
+                            <th>联系电话</th>
+                            <th>工商登记号</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="items-list2"></tbody>
+                    </table>
+                    <div class="admin-table-page">
+                        <div id="page2" class="page"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!---行政审批-->
+<script id="orderHandle1" type="text/html">
+    {{# layui.each(d.datalist, function(index, item){ }}
+    <tr>
+        <td>{{ item.businessid }}</td>
+        <td>{{ item.businessname.length>18?item.businessname.substring(0, 18)+ "...":item.businessname }}</td>
+        <td>行政审批</td>
+        <td> {{#  if(item.businessstatus == 0){ }}已下线{{#  }else if(item.businessstatus == 20){ }}已上线{{#  }else{ }}待上线{{#  } }}</td>
+        <td>{{item.contacts}}</td>
+        <td>{{item.phonenumber}}</td>
+        <td>{{item.registrationnum}}</td>
+        <td>
+        <span class="layui-breadcrumb" lay-separator=" ">
+            <a href="../businessManage/manageperson.html?id={{ item.businessid }}" title="员工管理"><i class="fa fa-user-o"
+                                                                                                   aria-hidden="true"></i></a>
+            <a href="../businessManage/detail.html?id={{ item.businessid }}&type=0" title="详情"><i class="fa fa-file-text-o"
+                                                                                           aria-hidden="true"></i></a>
+            <a href="../businessManage/addItems.html?id={{ item.businessid }}&type=0" title="编辑"><i class="fa fa-edit"
+                                                                                             aria-hidden="true"></i></a>
+            {{#  if(item.businessstatus == 0){ }}
+            <a href="javascript:;" title="上线" class="approvalSet" orderid="{{ item.businessid }}"
+               status="{{ item.businessstatus }}"><i class="layui-icon self-cursor" data-icon="&#xe62f;">
+                &#xe62f;</i></a>
+            {{#  }else if(item.businessstatus == 20){ }}
+            <a href="javascript:;" title="下线" id="downline" class="approvalSet" orderid="{{ item.businessid }}"
+               status="{{ item.businessstatus }}"><i class="layui-icon" data-icon="&#xe601;">&#xe601;</i></a>
+            {{#  }else{ }}
+            <a href="javascript:;" title="待上线" class="approvalSet" orderid="{{ item.businessid }}"
+               status="{{ item.businessstatus }}"><i class="layui-icon self-cursor" data-icon="&#xe62f;">
+                &#xe62f;</i></a>
+            {{#  } }}
+            <!-- <a href="../serviceItems/downLine.html?id=73" title="下线" onclick="downline({{ item.id }})"><i class="layui-icon" data-icon="&#xe601;">&#xe601;</i></a>-->
+        </span>
+        </td>
+    </tr>
+    {{# }); }}
+    {{#  if(d.datalist.length === 0){ }}
+    <td colspan="8">
+        <div class="not-found">
+            <img src="../../images/not-found.png" alt="">
+            <span>未搜索到相关数据</span>
+        </div>
+    </td>
+    {{#  } }}
+</script>
+<!---服务商-->
+<script id="orderHandle2" type="text/html">
+    {{# layui.each(d.datalist, function(index, item){ }}
+    <tr>
+        <td>{{ item.businesscode }}</td>
+        <td>{{ item.businessname.length>18?item.businessname.substring(0, 18)+ "...":item.businessname }}</td>
+        <td>服务商</td>
+        <td> {{#  if(item.businessstatus == 0){ }}已下线{{#  }else if(item.businessstatus == 20){ }}已上线{{#  }else{ }}待上线{{#  } }}</td>
+        <td>{{item.contacts}}</td>
+        <td>{{item.phonenumber}}</td>
+        <td>{{item.registrationnum}}</td>
+        <td>
+        <span class="layui-breadcrumb" lay-separator=" ">
+            <a href="../businessManage/ManagePerson.html?id={{ item.businessid }}" title="员工管理"><i class="fa fa-user-o"
+                                                                                                   aria-hidden="true"></i></a>
+            <a href="../businessManage/detail.html?id={{ item.businessid }}&type=1" title="详情"><i class="fa fa-file-text-o"
+                                                                                           aria-hidden="true"></i></a>
+            <a href="../businessManage/addItems.html?id={{ item.businessid }}&type=1" title="编辑"><i class="fa fa-edit"
+                                                                                             aria-hidden="true"></i></a>
+            {{#  if(item.businessstatus == 0){ }}
+            <a href="javascript:;" title="上线" class="approvalSet" orderid="{{ item.businessid }}"
+               status="{{ item.businessstatus }}"><i class="layui-icon self-cursor" data-icon="&#xe62f;">
+                &#xe62f;</i></a>
+            {{#  }else if(item.businessstatus == 20){ }}
+            <a href="javascript:;" title="下线" id="downline" class="approvalSet" orderid="{{ item.businessid }}"
+               status="{{ item.businessstatus }}"><i class="layui-icon" data-icon="&#xe601;">&#xe601;</i></a>
+            {{#  }else{ }}
+            <a href="javascript:;" title="待上线" class="approvalSet" orderid="{{ item.businessid }}"
+               status="{{ item.businessstatus }}"><i class="layui-icon self-cursor" data-icon="&#xe62f;">
+                &#xe62f;</i></a>
+            {{#  } }}
+        </span>
+        </td>
+    </tr>
+    {{# }); }}
+    {{#  if(d.datalist.length === 0){ }}
+    <td colspan="8">
+        <div class="not-found">
+            <img src="../../images/not-found.png" alt="">
+            <span>未搜索到相关数据</span>
+        </div>
+    </td>
+    {{#  } }}
+</script>
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('serviceIndex'),
+                orderID = common.getUrlParam("id"),
+                itemID = common.getUrlParam("itemid"),//事项id
+                layer = layui.layer;
+        common.saveTabIndex('serviceIndex');
+        common.init();
+        common.layTime(); //时间选择
+
+        common.saveTabIndex('businessMangeaIndex');
+        //创建一个编辑器
+        var editIndex = layedit.build('LAY_demo_editor');
+
+        //复选框样式
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_flat-green'
+        });
+
+        getJson();
+
+        //点击行政审批的重置
+        $(".reset").on('click', function () {
+            getJson();
+        });
+
+        //行政审批+服务商列表
+        function getJson() {
+            for (var i = 0; i < 2; i++) {
+                var dataArr = {"page": 1, "businesstype": i};
+                common.getJsonData('api/bossApi/businessMain/businessMainSearch', i + 1, dataArr)
+            }
+        }
+
+        //搜索行政审批
+        form.on('submit(searxingzheng)', function (data) {
+            var dataArr = {
+                "page": 1,
+                "keywords": data.field.keyword,
+                "businesstype": 0,
+                "businessstatus": data.field.businessstatus
+            }
+            common.getJsonData('api/bossApi/businessMain/businessMainSearch', 1, dataArr)
+        });
+
+        //搜索服务商
+        form.on('submit(searfuwu)', function (data) {
+            var dataArr = {
+                "page": 1,
+                "keywords": data.field.keyword,
+                "businesstype": 1,
+                "businessstatus": data.field.businessstatus
+            }
+            common.getJsonData('api/bossApi/businessMain/businessMainSearch', 2, dataArr)
+            console.log(dataArr);
+            return false;
+        });
+
+        //上线和下线（“0”下线的状态，“1”上线的状态），添加热门和取消热门（“0”不热，“1”已热）
+        $(document).on('click', '.approvalSet', function () {
+            var orderID = $(this).attr("orderid");
+            var status = $(this).attr("status");
+            var APIname = "api/bossApi/businessMain/businessMainOnline";
+            if (status == 0) {
+                var dataArr = {"businessId": orderID, "isonline": true};
+            } else {
+                var dataArr = {"businessId": orderID, "isonline": false};
+            }
+            var getJSON = common.getJsonData(APIname, '', dataArr);
+            //console.log(getJSON);
+            //return false;
+            if (getJSON["code"] == 1) {
+                layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                    window.location.reload();
+                });
+            } else {
+                layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                    window.location.reload();
+                });
+            }
+        });
+
+
+    });
+
+</script>
+</body>
+
+</html>

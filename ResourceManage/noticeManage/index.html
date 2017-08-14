@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>通知管理</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/table.css"/>
+
+</head>
+<body>
+<div style="margin: 15px;">
+    <div class="layui-tab layui-tab-card" lay-filter="userindex">
+        <ul class="layui-tab-title">
+            <li>客户端</li>
+            <li>商家版</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item">
+                <div class="layui-field-box">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item self-layui-form-item">
+                                <label class="layui-form-label" style="width:auto">状态</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="status">
+                                        <option value="">—— 请选择 ——</option>
+                                        <option value="0">已上线</option>
+                                        <option value="1">待上线</option>
+                                        <option value="2">已下线</option>
+                                        <option value="3">已过期</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label" style="width:auto">选择时间</label>
+
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="开始日" id="LAY_demorange_s1" name="beginti1me" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD'})">
+                                </div>
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="截止日" id="LAY_demorange_e1" name="endtime">
+                                </div>
+                                <label class="layui-form-label" style="width:auto">类型</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="type">
+                                        <option value="">—— 请选择 ——</option>
+                                        <option value="0">公告</option>
+                                        <option value="1">消息</option>
+                                    </select>
+                                </div>
+                                <div class="self-form-time">
+                                    <label class="layui-form-label" style="width:auto">关键字</label>
+
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="keywords" lay-verify="title" autocomplete="off"
+                                               placeholder="请输入关键字" class="layui-input">
+                                    </div>
+                                    <button class="layui-btn" lay-submit="" lay-filter="searkehu"
+                                            style="margin-left: 40px">搜索
+                                    </button>
+                                    <button type="reset" class="layui-btn layui-btn-primary resetkehu">重置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </blockquote>
+                    <a class="layui-btn" href="edit.html?version=0&type=1"><i class="layui-icon"></i>&nbsp;新建消息</a>
+                    <a class="layui-btn" href="edit.html?version=0&type=0"><i class="layui-icon"></i>&nbsp;新建公告</a>
+                    <span id="items-list1"></span>
+
+                    <div class="admin-table-page">
+                        <div id="page1" class="page"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="layui-field-box">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item self-layui-form-item">
+                                <label class="layui-form-label" style="width:auto">状态</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="status">
+                                        <option value="">—— 请选择 ——</option>
+                                        <option value="0">已上线</option>
+                                        <option value="1">待发布</option>
+                                        <option value="2">已下线</option>
+                                        <option value="3">已过期</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label" style="width:auto">选择时间</label>
+
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="开始日" id="LAY_demorange_s2" name="begintime">
+                                </div>
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="截止日" id="LAY_demorange_e2" name="endtime">
+                                </div>
+                                <label class="layui-form-label" style="width:auto">类型</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="type">
+                                        <option value="">—— 请选择 ——</option>
+                                        <option value="0">公告</option>
+                                        <option value="1">消息</option>
+                                    </select>
+                                </div>
+                                <div class="self-form-time">
+                                    <label class="layui-form-label" style="width:auto">关键字</label>
+
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="keywords" lay-verify="title" autocomplete="off"
+                                               placeholder="请输入关键字" class="layui-input">
+                                    </div>
+                                    <button class="layui-btn" lay-submit="" lay-filter="searshangjia"
+                                            style="margin-left: 40px">搜索
+                                    </button>
+                                    <button type="reset" class="layui-btn layui-btn-primary resetshangjia">重置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </blockquote>
+                    <a class="layui-btn" href="edit.html?version=1&type=0"><i class="layui-icon"></i>&nbsp;新建公告</a>
+                    <span id="items-list2"></span>
+
+                    <div class="admin-table-page">
+                        <div id="page2" class="page"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!---客户端-->
+<script id="orderHandle1" type="text/html">
+    <table class="site-table table-hover">
+        <thead>
+        <tr>
+            <th>标题</th>
+            <th>类型</th>
+            <th>状态</th>
+            <th>更新时间</th>
+            <th>摘要</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# layui.each(d.datalist, function(index, item){ }}
+        <tr>
+            <td title="{{ item.title }}">{{ item.title.length>18?item.title.substring(0, 18)+ "...":item.title }}</td>
+            <td>{{# if(item.type == 0){ }}公告{{# }else{ }}消息{{# } }}</td>
+            <td>{{# if(item.status == 0){ }}已上线{{# }else if(item.status == 1){ }}待上线{{# }else if(item.status == 2){
+                }}已下线{{# }else{ }}已过期{{# } }}
+            </td>
+            <td>{{ item.modifytime }}</td>
+            <td title='{{ item.content }}'>{{ item.content && item.content.length>18?item.content.substring(0, 18)+
+                "...":item.content }}
+            </td>
+            <td style="display:none">{{ item.validitytime}}</td>
+            <td style="display:none">{{ item.modifytime }}</td>
+            <td style="display:none">{{ item.version }}</td>
+            <td style="display:none">{{ item.tags }}</td>
+            <td style="display:none">{{ item.noticid }}</td>
+            <td style="display:none">{{ item.status }}</td>
+            <td>
+                <span class="layui-breadcrumb" lay-separator=" " indexid="{{ item.noticid }}">
+                    <a href="../noticemanage/detail.html?type={{ item.type }}" title="详情" class="detail"><i
+                            class="fa fa-file-text-o" aria-hidden="true"></i></a>
+                    {{#  if(item.status == 0 && item.type!= 1){ }}
+                     <a href="javascript:;" class="noticeSet" title="下线" type="{{item.type}}" orderid="{{item.noticid}}"
+                        status="{{item.status}}"><i class="layui-icon" data-icon="&#xe601;">&#xe601;</i></a>
+
+                    <!--
+                     <a href="javascript:;" title="下线" id="downline" class="noticeSet" orderid="{{ item.noticid }}"
+                        status="{{ item.status }}"><i class="layui-icon" data-icon="&#xe601;">&#xe601;</i></a>
+                        -->
+                    {{#  }else{ }}
+                        {{#  if(item.type == 0){ }}
+                            <a href="../noticemanage/edit.html?noticeid={{item.noticid}}&version=0&type=0&mody=1" class="detail" title="编辑"><i
+                                    class="fa fa-edit"
+                                    aria-hidden="true"></i></a>
+                        {{#  } }}
+                    <!--
+                    <a href="javascript:;" title="上线" class="noticeSet" orderid="{{ item.noticid }}"
+                       status="{{ item.status }}"><i class="layui-icon self-cursor" data-icon="&#xe62f;">&#xe62f;</i></a>
+
+                    -->
+                     {{#  } }}
+                </span>
+            </td>
+        </tr>
+        {{# }); }}
+        </tbody>
+    </table>
+</script>
+<!---服务商-->
+<script id="orderHandle2" type="text/html">
+    <table class="site-table table-hover">
+        <thead>
+        <tr>
+            <th>标题</th>
+            <th>类型</th>
+            <th>状态</th>
+            <th>更新时间</th>
+            <th>摘要</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# layui.each(d.datalist, function(index, item){ }}
+        <tr>
+            <td title="{{ item.title }}">{{ item.title.length>18?item.title.substring(0, 18)+ "...":item.title }}</td>
+            <td>{{# if(item.type == 0){ }}公告{{# }else{ }}消息{{# } }}</td>
+            <td>{{# if(item.status == 0){ }}已上线{{# }else if(item.status == 1){ }}待上线{{# }else if(item.status == 2){
+                }}已下线{{# }else{ }}已过期{{# } }}
+            </td>
+            <td>{{ item.modifytime }}</td>
+            <td>{{ item.content.length>18?item.content.substring(0, 18)+ "...":item.content
+                }}
+            </td>
+            <td style="display:none">{{ item.validitytime}}</td>
+            <td style="display:none">{{ item.modifytime }}</td>
+            <td style="display:none">{{ item.version }}</td>
+            <td style="display:none">{{ item.tags }}</td>
+            <td style="display:none">{{ item.noticid }}</td>
+            <td style="display:none">{{ item.status }}</td>
+            <td>
+                <span class="layui-breadcrumb" lay-separator=" " indexid="{{ item.noticid }}">
+                    <a href="../noticemanage/detail.html?type={{ item.type }}" title="详情" class="detail"><i
+                            class="fa fa-file-text-o" aria-hidden="true"></i></a>
+                    {{#  if(item.status == 0){ }}
+
+                     <div href="javascript:;" class="noticeSet" title="下线" type="{{item.type}}"
+                          orderid="{{item.noticid}}" status="{{item.status}}" style="display: none"><i
+                             class="layui-icon"
+                             data-icon="&#xe601;">&#xe601;</i>
+                     </div>
+                    <!--
+                     <a href="javascript:;" title="下线" id="downline" class="noticeSet" orderid="{{ item.noticid }}"
+                        status="{{ item.status }}"><i class="layui-icon" data-icon="&#xe601;">&#xe601;</i></a>
+                        -->
+
+                    {{#  }else{ }}
+                    <a href="../noticemanage/edit.html?noticeid={{item.noticid}}&version=1&type=0&mody=1" title="编辑" class="detail"><i
+                            class="fa fa-edit"
+                            aria-hidden="true"></i></a>
+                    <!--
+                    <a href="javascript:;" title="上线" class="noticeSet" orderid="{{ item.noticid }}"
+                       status="{{ item.status }}"><i class="layui-icon self-cursor" data-icon="&#xe62f;">&#xe62f;</i></a>
+
+                    -->
+ {{#  } }}
+                </span>
+            </td>
+        </tr>
+        {{# }); }}
+        </tbody>
+    </table>
+</script>
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('userindex'),
+                orderID = common.getUrlParam("id"),
+                layer = layui.layer;
+        common.saveTabIndex('userindex');
+        common.init();
+        common.layTime(); //时间选择
+        //复选框样式
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_flat-green'
+        });
+
+        /* ------------------------------------------------------------- 数据列表显示 ---------------------------------------------------------------- */
+
+        alluser(0, '');
+        alluser(1, '');
+        $(".resetkehu").on('click', function () {
+            alluser(0, '');
+        });
+        $(".resetshangjia").on('click', function () {
+            alluser(1, '');
+        });
+
+        /* ------------------------------------------------------------- 数据搜索操作 ---------------------------------------------------------------- */
+
+        //客户端 -> 搜索（状态，性别，标签）
+        form.on('submit(searkehu)', function (data) {
+            var dataArr = {
+                "version": 0,
+                "type": data.field.type,
+                "timebegin": data.field.begintime,
+                "timeend": data.field.endtime,
+                "status": data.field.status,
+                "keywords": data.field.keywords,
+                "page": 1
+            };
+            alluser(0, dataArr);
+            return false;
+        });
+
+        //商家 -> 搜索（性别，标签）
+        form.on('submit(searshangjia)', function (data) {
+            var dataArr = {
+                "version": 1,
+                "type": data.field.type,
+                "timebegin": data.field.begintime,
+                "timeend": data.field.endtime,
+                "status": data.field.status,
+                "keywords": data.field.keywords,
+                "page": 1
+            };
+            alluser(1, dataArr);
+            return false;
+        });
+
+        /* ------------------------------------------------------------- 数据MODEL ---------------------------------------------------------------- */
+
+        function alluser(typeid, dataArr) {
+            var dataArray = dataArr || {"page": 1, "version": typeid};
+            var cc = typeid + 1
+            var getJSON = common.getJsonData('api/bossApi/notice/noticeSearch', cc, dataArray);
+            /*
+             //映射模版
+             var cc = typeid + 1
+             var tplid = document.getElementById('orderHandle' + cc),
+             viewid = document.getElementById('items-list' + cc);
+             var getTpl = tplid.innerHTML;
+             layui.laytpl(getTpl).render(getJSON, function (html) {
+             viewid.innerHTML = html;
+             element.init();
+             });
+             */
+        }
+
+        /* ------------------------------------------------------------- 上线和下线操作 ---------------------------------------------------------------- */
+
+        //上线和下线（“0”下线的状态，“1”上线的状态）
+        $(document).on('click', '.noticeSet', function () {
+            var orderid = parseInt($(this).attr("orderid"));
+            var status = parseInt($(this).attr("status"));
+            var type = parseInt($(this).attr("type"));
+            if (status == 0) {
+                status = 2;
+            } else if (status == 1) {
+                status = 0;
+            } else if (status == 2) {
+                status = 1;
+            } else {
+
+            }
+            var dataArr = {"noticeid": orderid, "status": status, "type": type};
+            var getJSON = common.getJsonData("api/bossApi/notice/noticeSet", "", dataArr);
+            //console.log(dataArr);
+            // console.log(getJSON);
+            // return false;
+            if (getJSON["code"] == 1) {
+                layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                    window.location.reload();
+                });
+            } else {
+                layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                    window.location.reload();
+                });
+            }
+        });
+
+        /* ------------------------------------------------------------- 详情操作 ---------------------------------------------------------------- */
+
+        $(document).on('click', '.detail', function () {
+            var index = $(this).parent().parent().siblings();
+            //拼凑数组并放到localhost，以便详情使用
+            var arr = {
+                "param1": index.eq(0).attr("title"),
+                "param2": index.eq(1).html(),
+                "param3": index.eq(2).html(),
+                "param4": index.eq(3).html(),
+                "param5": index.eq(4).html(),
+                "param6": index.eq(5).html(),
+                "param7": index.eq(6).html(),
+                "param8": index.eq(7).html(),
+                "param9": index.eq(8).html(),
+                "param10": index.eq(9).html(),
+                "param11": index.eq(10).html(),
+                "param12": index.eq(11).html(),
+            };
+            localStorage.setItem("noticmanager", JSON.stringify(arr));
+            console.log(localStorage.getItem("noticmanager"));
+
+            //return false;
+            location.href = "detail.html";
+        });
+
+    });
+
+</script>
+</body>
+</html>

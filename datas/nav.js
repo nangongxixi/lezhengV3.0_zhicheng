@@ -1,0 +1,108 @@
+var navs = [{
+
+	"title": "业务管理",
+	"icon": "fa-paper-plane-o",
+	"spread": true,
+	"children": [{
+		"title": "服务项目",
+		"icon": "fa-navicon",
+		"href": "yewumanage/serviceitems/index.html"
+	}, {
+		"title": "商家管理",
+		"icon": "fa-plane",
+		"href": "yewumanage/businessmanage/index.html"
+	}, {
+		"title": "工单管理",
+		"icon": "&#xe63c;",
+		"href": "yewumanage/ordersmanage/index.html"
+	}]
+}, {
+    "title": "订单管理",
+    "icon": "fa-folder-open-o",
+    "spread": false,
+    "children": [{
+        "title": "订单处理",
+        "icon": "&#xe60a;",
+        "href": "ordersmanage/ordersHandle/index.html"
+    }, {
+        "title": "订单查询",
+        "icon": "&#xe615;",
+        "href": "ordersmanage/ordersQuery/index.html"
+    }]
+}, {
+    "title": "运营管理",
+    "icon": "fa-shopping-bag",
+    "spread": false,
+    "children": [{
+        "title": "新闻管理",
+        "icon": "fa-newspaper-o",
+        "href": "operationmanage/newsManage/index.html"
+    }, {
+        "title": "互动管理",
+        "icon": "fa-group",
+        "href": "operationmanage/interactionManage/index.html"
+    }, {
+        "title": "banner管理",
+        "icon": "&#xe634;",
+        "href": "operationmanage/bannerManage/index.html"
+    }, {
+        "title": "二维码管理",
+        "icon": "fa-qrcode",
+        "href": "operationmanage/qrCodeManage/index.html"
+    }]
+}, {
+    "title": "资源管理",
+    "icon": "&#xe636;",
+    "spread": false,
+    "children": [{
+        "title": "用户管理",
+        "icon": "&#xe613;",
+        "href": "resourcemanage/usermanage/index.html"
+    }, {
+        "title": "预约管理",
+        "icon": "&#xe60e;",
+        "href": "resourcemanage/appointmentmanage/index.html"
+    }, {
+        "title": "通知管理",
+        "icon": "fa-volume-up",
+        "href": "resourcemanage/noticemanage/index.html"
+    }]
+}, {
+    "title": "财务管理",
+    "icon": "fa-calculator",
+    "spread": false,
+    "children": [{
+        "title": "财务管理",
+        "icon": "&#xe64f;",
+        "href": "financeManage/financeManage/index.html"
+    }, {
+        "title": "优惠券管理",
+        "icon": "fa-credit-card",
+        "href": "financeManage/couponManage/index.html"
+    }, {
+        "title": "积分管理",
+        "icon": "fa-star",
+        "href": "financeManage/pointsManage/index.html"
+    }]
+}, {
+    "title": "系统管理",
+    "icon": "fa-dashboard",
+    "spread": false,
+    "children": [{
+        "title": "角色管理",
+        "icon": "fa-user-plus",
+        "href": "systemmanage/roleManage/index.html"
+    }, {
+        "title": "属性管理",
+        "icon": "fa-cube",
+        "href": "systemmanage/attrManage/index.html"
+    }, {
+        "title": "日志管理",
+        "icon": "fa-file-code-o",
+        "href": "systemmanage/logManage/index.html"
+    }, {
+        "title": "自定义步骤",
+        "icon": "fa-plus",
+        "href": "systemmanage/customStep/index.html"
+    }]
+}];

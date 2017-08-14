@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <title>编辑服务</title>
+        <meta name="renderer" content="webkit">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="format-detection" content="telephone=no">
+
+        <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all" />
+        <link rel="stylesheet" href="../../css/global.css" media="all">
+        <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+        <link rel="stylesheet" href="../../css/table.css" />        
+    </head>
+
+    <body>
+        <div style="margin: 15px;">			
+            <fieldset class="layui-elem-field">
+                <legend>服务详情</legend>
+                <div class="layui-field-box">
+                    <form class="layui-form" action="">	
+                        <table class="layui-table" id="content">                           											
+                        </table>
+
+                        <table class="layui-table" >
+                            <tr><th class="self-form-title">产品编号：</th>
+                                <td>                               
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="number" lay-verify="number" autocomplete="off" placeholder="请输入产品编号" class="layui-input self-form-input">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr><th class="detail-title">办理须知：</th>
+                                <td>                               
+                                    <div class="layui-input-block edit_box self-edit-margin">
+                                        <textarea class="layui-textarea layui-hide" name="content" lay-verify="content" id="LAY_demo_editor"></textarea>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="layui-btn-group self-btn-return">
+                            <button class="layui-btn" lay-submit="" lay-filter="demo1">保存</button>
+                            <button class="layui-btn layui-btn-primary" lay-submit="" lay-filter="demo2">上线</button>
+                            <button class="layui-btn" lay-submit="" lay-filter="demo1">返回</button>
+                        </div>  
+                        <a href="javascript:history.go(-1);" class="return-go"><i class="fa fa-reply" data-icon="fa-reply" aria-hidden="true"></i> 返回</a>
+                    </form>
+                </div>
+            </fieldset>            
+        </div>
+
+        <script id="orderHandle" type="text/html">
+            <tr>
+                <th>事项名称：</th>
+                <td>{{ d.title}}</td>
+            </tr>
+            <tr>
+                <th>事项编号：</th>
+                <td>{{ d.id}}</td>
+            </tr>                        
+            <tr>
+                <th>服务主题：</th>
+                <td>建筑类</td>
+            </tr>
+            <tr>
+                <th>订单步骤：</th>
+                <td>订单步骤一</td>
+            </tr>            
+        </script> 
+    
+        <script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+        <script type="text/javascript" src="../../js/config.js"></script>
+        
+        <script>
+            layui.use(['form', 'layedit', 'laydate', 'element', 'laytpl', 'common'], function () {
+                var $ = layui.jquery,
+                    form = layui.form(),
+                    laytpl = layui.laytpl,
+                    layer = layui.layer,
+                    layedit = layui.layedit,
+                    laydate = layui.laydate,
+                    element = layui.element(),
+                    common = layui.common,
+                    editIndex = layedit.build('LAY_demo_editor'),
+                    orderid = common.getUrlParam("id");
+            //自定义验证规则
+                form.verify({
+                    number: function (value) {
+                        if (/^[\s]{0,}$|^[\w\s]{7,}$/g.test(value)) {
+                            return '产品编号不能为空或空格且不小于6';
+                        }
+                    },
+                    content: function (value) {
+                        layedit.sync(editIndex);
+                        var contentvalue = layedit.getContent(editIndex);
+                        if (contentvalue.length < 5) {
+                            return '内容不能为空且不小于5';
+                        }
+                    }
+                });
+            //监听提交
+                form.on('submit(demo1)', function (data) {
+                    layer.alert('提交的数据：' + JSON.stringify(data.field), {icon: 1, title: '提交信息'}, function () {
+                        parent.layer.closeAll();
+                    });
+                    return false;
+                });
+
+                $.ajax({
+                    url: "http://221.10.2.222:5680/api/wx/News/" + orderid + "/0",
+                    type: "get",
+                    dataType: "json",
+                    success: function (data) {
+                        renderTpl(data);
+                    }
+                });
+
+                function renderTpl(data) {
+                    var tplid = document.getElementById('orderHandle'),
+                            viewid = document.getElementById('content');
+                    var getTpl = tplid.innerHTML;
+                    laytpl(getTpl).render(data, function (html) {
+                        viewid.innerHTML = html;
+                        element.init();
+                    });
+                }
+
+            });            
+        </script>
+    </body>
+</html>
+

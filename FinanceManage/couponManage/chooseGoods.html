@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>编辑/添加优惠券</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <style>
+        .layui-choose-left {
+            float: left;
+            width: 200px;
+        }
+
+        .layui-colla-content {
+            padding: 0;
+        }
+
+        .layui-colla-content li {
+            height: 40px;
+            line-height: 40px;
+            padding-left: 40px;
+            cursor: pointer;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .layui-colla-content li:hover {
+            background: #eee;
+        }
+
+        .layui-colla-content li.active {
+            background: #009e94;
+            color: #fff;
+        }
+
+        .layui-choose-right {
+            margin-left: 220px;
+        }
+
+        .layui-choose-tab {
+            padding: 0 15px;
+        }
+
+        .choosed-title {
+            background: #f2f2f2;
+            font-size: 15px;
+            height: 40px;
+            line-height: 40px;
+            padding-left: 10px;
+            color: #5d5c5c;
+            border: 1px solid #e2e2e2;
+        }
+
+        .choosed-content {
+            border: 1px solid #f2f2f2;
+            border-top: 0;
+            min-height: 50px;
+            padding: 10px;
+            overflow: hidden;
+        }
+
+        .choosed-item {
+            float: left;
+            margin: 0 15px 10px 0;
+            padding: 0 10px;
+            height: 30px;
+            line-height: 30px;
+            font-size: 16px;
+            color: #5FB878;
+            border: 1px solid #5FB878;
+            -webkit-border-radius: 2px;
+            -moz-border-radius: 2px;
+            border-radius: 2px;
+        }
+
+        .choosed-item:hover {
+            color: #009688;
+            border: 1px solid #009688;
+        }
+
+        .choosed-item i {
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .itemstyla {
+            cursor: pointer;
+            min-height: 40px;
+            line-height: 40px;
+            border-bottom: 1px solid #ddd;
+            font-size: 14px;
+            font-weight: 400;
+            text-align: left;
+            background-color: #009688 !important;
+            color: #fff !important;
+        }
+
+
+    </style>
+</head>
+
+<body>
+<div>
+    <div class="layui-field-box layui-clear" style="margin-bottom: 60px">
+        <div class="layui-choose-left">
+            <div class="layui-choose-left">
+                <div class="layui-collapse" lay-accordion="" id="area"></div>
+                <table class="site-table table-hover  right">
+                    <tbody class="selsect-content1">
+                    <tr>
+                        <td class="select_input-items" id="serverList"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="layui-choose-right">
+            <div class="choosed-title">请选择产品</div>
+            <div class="choosed-content">
+                <form class="site-table" action="" id="chooseGoods">
+                    <div class="layui-form-item" style="margin-top: 0">
+                        <div style="position:relative; margin-bottom: 20px; width:30%; overflow: hidden; float:left">
+                            <input type="checkbox" class="table_selected_all">
+                            <span style=" line-height: 180%; position: absolute; top: -1px; margin-left: 10px;">选择全部（注：选择该选项，该优惠券将开放给所有产品）</span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-inline">
+                            <input type="text" name="keywords" lay-verify="" placeholder=" 请输入关键字" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                        <div class="layui-input-inline" style="width: 50px">
+                            <button class="layui-btn">搜索</button>
+                        </div>
+                    </div>
+                    <fieldset class="layui-elem-field" style="margin-top: 30px">
+                        <legend>产品列表</legend>
+                        <div class="layui-field-box" style="margin: 15px">
+                            <div class="layui-form-item" id="itemval">
+                                <span id="items-list1"></span>
+                                <span id="items-list2"></span>
+                                <span id="items-list3"></span>
+                            </div>
+                            <div class="admin-table-page">
+                                <div id="page1" class="page"></div>
+                                <div id="page2" class="page"></div>
+                                <div id="page3" class="page"></div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="layui-form-item" style="text-align: center">
+                <button class="layui-btn" id="shouji" data-type="0">保存</button>
+                <button class="layui-btn">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script id="orderHandle1" type="text/html">
+    {{# layui.each(d.datalist, function(index, item){ }}
+    <div style="position:relative; margin-bottom: 20px; width:30%; overflow: hidden; float:left">
+        <input type="checkbox" name="0_{{item.id}}" class="input-self" id="orderHandleone{{ item.id }}">
+        <label for="orderHandleone{{ item.id }}" class="self-cursor"></label>
+        <span style=" line-height: 180%; position: absolute; top: -1px; margin-left: 10px;">{{item.title}}</span>
+    </div>
+    {{# }); }}
+</script>
+<script id="orderHandle2" type="text/html">
+    {{# layui.each(d.datalist, function(index, item){ }}
+    <div style="position:relative; margin-bottom: 20px; width:30%; overflow: hidden; float:left">
+        <input type="checkbox" name="1_{{item.id}}" class="input-self" id="orderHandletwo{{ item.id }}">
+        <label for="orderHandletwo{{ item.id }}" class="self-cursor"></label>
+        <span style=" line-height: 180%; position: absolute; top: -1px; margin-left: 10px;">{{item.title}}</span>
+    </div>
+    {{# }); }}
+</script>
+<script id="orderHandle3" type="text/html">
+    {{# layui.each(d.datalist, function(index, item){ }}
+    <div style="position:relative; margin-bottom: 20px; width:30%; overflow: hidden; float:left">
+        <input type="checkbox" name="2_{{item.id}}" class="input-self" id="orderHandlethree{{ item.id }}">
+        <label for="orderHandlethree{{ item.id }}" class="self-cursor"></label>
+        <span style=" line-height: 180%; position: absolute; top: -1px; margin-left: 10px;">{{item.title}}</span>
+    </div>
+    {{# }); }}
+</script>
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                orderID = common.getUrlParam("id"),
+                layer = layui.layer;
+        common.init();
+        // common.saveTabIndex('attrManage');
+        // common.layTime(); //时间选择
+
+        /*----------------------------------------------- 左侧列表 -------------------------------------------------------------------------*/
+
+        //区域列表
+        var dataArr = {"id": 0};
+        var areaBig = common.getJsonData('api/bossApi/service/areaSearch', '', dataArr);
+        $.each(areaBig.datalist, function (index, item) {
+            $("#area").append('<div class="layui-colla-item"><h2 class="layui-colla-title" id="' + item.areaid + '">' + item.areaname + '</h2><div class="layui-colla-content"><ul id="areasmall' + item.areacode + '"></ul></div></div>');
+            if (index == 0) {
+                $(".layui-colla-content").addClass("layui-show");
+            }
+            var dataArr = {"id": item.areacode};
+            var areaSmall = common.getJsonData('api/bossApi/service/areaSearch', '', dataArr);
+            for (var i = 0; i < areaSmall.datalist.length; i++) {
+                $("#areasmall" + item.areacode).append('<li class="smallitem" id="' + areaSmall.datalist[i].areaid + '">' + areaSmall.datalist[i].areaname + '</li>');
+            }
+        });
+        //列表样式
+        $("#area ul>li:even").css("background", "#fbfbfb");
+        $("#area ul>li:last").css("border", "0");
+
+        //服务大类列表
+        var APIserviceTypeList = "api/bossApi/service/serviceTypeList";
+        var getServiceTypeList = common.getJsonData(APIserviceTypeList, '', '');
+        $("#serverList").html("");
+        $.each(getServiceTypeList.datalist, function (index, item) {
+            $("#serverList").append('<h2 class="self-input" queryServerListID="' + item.id + '"><i class="layui-icon self-cursor" data-icon="&#xe602;">&#xe602;</i> ' + item.title + '</h2>');
+        });
+        itemStyle()
+
+        //操作左侧列表（点击区域筛选）
+        $("#area ul>li").on('click', function () {
+            //左侧样式
+            $(this).addClass("itemstyla").siblings().removeClass("itemstyla");
+            $(".right-btn").attr("class", "self-input");
+            //右侧列表
+            $("#items-list2").html('');
+            $("#items-list3").html('');
+            var areaid = $(this).attr("id");
+            console.log(areaid);
+            var dataArr = {"page": 1, "areaid": areaid};
+            common.getJsonData('api/bossApi/service/approvalSearch', 1, dataArr);
+            gouxuan();
+        });
+        //操作左侧列表（点击服务大类列表筛选）
+        $(".self-input").on('click', function () {
+            //左侧样式
+            $(this).attr("class", "right-btn").siblings().attr("class", "self-input");
+            $("#area ul>li").removeClass("itemstyla");
+            //右侧列表
+            $("#items-list1").html('');
+            var servicetypeid = $(this).attr("queryserverlistid");
+            var dataArr = {"page": 1, "servicetypeid": servicetypeid};
+            common.getJsonData('api/bossApi/service/queryServiceSearch', 2, dataArr);
+            common.getJsonData('api/bossApi/service/thirdServiceList', 3, dataArr);
+            gouxuan();
+        });
+
+        //全选
+        form.on('checkbox(allchecked)', function (data) {
+            //console.log(data.value);
+            if (data.elem.checked == true) {
+                $("input").next().addClass("layui-form-checked")
+            } else {
+                $("input").next().removeClass("layui-form-checked")
+            }
+            var goods = $("input")
+            var goodsIds = '';
+            for (var i = 2; i < goods.length - 2; i++) {
+                goodsIds += goods.eq(i).attr("name") + '/';
+            }
+            localStorage.setItem('productdata', goodsIds.substring(0, goodsIds.length - 1));
+            //console.log(localStorage.getItem('productdata'));
+            // return false
+        });
+
+        //单独点的时候
+        $(document).on('change','#chooseGoods input',function(){
+            var productdata = JSON.parse(localStorage.getItem('productdata'));
+            if(productdata){
+                productdata.push($(this).attr('name'));
+            }else{
+                var productdata=[];
+                productdata.push($(this).attr('name'));
+            }
+           // productdata.push($(this).attr('name'));
+            localStorage.setItem('productdata', JSON.stringify(productdata));
+            //localStorage.setItem('productdatabeifen', JSON.stringify(productdata));
+            console.log(localStorage.getItem('productdata'));
+        });
+        //翻页的时候选中当前的数据
+        $(document).on('click','#layui-laypage-0 a',function(){
+            gouxuan();
+        });
+
+
+        //右侧样式（服务大类…）
+        function itemStyle() {
+            $(".selected-input").find(".layui-input").css({
+                'border': '0',
+                'background-color': '#f1f1f1',
+                'height': '34px',
+                'text-align': 'center'
+            });
+            $(".selsect-content0 tr, .selsect-content1 tr, .selsect-content2 tr").find("h2:even").css("background", "#ffffff");
+            $(".selsect-content0 tr, .selsect-content1 tr, .selsect-content2 tr").find("h2:last").css("border", "0");
+        }
+
+        /*----------------------------------------------- 右侧数据 -------------------------------------------------------------------------*/
+
+        getXingzhengData(); //默认加载行政审批
+        getThirdServiceData(); //默认加载第三方服务
+        getBuniessServiceData(); //默认加载企业服务
+
+        //行政审批列表
+        function getXingzhengData() {
+            var dataArr = {"page": 1};
+            common.getJsonData('api/bossApi/service/approvalList', 1, dataArr);
+            gouxuan();
+        }
+
+        //第三方服务列表
+        function getThirdServiceData() {
+            var dataArr = {"page": 1};
+            common.getJsonData('api/bossApi/service/thirdServiceList', 2, dataArr);
+            gouxuan();
+        }
+
+        //企业服务列表
+        function getBuniessServiceData() {
+            var dataArr = {"page": 1};
+            common.getJsonData('api/bossApi/service/businessServiceList', 3, dataArr);
+            gouxuan();
+        }
+
+        var goodsIds = '';
+        form.on('checkbox', function (data) {
+            if (data.elem.checked) {
+                goodsIds += data.elem.name + '/';
+            } else {
+                for (var i = 0; i < goodsIds.length; i++) {
+                    if (goodsIds[i] === data.elem.name) {
+                        goodsIds.splice(i, 1)
+                    }
+                }
+            }
+            localStorage.setItem('productdata', goodsIds.substring(0, goodsIds.length - 1));
+            //console.log(localStorage.getItem('productdata'));
+            return false;
+        });
+
+        $(document).on('click', '.layui-btn', function () {
+            parent.layer.closeAll(); //关闭浮窗
+        })
+
+        //勾选起已有权限
+        function gouxuan(){
+            var rights = JSON.parse(localStorage.getItem('productdata'));
+            if(rights){
+                for (var m = 0; m < rights.length; m++) {
+                    $("#itemval input[name='"+rights[m]+"']").attr('checked',true);
+                    $("#itemval input[name='"+rights[m]+"']").parent().addClass('checked');
+                }
+            }
+        }
+        //点击确定
+        $("#shouji").on("click", function () {
+            collectSelcet($(this));//收集当页当页当页当页选中的标签
+            return 1;
+        });
+        //收集表格选中项
+        function collectSelcet(elm) {
+            var btnType = elm.attr('data-type');
+            if (btnType === '0') {
+                var inputs = $("#itemval").find('input:checked'), ids = [];
+                console.log(inputs.length);
+                for(var i=0;i<inputs.length;i++){
+                    if (inputs[i].name) {
+                        ids.push(inputs[i].name);
+                    }
+                }
+               // console.log(ids);
+               //return false
+                if (ids.length === 0) {
+                    return 0;
+                } else {
+                    localStorage.setItem('productdata', JSON.stringify(ids));
+                    localStorage.setItem('productdatabeifen', JSON.stringify(ids));
+                    return 1;
+                }
+            } else {
+                var id = elm.parents('tr').find('input').attr('id');
+                localStorage.setItem('productdata', "{" + id + "}");
+                return 1;
+            }
+        }
+
+    });
+</script>
+</body>
+</html>

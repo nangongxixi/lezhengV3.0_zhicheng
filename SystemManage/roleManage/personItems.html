@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>服务商</title>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/table.css"/>
+
+    <style type="text/css">
+        .inputleft {
+            width: 100px;
+            text-align: left !important;
+        }
+    </style>
+
+</head>
+<body>
+<div style="margin: 15px" id="ddc">
+    <table class="table-hover" id="items-list" style="width:100%">
+        <tr class="site-table itemstab" style="display:none">
+            <td class="inputleft"><input type="checkbox" class="table_selected_all">&nbsp;&nbsp;<span class="allselect">全选</span>
+            </td>
+            <td style="padding-top: 15px"></td>
+        </tr>
+        <tr class="site-table itemstab" style="display:none">
+            <td class="inputleft"><input type="checkbox" class="table_selected_all">&nbsp;&nbsp;<span class="allselect">全选</span>
+            </td>
+            <td style="padding-top: 15px"></td>
+        </tr>
+        <tr class="site-table itemstab" style="display:none">
+            <td class="inputleft"><input type="checkbox" class="table_selected_all">&nbsp;&nbsp;<span class="allselect">全选</span>
+            </td>
+            <td style="padding-top: 15px"></td>
+        </tr>
+    </table>
+    <div class="self-btn-return" style="margin-top: 15px">
+        <button class="layui-btn" id="additem" data-table="itemstab" data-type="0"><i class="layui-icon"
+                                                                                      data-icon="&#xe605;">&#xe605;</i>&nbsp;确定
+        </button>
+    </div>
+    <div class="admin-table-page">
+        <div id="page" class="page"></div>
+    </div>
+</div>
+<script id="orderHandle" type="text/html">
+    {{#  layui.each(d.datalist, function(index, item){ }}
+    <div class="left" style="display:block; line-height: 30px">
+        <input type="checkbox" class="input-self" id="{{ item.id }}" name="{{ item.title }}"
+               {{# layui.each(d.ids, function(indexx){ }}
+               {{# if(item.id== indexx){ }}
+               checked
+               {{# } }}
+               {{# }); }}
+                ><label for="{{ item.id }}" class="self-cursor"></label>
+        <span style="position: relative; bottom: 6px;">{{ item.title }}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    </div>
+    {{#  }); }}
+</script>
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('rolemanage'),
+                orderID = common.getUrlParam("id"),
+                layer = layui.layer;
+        common.saveTabIndex('rolemanage');
+        common.init();
+        common.layTime(); //时间选择
+        //复选框样式
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_flat-green'
+        });
+
+        //显示列表
+        permissions();
+        function permissions() {
+            var getJSON = common.getJsonData('api/bossApi/role/rightListAll', '', '');
+            var data = getJSON.data;
+            var objinput = $(".allselect");
+            for (var i = 0; i < data.length; i++) {
+                objinput.eq(i).html(data[i].name);//给全选框负值
+                objinput.eq(i).parent().parent().removeAttr('style');//显示隐藏的样式
+                objinput.eq(i).parent().find('input').attr('id', data[i].rightid);//给当前input添加id属性
+                for (var j = 0; j < data[i].childlist.length; j++) {
+                    objinput.eq(i).parent().next().append('<div class="left" style="display:block; line-height: 30px"><input type="checkbox" class="input-self" id="' + data[i].childlist[j].rightid + '" name="' + data[i].childlist[j].name + '"><label for="' + data[i].childlist[j].rightid + '" class="self-cursor"></label><span style="position: relative; bottom: 6px;">&nbsp;&nbsp;' + data[i].childlist[j].name + '&nbsp;&nbsp;&nbsp;&nbsp;</span></div>');
+                }
+            }
+            //勾选起已有权限
+            var rights = localStorage.getItem('ids');
+            if(rights){
+                var arr = rights.split(',');
+                var rightsids = '';
+                for (var m = 0; m < arr.length; m++) {
+                    $("#" + arr[m]).attr('checked',true);
+                    $("#" + arr[m]).parent().addClass('checked');
+                    rightsids += arr[m] + ',';
+                }
+                rightsids = rightsids.substring(0,rightsids.length-1);
+                localStorage.setItem('ids',rightsids);
+            }
+        }
+        form.render();
+
+        $("#additem").on("click", function () {
+            collectSelcet($(this));
+           // console.log(localStorage);
+            parent.layer.closeAll(); //关闭浮窗
+            window.parent.location.reload();//刷新父窗口
+        });
+
+        //收集表格选中项
+        function collectSelcet(elm) {
+            var btnType = elm.attr('data-type');
+            if (btnType === '0') {
+                var tableID = elm.attr('data-table'),
+                        inputs = $('.' + tableID).find('input:checked.input-self'),
+                        //ids = [];
+                        ids='';
+                for (var i in inputs) {
+                    if (inputs[i].id) {
+                        //ids.push('"' + inputs[i].id + '":' + '"' + inputs[i].name + '"');
+                        ids+=inputs[i].id+',';
+                        var dd = ids.substr(0,ids.length-1);
+
+                    }
+                }
+                if (ids.length === 0) {
+                    return 0;
+                } else {
+                    localStorage.setItem('ids', dd);
+                    return 1;
+                }
+            } else {
+                var id = elm.parents('tr').find('input').attr('id');
+                localStorage.setItem('ids', "{" + id + "}");
+                return 1;
+            }
+        }
+    });
+
+
+</script>
+</body>
+</html>

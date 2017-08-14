@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>编辑用户信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../css/webuploader.css">
+    <style>
+        .file {
+            position: relative;
+            height: 100px;
+            filter: alpha(opacity:0);
+            opacity: 0;
+            width: 100px
+        }
+        #localImag {
+            position: absolute;
+            top: 0
+        }
+    </style>
+</head>
+<body>
+<div style="margin: 15px;">
+    <fieldset class="layui-elem-field">
+        <legend></legend>
+        <div class="layui-field-box">
+            <form class="layui-form" action="" id="adduser">
+                <table class="layui-table">
+                    <tr>
+                        <th class="self-form-title">头像：<span class="wenzism">(图片比例16:9)</span></th>
+                        <td>
+                            <div class="site-demo-upload">
+                                <img id="LAY_demo_upload" src="">
+                                <div class="site-demo-upbar">
+                                    <div id="localImag"><img id="preview" src="../../images/upimg.png" width="100" height="100" style="display: block"></div>
+                                    <input type="file" name="file" id="doc" onchange="javascript:setImagePreview();" class="file">
+                                    <input type="hidden" name="module" lay-verify="required" autocomplete="off" class="layui-input" placeholder="" value="7012">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>乐政号：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="text" name="lezhengcode" lay-verify="" autocomplete="off"
+                                       placeholder="后台注册，乐政号为空" class="layui-input self-form-input" disabled>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>手机号：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="text" name="phonexian" lay-verify="required" autocomplete="off"
+                                       placeholder="请输入手机号" class="layui-input self-form-input" disabled>
+                                <input type="text" name="phone" lay-verify="required" autocomplete="off"
+                                       placeholder="请输入手机号" class="layui-input self-form-input" style="display:none">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>昵称：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="text" name="username" lay-verify="username" autocomplete="off"
+                                       placeholder="请输入昵称" class="layui-input self-form-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>性别：</th>
+                        <td id="sex">
+                            <input type="radio" name="sex" value="1" title="男">
+                            <input type="radio" name="sex" value="0" title="女">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>常驻地址：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="text" name="address" maxlength="200" lay-verify="" autocomplete="off"
+                                       placeholder="请输入地址" class="layui-input self-form-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>邮箱：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="text" name="email" lay-verify="Email" autocomplete="off"
+                                       placeholder="请输入邮箱" class="layui-input self-form-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="self-form-title">关注标签：</th>
+                        <td>
+                            <div class="layui-input-inline" id="tags">
+                                <input name="" lay-skin="primary" title="全选" type="checkbox" lay-filter="allChoose">&nbsp;
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>备注：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <textarea placeholder="请输入内容" name="note" lay-verify="required" maxlength="1000" class="layui-textarea"
+                                          style="width:300px"></textarea>
+                            </div>
+                        </td>
+                    </tr>
+
+                </table>
+                <div class="layui-btn-group self-btn-return">
+                    <button class="layui-btn" lay-submit="" lay-filter="adduser">保存</button>
+                    <button class="layui-btn layui-btn-primary" id="resetpwd" >重置密码</button>
+                </div>
+            </form>
+        </div>
+    </fieldset>
+</div>
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('adduser'),
+                orderID = common.getUrlParam("id"),
+                adduser = common.getUrlParam("adduser"),
+                layer = layui.layer;
+        common.saveTabIndex('adduser');
+        //common.init();
+        common.layTime(); //时间选择
+
+        //全选
+        form.on('checkbox(allChoose)', function (data) {
+            var child = $(data.elem).parents('table').find('#tags input');
+            child.each(function (index, item) {
+                item.checked = data.elem.checked;
+            });
+            form.render('checkbox');
+        });
+
+        //自定义验证规则
+        form.verify({
+            Email: function (value) {
+                if (!value.match(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/g)) {
+                    return '邮箱格式不正确';
+                }
+            },
+        });
+
+        //推送标签列表
+        var APIname = "api/bossApi/property/tagList";
+        var getJSON = common.getJsonData(APIname, '', '');
+        $.each(getJSON.data, function (index, item) {
+            $("#tags").append('<input name="' + item.name + '" lay-skin="primary" title="' + item.name + '" datastorage="tags" type="checkbox" fid="' + item.tagsid + '">');
+        });
+        form.render();
+
+        /*------------------------------------------------------------------回填详情--------------------------------------------------------------------- */
+
+        if (orderID) {
+            $("legend").html("编辑用户信息");
+            var dataArr = {"id": orderID};
+            var getJSON = common.getJsonData('api/bossApi/users/usersDetail', '', dataArr);
+            $("input[name='lezhengcode']").attr("value", getJSON.data.username);
+            $("input[name='phonexian']").attr("value", getJSON.data.phonenumber.substring(0,3)+"****"+getJSON.data.phonenumber.substring(8,11));
+            $("input[name='username']").attr("value", getJSON.data.nickname);
+            $("input[name='phone']").attr("value", getJSON.data.phonenumber);
+           // $("#sex input[value='" + getJSON.data.sex + "']").attr("checked", "checked");
+            $("input[name='address']").attr("value", getJSON.data.address);
+            $("input[name='email']").attr("value", getJSON.data.emailadd);
+            $("input[name='sex'][value='"+getJSON.data.sex+"']").attr("checked","");
+            $("#preview").attr("src", getJSON.data.imgurl);
+
+            //选中标签
+            if(getJSON.data.tags){
+                var tags = getJSON.data.tags.split(",");
+            }
+
+            if(adduser){
+                $("input[name='username']").attr("value", 'LZ_' + RndNum(9));
+                $("input[name='username']").attr("placeholder", 'LZ_' + RndNum(9));
+                $("input[name='phone']").attr("value",getJSON.data.phonenumber);
+            }
+
+            if(tags){
+                for (var i = 0; i < tags.length; i++) {
+                    console.log(tags[i]);
+                    $("#tags input[fid='" + tags[i] + "']").next().addClass("layui-form-checked");
+                    $("#tags input[fid='" + tags[i] + "']").attr("checked", "checked");
+                }
+            }
+            $("textarea[name='note']").html(getJSON.data.blackreason);//备注（拉黑原因）
+        } else {
+            var usertel = sessionStorage.getItem('usertel')
+            if(usertel){
+                var usertelbb=usertel.substring(0,3)+"****"+usertel.substring(8,11);
+            }
+
+            $("legend").html("添加用户信息");
+            $("input[name='phonexian']").attr("value", usertelbb);
+            $("input[name='phonexian']").attr("placeholder",usertelbb);
+
+            $("input[name='phone']").attr("value", usertel);
+            $("input[name='phone']").attr("placeholder",usertel);
+
+            $("input[name='username']").attr("value", 'LZ_' + RndNum(9));
+            $("input[name='username']").attr("placeholder", 'LZ_' + RndNum(9));
+
+        }
+
+        function RndNum(n) {
+            var rnd = "";
+            for (var i = 0; i < n; i++)
+                rnd += Math.floor(Math.random() * 10);
+            return rnd;
+        }
+        form.render();
+
+        //避免input被刷新清空
+        formInStorage.init({
+            formElem: '#adduser',
+            formSession: 'adduser'
+        });
+        //console.log(sessionStorage.getItem('usertel'));
+        /*------------------------------------------------------------------提交表单--------------------------------------------------------------------- */
+
+        form.on('submit(adduser)', function (data) {
+            var imgguid = '';
+            $.ajax({
+                url: apiUrl + 'api/files/fileupload',
+                type: 'POST',
+                cache: false,
+                data: new FormData($('#adduser')[0]),
+                processData: false,
+                contentType: false,
+                async: false
+            }).done(function (res) {
+                imgguid = res.data;
+            }).fail(function (res) {
+            });
+            $(this).attr('disabled',"true");
+            var tags = $("#tags").find(".layui-form-checked").length; //是否选择了标签
+            /*
+            if (tags == 0) {
+                $("#tags").css("border", "1px solid red");
+                layer.msg('必填项不能为空！', {icon: 5, shift: 6});
+                return false;
+            }
+            */
+            //拼装数据，请求接口
+            var tags = "";
+            $('input[datastorage="tags"]:checked').each(function () { //当前选中的复选框
+                tags += $(this).attr('fid') + ",";
+            });
+            tags = tags.substring(0, tags.length - 1); // '1,2,'去掉最后一个逗号
+            //请求接口
+            var APIname = 'api/bossApi/users/updateuserinfo';
+            if(data.field.sex==undefined || data.field.sex==''){
+                var sex = -1;
+            }else{
+                sex = data.field.sex;
+            }
+            if(data.field.lezhengcode==undefined || data.field.lezhengcode==''){
+                var lezhengcode = '';
+            }else{
+                lezhengcode = data.field.lezhengcode;
+            }
+            if (orderID != null) {
+                var dataArr = {
+                    "uid": parseInt(orderID),
+                    "imgguid": imgguid,
+                    "username": lezhengcode,
+                    "phonenumber": data.field.phone,
+                    "nickname": data.field.username,
+                    "gender": sex,
+                    "address": data.field.address,
+                    "email": data.field.email,
+                    "tags": tags,
+                    "blackreason": data.field.note
+                };
+            } else {
+                var dataArr = {
+                    "uid": 0,
+                    "imgguid": imgguid,
+                    "username": data.field.lezhengcode,
+                    "phonenumber": data.field.phone,
+                    "nickname": data.field.username,
+                    "gender": sex,
+                    "address": data.field.address,
+                    "email": data.field.email,
+                    "tags": tags,
+                    "blackreason": data.field.note
+                };
+            }
+            var dataArr1 = {"text":data.field.username}
+            var getJSON = common.getJsonData('api/bossApi/users/nickNameCount', '', dataArr1);
+            var getuser = common.getJsonData('api/bossApi/users/usersDetail', '', {"id": orderID});
+            if(getuser.data.nickname != data.field.username){
+                if (getJSON && getJSON["data"] == 1) {
+                    layer.msg('昵称已经存在');
+                    return false;
+                }
+            }
+           // console.log(dataArr);
+            // return false;
+            var getJSON = common.getJsonData(APIname, '', dataArr);
+            if (getJSON["code"] == 1) {
+                layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                    localStorage.removeItem("adduser");
+                    location.href = "index.html";
+                    /*
+                     var index = parent.layer.getFrameIndex(window.name);
+                     parent.layer.close(index);
+                     window.parent.location.reload();
+                     */
+                });
+            } else {
+                layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                    location.href = "index.html";
+                });
+            }
+            return false;
+        });
+
+        //重置密码
+        $("#resetpwd").on('click',function(){
+            var getJSON = common.getJsonData('api/bossApi/users/resetUserPW', '', {"id": orderID});
+            if (getJSON["code"] == 1) {
+                layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                    localStorage.removeItem("adduser");
+                    location.href = "index.html";
+                });
+            } else {
+                layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                    location.href = "index.html";
+                });
+            }
+            return false;
+        });
+
+    });
+
+    //下面用于图片上传预览功能
+    function setImagePreview(avalue) {
+        var docObj = document.getElementById("doc");
+        var imgObjPreview = document.getElementById("preview");
+        if (docObj.files && docObj.files[0]) {
+//火狐下，直接设img属性
+            imgObjPreview.style.display = 'block';
+            imgObjPreview.style.width = '100px';
+            imgObjPreview.style.height = '100px';
+//imgObjPreview.src = docObj.files[0].getAsDataURL();
+
+//火狐7以上版本不能用上面的getAsDataURL()方式获取，需要一下方式
+            imgObjPreview.src = window.URL.createObjectURL(docObj.files[0]);
+        } else {
+//IE下，使用滤镜
+            docObj.select();
+            var imgSrc = document.selection.createRange().text;
+            var localImagId = document.getElementById("localImag");
+//必须设置初始大小
+            localImagId.style.width = "100px";
+            localImagId.style.height = "100px";
+//图片异常的捕捉，防止用户修改后缀来伪造图片
+            try {
+                localImagId.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
+                localImagId.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = imgSrc;
+            } catch (e) {
+                alert("您上传的图片格式不正确，请重新选择!");
+                return false;
+            }
+            imgObjPreview.style.display = 'none';
+            document.selection.empty();
+        }
+        return true;
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,344 @@
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
+    <meta name="keywords" content="乐政V3.0业务支撑系统"/>
+    <meta name="description" content="乐政V3.0业务支撑系统"/>
+    <title>"乐政V3.0业务支撑系统"</title>
+    <!--webim相关配置-->
+    <link rel="stylesheet" href="plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="css/global.css" media="all">
+    <link rel="stylesheet" href="plugins/font-awesome/css/font-awesome.min.css">
+    <!----------------------------------------环信CSS---------------------------------------->
+    <link rel="stylesheet" type="text/css" href="css/huanxin/login.css">
+    <link rel="stylesheet" type="text/css" href="css/huanxin/file.css">
+    <link rel="stylesheet" type="text/css" href="css/huanxin/emoji.css">
+    <link rel="stylesheet" type="text/css" href="css/huanxin/friends.css">
+    <link rel="stylesheet" type="text/css" href="css/huanxin/chatwindow.css">
+    <link href="css/huanxin/tabStyle.css" rel="stylesheet" type="text/css">
+    <!--聊天窗口的样式-->
+    <link rel="stylesheet" href="css/huanxin/dialog.css"/>
+    <!----------------------------------------环信JS---------------------------------------->
+    <script type="text/javascript" src="js/huanxin/webim.config.js"></script>
+    <!--sdk相关的js-->
+    <script type='text/javascript' src='js/huanxin/strophe-1.2.8.min.js'></script>
+    <!--<script type="text/javascript" src="js/huanxin/demo-1.4.5.js"></script>报错被注销-->
+    <script type="text/javascript" src="js/huanxin/websdk-1.4.5.js"></script>
+    <script type="text/javascript" src="js/huanxin/jquery-1.11.2.min.js"></script>
+    <!--页面方法JS-->
+    <script type="text/javascript" src="js/huanxin/main.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            //默认注册
+            //register();
+            //默认加好友
+            //addFriends();
+            //默认登陆
+            login();
+            //滚动条始终置于底部
+            $("#message,#fasong").click(function () {
+                $("#content").scrollTop($("#content").height());
+                $('#content').scrollTop($('#content')[0].scrollHeight);
+                //保持滚动条底部
+                $(window).resize(function () {
+                    $("#content").scrollTop($("#content").height());
+                    $('#content').scrollTop($('#content')[0].scrollHeight);
+                });
+            });
+            //加好友后刷新页面
+            window.onload = function () {
+                if (location.href.indexOf("?xyz=") < 0) {
+                    location.href = location.href + "?xyz=" + Math.random();
+                }
+            };
+        });
+    </script>
+    <style type="text/css">
+        .add-text {
+            line-height: 60px;
+            font-size: 18px;
+            display: block;
+            padding-left: 15px;
+            color: #009688
+        }
+
+        .add-text-down {
+            line-height: 40px;
+            font-size: 18px;
+            display: block;
+            padding-left: 15px;
+            color: #009688;
+            width: 70%;
+            text-align: left
+        }
+
+        .add-text-num {
+            text-align: left;
+            padding-left: 15px;
+            line-height: 10px;
+            color: #FF5722
+        }
+
+        .select_input-items {
+            cursor: pointer
+        }
+
+        .select_input-items:hover {
+            background-color: #f2f2f2
+        }
+    </style>
+</head>
+<body style="overflow-y:auto">
+<div style="background-color:#f1f1f1; width:80%;height:463px">
+    <!--好友和聊天界面-->
+    <input type="hidden" id="hideClass" value="t1">
+    <input type="hidden" id="hideFriends" value="wx_default1" fanzhe="wx_default">
+    <!--<input type="hidden" id="hideFriends" value="wx_default1" fanzhe="{$smarty.session.openid}">-->
+    <div style="width: 100%;height: 368px;" id="main">
+        <!--聊天界面 -->
+        <div class="chatwindow" style="position:relative">
+            <!--接收人 -->
+            <div class="fromDiv" style="display:none">
+                <ul class="tabs">
+                </ul>
+            </div>
+            <!--消息记录 -->
+            <div id="content" headpic="../upload/0.jpg">
+                <section class="chat-box">
+                    <span class="chat-trip">机器人亮亮为您服务</span>
+
+                    <div class="bubbleDiv"></div>
+                </section>
+            </div>
+            <!--输入框 -->
+            <div class="inputMessage">
+                <textarea id="message"></textarea>
+                <!--发送按钮-->
+                <div class="sendMessage">
+                    <input class="btn" type="button" id="fasong" value="发送" onclick="sendMessage(), chat()"/>
+                </div>
+            </div>
+            <!--右侧部分-->
+            <table class="site-table table-hover selected-css right"
+                   style="position: absolute; top:-10px; right: -25%; width:23.8%">
+                <tbody class="selsect-content0">
+                <tr id="additem">
+                    <td class="select_input-items" style="padding:15px !important">
+                        <img src="images/upimg.png" width="60" class="left">
+                        <span class="left add-text"> 新建订单</span>
+                    </td>
+                </tr>
+                <tr id="adduser">
+                    <td class="select_input-items" style="padding:15px !important">
+                        <img src="images/upimg.png" width="60" class="left">
+                        <span class="left add-text"> 添加用户</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-left:0;border-right:0">
+
+                    </td>
+                </tr>
+                <tr id="usertotal">
+                    <td class="select_input-items" style="padding:15px !important">
+                        <img src="images/upimg.png" width="60" class="left">
+                        <span class="left add-text-down">用户总数</span>
+                        <span class="left add-text-num" id="usercount">0</span>
+                    </td>
+                </tr>
+                <tr id="orderdcl">
+                    <td class="select_input-items" style="padding:15px !important">
+                        <img src="images/upimg.png" width="60" class="left">
+                        <span class="left add-text-down">待处理订单</span>
+                        <span class="left add-text-num" id="ordercount">0</span>
+                    </td>
+                </tr>
+                <tr id="countzw">
+                    <td class="select_input-items" style="padding:15px !important">
+                        <img src="images/upimg.png" width="60" class="left">
+                        <span class="left add-text-down">待处理账务</span>
+                        <span class="left add-text-num" id="pricecount">0</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="clear"></div>
+<div style="margin-top: 15px">
+    <blockquote class="layui-elem-quote">
+        <form class="layui-form" action="">
+            <div class="layui-form-item self-layui-form-item">
+                <label class="layui-form-label" style="width:auto">选择时间</label>
+
+                <div class="layui-input-inline">
+                    <input class="layui-input" placeholder="开始日" id="LAY_demorange_s1" name="begintime">
+                </div>
+                <div class="layui-input-inline">
+                    <input class="layui-input" placeholder="截止日" id="LAY_demorange_e1" name="endtime">
+                </div>
+                <label class="layui-form-label" style="width:auto">操作员</label>
+
+                <div class="layui-input-inline">
+                    <select name="staffid">
+                        <option value="">—— 请选择 ——</option>
+                        <option value="0">大鱼</option>
+                        <option value="1">小鱼</option>
+                    </select>
+                </div>
+                <label class="layui-form-label" style="width:auto">操作类型</label>
+
+                <div class="layui-input-inline">
+                    <select name="operationtype">
+                        <option value="">—— 请选择 ——</option>
+                        <option value="0">用户相关</option>
+                        <option value="1">参数相关</option>
+                    </select>
+                </div>
+                <div class="self-form-time">
+                    <label class="layui-form-label" style="width:auto">关键字</label>
+
+                    <div class="layui-input-inline">
+                        <input type="text" name="keyword" lay-verify="title" autocomplete="off"
+                               placeholder="请输入关键字" class="layui-input">
+                    </div>
+                    <button class="layui-btn" lay-submit="" lay-filter="searlog" style="margin-left: 40px">
+                        搜索
+                    </button>
+                    <button type="reset" class="layui-btn layui-btn-primary resetlog">重置</button>
+                </div>
+            </div>
+        </form>
+    </blockquote>
+    <span id="items-list1" style="margin-bottom:70px; display: block"></span>
+
+    <div class="admin-table-page">
+        <div id="page1" class="page"></div>
+    </div>
+</div>
+<!---内容-->
+<script id="orderHandle1" type="text/html">
+    <table class="site-table table-hover" id="targetTable">
+        <thead>
+        <tr>
+            <th>流水号</th>
+            <th>时间</th>
+            <th>操作类型</th>
+            <th>关联对象</th>
+            <th>操作员</th>
+            <th>具体动作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# layui.each(d.datalist, function(index, item){ }}
+        <tr>
+            <td>{{ item.serialnumber }}</td>
+            <td>{{ item.createtime }}</td>
+            <td>{{ item.operationtype }}</td>
+            <td>{{ item.objectid }}</td>
+            <td>{{ item.staffname }}</td>
+            <td title="{{ item.remark }}">{{ item.remark.length>30?item.remark.substring(0, 30)+ "...":item.remark }}
+            </td>
+        </tr>
+        {{# }); }}
+        </tbody>
+    </table>
+</script>
+<script type="text/javascript" src="../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../js/config.js"></script>
+<script type="text/javascript">
+    //搜索表单
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                newslist = localStorage.getItem('newslist'),
+                orderID = common.getUrlParam("id"),
+                layer = layui.layer;
+        common.saveTabIndex('newslist');
+        common.init();
+        common.layTime(); //时间选择
+
+        //获取用户总数、待处理订单、待处理财务
+        var getcounts = common.getJsonData('api/bossApi/homepage/getcounts', '', '');
+        $("#usercount").html(getcounts.data.usercount);
+        $("#ordercount").html(getcounts.data.ordercount);
+        $("#pricecount").html(getcounts.data.pricecount);
+
+        //日志记录列表
+        getJsonList('api/bossApi/log/logSearch', 0, '');
+        $(".resetlog").on('click', function () {
+            getJsonList('api/bossApi/log/logSearch', 0, '');
+        });
+        //区域 -> 搜索（关键字）
+        form.on('submit(searlog)', function (data) {
+            var dataArr = {
+                "id": 0,
+                "timebegin": data.field.begintime,
+                "timeend": data.field.endtime,
+                "staffid": data.field.staffid,
+                "operationtype": data.field.operationtype,
+                "keyword": data.field.keyword
+            };
+            getJsonList('api/bossApi/log/logSearch', 0, dataArr);
+            return false;
+        });
+
+        function getJsonList(APIname, typeid, dataArr) {
+            var dataArray = dataArr || {"page": 1};
+            var getJSON = common.getJsonData(APIname, '', dataArray);
+            //映射模版
+            var cc = typeid + 1
+            var tplid = document.getElementById('orderHandle' + cc),
+                    viewid = document.getElementById('items-list' + cc);
+            var getTpl = tplid.innerHTML;
+            layui.laytpl(getTpl).render(getJSON, function (html) {
+                viewid.innerHTML = html;
+                element.init();
+            });
+        }
+    });
+
+    //CTRL+ENTER键发送消息
+    $(function () {
+        $("#message").on('keyup', function (event) {
+            if (event.ctrlKey && event.keyCode == 13) {
+                // alert(event.keyCode);
+                sendMessage(), chat();
+            }
+        });
+        $("#additem").on("click", function () {
+            location.href = "ordersmanage/ordersquery/addorder.html";
+        });
+        $("#adduser").on("click", function () {
+            location.href = "ResourceManage/userManage/index.html";
+        });
+
+        $("#usertotal").on("click", function () {
+            location.href = "ResourceManage/userManage/index.html";
+        });
+
+        $("#orderdcl").on("click", function () {
+            location.href = "OrdersManage/ordersHandle/index.html";
+        });
+
+        $("#countzw").on("click", function () {
+            location.href = "FinanceManage/financeManage/index.html";
+        });
+    });
+
+</script>
+</body>
+</html>

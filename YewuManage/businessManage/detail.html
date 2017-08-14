@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>服务详情</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+<div style="margin: 15px;">
+    <fieldset class="layui-elem-field">
+        <legend>商家详情</legend>
+        <div class="layui-field-box">
+            <table class="layui-table" id="items-list1">
+            </table>
+        </div>
+    </fieldset>
+</div>
+<a href="javascript:history.go(-1);" class="return-go"><i class="fa fa-reply" data-icon="fa-reply"
+                                                          aria-hidden="true"></i> 返回</a>
+
+<script id="orderHandle1" type="text/html">
+    <tr>
+        <th class="self-form-title">商家名称：</th>
+        <td>{{ d.data.businessname}}</td>
+    </tr>
+    <tr>
+        <th>商家编号：</th>
+        <td>{{ d.data.businesscode}}</td>
+    </tr>
+    <tr>
+        <th>联系人姓名：</th>
+        <td>{{d.data.contacts}}</td>
+    </tr>
+    <tr>
+        <th>联系人电话：</th>
+        <td>{{d.data.phonenumber}}</td>
+    </tr>
+    <tr>
+        <th>商家地址：</th>
+        <td>{{d.data.address}}</td>
+    </tr>
+    <tr>
+        <th>工商登记号：</th>
+        <td>{{d.data.registrationnum}}</td>
+    </tr>
+    <tr>
+        <th>开户行：</th>
+        <td>{{d.data.bank}}</td>
+    </tr>
+    <tr>
+        <th>开户账号：</th>
+        <td>{{d.data.banknumber}}</td>
+    </tr>
+    <tr>
+        <th class="detail-title">公司简介：</th>
+        <td class="self-content-img">
+            {{ d.data.brief}}
+        </td>
+    </tr>
+    <tr>
+        <th>商家图片：</th>
+        <td class="suoluetu">
+            <img src="{{ d.data.imgurl}}" height="100" style="width:100px;height:auto">
+            <!-- {{#  layui.each(d.data.imagelist, function(index, item){ }}
+               <img src="{{item}}">
+             {{#  }); }}
+             -->
+        </td>
+    </tr>
+    {{# if(d.data.type==0){ }}
+    <tr>
+        <th>开通部门：</th>
+        <td>
+            {{# layui.each(d.data.areadepartmentlist, function(index, item){ }}
+            <div class="layui-btn layui-btn-primary layui-btn-big self-layui-btn">{{item.areaname}}</div>
+            <div class="clear"></div>
+            {{# layui.each(item.departmentlist, function(index, item){ }}
+            <div class="layui-btn  layui-btn-small  layui-btn-primary self-layui-btn">{{item.departmentname}}</div>
+            {{# }); }}
+            <div class="clear"></div>
+            {{# }); }}
+    </tr>
+    {{# } }}
+</script>
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('serviceIndex'),
+                orderID = common.getUrlParam("id"),
+                type = common.getUrlParam("type"),
+                layer = layui.layer;
+        common.saveTabIndex('serviceIndex');
+        common.init();
+        //common.layTime(); //时间选择
+
+        var dataArr = {
+            "id": orderID
+        }
+        var dd = common.getJsonData('api/bossApi/businessMain/businessMainDetail', '', dataArr)
+        dd.data.type = type;
+        tpi(dd);
+
+        //图片放大
+        $(document).on('click', '.suoluetu img', function () {
+            layer.open({
+                type: 1,
+                title: false,
+                closeBtn: 0,
+                area: ['700'],
+                skin: 'layui-layer-nobg', //没有背景色
+                shadeClose: true,
+                content: '<img src="' + $(this).attr("src") + '">'
+            });
+        });
+
+        $(document).on('click', '.self-cursor', function () {
+            alert($(this).parent().parent().parent().attr("orderid"));
+            parent.layer.closeAll();
+        });
+
+        function tpi(data) {
+            var tplid = document.getElementById('orderHandle1'),
+                    viewid = document.getElementById('items-list1');
+            var getTpl = tplid.innerHTML;
+            layui.laytpl(getTpl).render(data, function (html) {
+                viewid.innerHTML = html;
+                element.init();
+            });
+        }
+
+    });
+</script>
+</body>
+</html>

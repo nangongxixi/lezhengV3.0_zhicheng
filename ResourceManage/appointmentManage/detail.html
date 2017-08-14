@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>预约详情</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+<span id="items-list1"></span>
+
+<script id="orderHandle1" type="text/html">
+    <fieldset class="layui-elem-field">
+        <legend>客户信息</legend>
+        <div class="layui-field-box">
+            <table class="layui-table">
+                <tr>
+                    <th>姓名：</th>
+                    <td>{{ d.name }}</td>
+                </tr>
+                <tr>
+                    <th>身份证号：</th>
+                    <td>{{ d.idcard }}</td>
+                </tr>
+                <tr>
+                    <th>手机号码：</th>
+                    <td>{{ d.phone }}</td>
+                </tr>
+            </table>
+        </div>
+    </fieldset>
+    <fieldset class="layui-elem-field">
+        <legend>预约信息</legend>
+        <div class="layui-field-box">
+            <table class="layui-table">
+                <tr>
+                    <th>事件：</th>
+                    <td>{{ d.matter }}</td>
+                </tr>
+                <tr>
+                    <th>部门：</th>
+                    <td>{{d.sector }}</td>
+                </tr>
+                <tr>
+                    <th>区域：</th>
+                    <td>{{ d.handlearea }}</td>
+                </tr>
+                <tr>
+                    <th>下单时间：</th>
+                    <td>{{ d.bookingtime }}</td>
+                </tr>
+                <tr>
+                    <th>办理时间：</th>
+                    <td>{{ d.bookingdate }}</td>
+                </tr>
+                <tr>
+                    <th>办理地址：</th>
+                    <td>{{ d.address }}</td>
+                </tr>
+            </table>
+        </div>
+    </fieldset>
+</script>
+
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('serviceIndex'),
+                orderID = common.getUrlParam("id"),
+                itemID = common.getUrlParam("itemid"),//事项id
+                layer = layui.layer;
+        common.saveTabIndex('serviceIndex');
+        common.init();
+        common.layTime(); //时间选择
+
+        //取出值赋值给模版
+        var arr = JSON.parse(localStorage.getItem("yuyuemanager"));
+        var tplid = document.getElementById('orderHandle1'),
+                viewid = document.getElementById('items-list1');
+        var getTpl = tplid.innerHTML;
+        layui.laytpl(getTpl).render(arr, function (html) {
+            viewid.innerHTML = html;
+            element.init();
+        });
+
+        localStorage.removeItem("yuyuemanager");
+
+    });
+</script>
+</body>
+</html>
+

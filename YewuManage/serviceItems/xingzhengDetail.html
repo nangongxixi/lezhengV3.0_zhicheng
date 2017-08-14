@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <title>服务详情</title>
+        <meta name="renderer" content="webkit">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="format-detection" content="telephone=no">
+
+        <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all" />
+        <link rel="stylesheet" href="../../css/global.css" media="all">
+        <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    </head>
+
+    <body>
+        <div style="margin: 15px;">
+            <fieldset class="layui-elem-field">
+                <legend>行政审批详情</legend>
+                <div class="layui-field-box">
+                    <table class="layui-table" id="items-list">
+                    </table>
+                </div>
+            </fieldset>
+        </div>
+        <a href="javascript:history.go(-1);" class="return-go"><i class="fa fa-reply" data-icon="fa-reply" aria-hidden="true"></i> 返回</a>
+
+        <script id="orderHandle" type="text/html">
+        <tr>
+            <th class="self-form-title">事项名称：</th>
+            <td>{{ d.data.eventname}}</td>
+        </tr>
+        <tr>
+            <th>事项编号：</th>
+            <td>{{ d.data.itemcode}}</td>
+        </tr>
+        <tr>
+            <th>产品编号：</th>
+            <td>{{ d.data.productcode}}</td>
+        </tr>
+        <tr>
+            <th>服务主题：</th>
+            <td>{{ d.data.theme}}</td>
+        </tr>
+        <tr>
+            <th>订单步骤：</th>
+            <td>{{ d.data.fixstepname}} -- {{ d.data.customstepname}}</td>
+        </tr>
+        <tr>
+            <th>事项类型：</th>
+            <td>{{ d.data.eventtype}}</td>
+        </tr>
+        <!--
+        <tr>
+            <th style="padding-bottom:0px !important;padding-top:0px !important">推送版本：</th>
+            <td style="padding-bottom:0px !important">{{ d.data.versionname}}</td>
+        </tr>
+        -->
+        <tr>
+            <th style="padding-bottom:0px !important;padding-top:0px !important">推送标签：</th>
+            <td style="padding-bottom:0px !important">{{ d.data.tagsname}}</td>
+        </tr>
+        <tr>
+            <th class="detail-title">办理须知：</th>
+            <td class="self-content-img">
+                {{ d.data.guide}}
+            </td>
+        </tr>
+    </script>
+
+    <script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+    <script type="text/javascript" src="../../js/config.js"></script>
+
+    <script>
+        layui.use(['icheck', 'laypage', 'layer', 'laytpl', 'element', 'common'], function () {
+            var $ = layui.jquery,
+                laytpl = layui.laytpl,
+                laypage = layui.laypage,
+                element = layui.element(),
+                common = layui.common,
+                orderId = common.getUrlParam("id"),
+                layer = parent.layer === undefined ? layui.layer : parent.layer;
+
+            /*-------------------------------------------------------------数据和事件---------------------------------------------------------------- */
+
+            var APIname='api/bossApi/service/approvalDetail';
+            var dataArr = {"id": orderId};
+            var getJSON = common.getJsonData(APIname, '', dataArr);
+            var fixedstepid = getJSON.data.step.substring(0, 1);
+            var customstepsetid = getJSON.data.step.substring(2,3);
+            //获取相应id下的固定步骤名称放入详情对象
+            var APIname = "api/bossApi/step/fixedStepList";
+            var fixGetJSON = common.getJsonData(APIname, '', '');
+            $.each(fixGetJSON.data, function (index, item) {
+                if(fixedstepid == item.fixedstepid ){
+                    getJSON.data.fixstepname = item.typename;
+                }
+            });
+            //获取相应id下的自定义步骤名称放入详情对象
+            var APIname = "api/bossApi/step/customStepSetList";
+            var customGetJSON = common.getJsonData(APIname, '', '');
+            $.each(customGetJSON.data, function (index, item) {
+                if(customstepsetid == item.customstepsetid ){
+                    getJSON.data.customstepname = item.setname;
+                }
+            });
+            //映射版本名称
+            if(getJSON.data.version=="0"){
+                getJSON.data.versionname = '<div class="layui-btn layui-btn-small layui-btn-primary self-layui-btn">个人版</div>';
+            }else if(getJSON.data.version=="1"){
+                getJSON.data.versionname = '<div class="layui-btn layui-btn-small layui-btn-primary self-layui-btn">企业版</div>';
+            }else{
+                getJSON.data.versionname = '<div class="layui-btn layui-btn-small layui-btn-primary self-layui-btn">个人版</div><div class="layui-btn layui-btn-small layui-btn-primary self-layui-btn">企业版</div>';
+            }
+            //标签名称处理
+            var APIname = "api/bossApi/property/tagList";//标签列表
+            var tagsGetJSON = common.getJsonData(APIname, '', '');
+            if(getJSON.data.tags){
+                var tags = getJSON.data.tags.split(','); //从详情取出来的标签值数组
+                getJSON.data.tagsname = '';
+                for(var i = 0;i<tags.length;i++){
+                    $.each(tagsGetJSON.data,function(index,item){
+                        if(tags[i] == item.tagsid){
+                            getJSON.data.tagsname += '<div class="layui-btn layui-btn-small layui-btn-primary self-layui-btn">'+item.name+'</div>';
+                        }
+                    });
+                }
+                getJSON.data.tagsname = getJSON.data.tagsname.substring(0,getJSON.data.tagsname.length-1);//去掉最后一个逗号
+            }else{
+                getJSON.data.tagsname = '暂无…'
+            }
+            //映射模版
+            var tplid = document.getElementById('orderHandle'),
+                viewid = document.getElementById('items-list');
+            var getTpl = tplid.innerHTML;
+            layui.laytpl(getTpl).render(getJSON, function (html) {
+                viewid.innerHTML = html;
+                element.init();
+            });
+
+        });
+    </script>
+</body>
+</html>

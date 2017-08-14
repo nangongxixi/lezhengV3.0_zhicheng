@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>互动管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <style>
+        .newsDetail-tools-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: #dfe6ec;
+            padding: 15px;
+            box-shadow: 0px 1px 2px #99a3ab;
+        }
+
+        .news-info {
+            margin-right: 15px;
+        }
+
+        .news-info h3 {
+            font-size: 20px;
+            color: #000;
+        }
+
+        .news-info > div {
+            height: 20px;
+            line-height: 20px;
+            color: #949494;
+        }
+
+        .newsDetail-tools-bar .layui-btn {
+            margin: 25px 10px;
+            height: 30px;
+            line-height: 30px;
+            width: 90px;
+        }
+
+        .newsDetail-container {
+            padding: 20px;
+            padding-top: 90px;
+        }
+
+        .user-info-left img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .user-info-right {
+            padding: 5px;
+            margin-left: 60px;
+        }
+
+        .user-info-right .username {
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+
+        .user-info-right .time {
+            color: #666;
+        }
+
+        .newsDetail-container .content {
+            padding: 10px 0;
+            line-height: 2;
+        }
+
+        .newsDetail-container .content li {
+            float: left;
+            width: 33.33%;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .newsDetail-container .content li img {
+            width: 90%;
+            height: auto;
+        }
+
+        .comments-item {
+            border-bottom: 1px solid #e4e4e4;
+        }
+
+        .comments-content .title {
+            background: #f2f2f2;
+            height: 40px;
+            line-height: 40px;
+            font-size: 16px;
+            padding: 0 10px;
+        }
+
+        .comments-item {
+            margin: 10px 0;
+            padding: 10px 0;
+        }
+
+        .comments-item img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .comments-item .r {
+            margin-left: 60px;
+        }
+
+        .comments-item p {
+            margin: 10px 0;
+            line-height: 2;
+        }
+
+        .comments-item .handle {
+            text-align: right;
+        }
+
+        .comments-item .handle span {
+            margin: 0 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<span id="items-list"></span>
+<span id="items-list1"></span>
+
+<div id="page1" class="page"></div>
+
+
+<div class="self-btn-return">
+    <br>
+    <button class="layui-btn layui-btn-big" id="return"><i class="fa fa-reply" data-icon="fa-reply"
+                                                           aria-hidden="true"></i> 返回
+    </button>
+</div>
+
+<script id="orderHandle" type="text/html">
+    <div class="newsDetail-tools-bar clear">
+        <div style="display:none" id="huodonghead">
+            <div class="pull-left news-poster js_preview_img">
+                <img src="../../images/0.jpg" alt="" width="86" style="margin-right: 15px">
+            </div>
+            <div class="pull-left news-info">
+                <h3>{{d.name}}</h3>
+                <div>{{d.modifytime}}</div>
+                <div>状态： {{d.status}}</div>
+                <div>推送标签： {{d.tagsname}}</div>
+            </div>
+        </div>
+        <div class="pull-left news-info qita">
+            <h3>状态：{{d.status}}</h3>
+        </div>
+
+        <div class="pull-right" id="wenda" style="display:none">
+            <button class="layui-btn ">回答 {{d.answercount}}</button>
+        </div>
+
+        <span id="huati" style="display:none">
+            <div class="pull-right">
+                <button class="layui-btn ">转发 {{d.forwardingnum}}</button>
+            </div>
+            <div class="pull-right">
+                <button class="layui-btn ">评论 {{d.reviewnum}}</button>
+            </div>
+            <div class="pull-right">
+                <button class="layui-btn ">点赞 {{d.praisenum}}</button>
+            </div>
+        </span>
+
+         <span id="huodong" style="display:none">
+            <div class="pull-right">
+                <button class="layui-btn ">分享 {{d.sharenum}}</button>
+            </div>
+            <div class="pull-right">
+                <button class="layui-btn ">评论 {{d.reviewnum}}</button>
+            </div>
+        </span>
+
+    </div>
+    <div class="newsDetail-container">
+        <div class="clear"></div>
+        <div class="content qita">{{d.content}}</div>
+        {{# if(d.imgurl){ }}
+        {{# layui.each(d.imgurl, function(indexs, items){ }}
+        <img src="{{items}}" style="width:24%; height:250px; margin-right:5px; margin-bottom: 10px">
+        {{# }); }}
+        {{# } }}
+        <div class="content"  id="huodongcontent">
+            {{# if(d.weburl){ }}
+            <br><br>
+            <iframe frameborder=0 id="iframe" width=100% height="500" marginheight=0 marginwidth=0 style="overflow-x:hidden" src="{{d.weburl}}"></iframe>
+            {{# } }}
+        </div>
+        <div class="comments-content">
+            <div class="title">全部回答</div>
+        </div>
+    </div>
+</script>
+
+<script id="orderHandle1" type="text/html">
+    {{# layui.each(d.data, function(index, item){ }}
+    <div class="comments-item" style="width:95%; margin: 0 auto">
+        <div class="row-1 clear">
+            <div class="pull-left">
+                {{# if(item.imgurl){ }}
+                <div style="margin: 0 auto; text-align: center"><img src="{{item.imgurl}}"></div>
+                {{# } }}
+            </div>
+            <div class="user-info-right">
+                <div class="username">{{item.nickname}}</div>
+                <div class="time">{{item.createtime}}</div>
+                <p>{{item.reviewcontent}}</p>
+                <br>
+               <div><button class="layui-btn layui-btn-primary layui-btn-mini right" answerid="{{item.reviewid}}">删除</button></div>
+            </div>
+            <div class="clear"><br><br></div>
+            {{# layui.each(item.subcontentlist, function(index, item){ }}
+            <div class="user-info-right" style="margin-left: 60px; background-color: #f2f2f2; padding:10px">
+                <div class="pull-left">
+                    {{# if(item.imgurl){ }}
+                    <div style="margin: 0 auto; text-align: center"><img src="{{item.imgurl}}"></div>
+                    {{# } }}
+                </div>
+                <div class="user-info-right">
+                    <div class="username">{{item.nickname}}</div>
+                    <div class="time">{{item.createtime}}</div>
+                </div>
+                {{# if(d.imgurl){ }}
+                <div style="margin: 0 auto; text-align: center"><img src="{{d.imgurl}}"></div>
+                {{# } }}
+                <p>{{item.reviewcontent}}</p>
+                <br>
+                <div><button class="layui-btn layui-btn-primary layui-btn-mini right" answerid="{{item.reviewid}}">删除</button></div>
+                <div class="clear"></div>
+            </div>
+            {{# }); }}
+        </div>
+    </div>
+    {{# }); }}
+</script>
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('userindex'),
+                questionid = common.getUrlParam("questionid"),//问答
+                topicid = common.getUrlParam("topicid"), //话题
+                activityid = common.getUrlParam("activityid"), //活动
+                layer = layui.layer;
+        common.saveTabIndex('userindex');
+        //common.init();
+        //common.layTime(); //时间选择
+
+        //取出值赋值给模版
+        var arr = JSON.parse(localStorage.getItem("interactionmanageDetail"));
+        arr.imgurl = arr.imgurl.split(",");
+        console.log(arr);
+        //模版调用
+        var tplid = document.getElementById('orderHandle'),
+                viewid = document.getElementById('items-list');
+        var getTpl = tplid.innerHTML;
+        laytpl(getTpl).render(arr, function (html) {
+            viewid.innerHTML = html;
+            element.init();
+        });
+
+        //问答
+        if (questionid) {
+            //回答列表
+            var dataArray = {"id": questionid}
+            $("#wenda").removeAttr('style');
+            common.getJsonData('api/bossApi/interaction/questionAnswerList', 1, dataArray);
+        }
+
+        //话题
+        if (topicid) {
+            //回答列表
+            var dataArray = {"objectid": topicid, "type":1003}
+            $("#huati").removeAttr('style');
+            common.getJsonData('api/bossApi/news/reviewList', 1, dataArray);
+        }
+
+        //活动
+        if (activityid) {
+            //回答列表
+            var dataArray = {"objectid":activityid, "type":1002}
+            $("#huodong").removeAttr('style');
+            $("#huodonghead").removeAttr('style');
+            $("#huodongcontent").removeAttr('style');
+            $(".qita").css('display','none');
+            common.getJsonData('api/bossApi/news/reviewList', 1, dataArray);
+        }
+
+        //删除企业服务
+        $(document).on('click', '.layui-btn-mini', function () {
+            var obj = $(this);
+            layer.confirm('您确定要删除本条数据？', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                var answerid = obj.attr("answerid");
+                var APIname = "api/bossApi/news/reviewDel";
+                var dataArr = {"id": answerid};
+                var getJSON = common.getJsonData(APIname, '', dataArr);
+                //console.log(getJSON);
+                //return false;
+                if (getJSON["code"] == 1) {
+                    layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                        history.go(0);
+                    });
+                }
+            });
+            return false;
+        });
+
+
+    });
+
+    //返回
+    document.getElementById("return").onclick = function () {
+        localStorage.removeItem("interactionmanageDetail");
+        history.go(-1);
+    };
+
+</script>
+</body>
+</html>

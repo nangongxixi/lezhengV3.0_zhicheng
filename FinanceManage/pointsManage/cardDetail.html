@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>订单对账</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="format-detection" content="telephone=no">
+
+  <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all" />
+  <link rel="stylesheet" href="../../css/global.css" media="all">
+  <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+  <style>
+    .layui-field-box {
+      padding: 0;
+    }
+
+    .layui-field-box .layui-table {
+      margin: 0;
+      border: 0;
+    }
+
+    .layui-input-inline {
+      width: 200px;
+    }
+
+    .layui-form-item .layui-input-inline {
+      width: 300px;
+    }
+
+    .order-form-title {
+      padding-left: 20px;
+      height: 38px;
+      line-height: 38px;
+      background: #e2e2e2;
+      font-size: 15px;
+    }
+
+    .order-form-block {
+      border: 1px solid #e2e2e2;
+      border-top: 0;
+      padding: 20px 0;
+    }
+
+    .layui-form-item {
+      margin-top: 0;
+    }
+
+    .layui-form-item:nth-child(1) {
+      margin-top: 0;
+    }
+
+    .layui-input-inline {
+      padding: 9px 0;
+    }
+
+    .layui-form-label {
+      width: 90px;
+    }
+  </style>
+</head>
+
+<body>
+  <div style="margin: 15px;">
+    <fieldset class="layui-elem-field layui-field-title">
+      <legend>订单对账</legend>
+    </fieldset>
+    <div class="layui-field-box">
+      <div class="order-form-title">收款详情</div>
+      <div class="order-form-block">
+        <div class="layui-form-item">
+          <div class="layui-inline">
+            <label class="layui-form-label">应收金额：</label>
+            <div class="layui-input-inline">
+              嘻嘻哈哈嘻嘻哈
+            </div>
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <div class="layui-inline">
+            <label class="layui-form-label">优惠金额：</label>
+            <div class="layui-input-inline">
+
+            </div>
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <div class="layui-inline">
+            <label class="layui-form-label">实收金额：</label>
+            <div class="layui-input-inline">
+              123
+            </div>
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <div class="layui-inline">
+            <label class="layui-form-label">收款流水号：</label>
+            <div class="layui-input-inline">
+
+            </div>
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <div class="layui-inline">
+            <label class="layui-form-label">收款时间：</label>
+            <input type="checkbox" name="checkAll" lay-skin="primary" title="全选">
+            <div class="layui-input-inline">
+
+            </div>
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <div class="layui-inline">
+            <label class="layui-form-label">费用类型：</label>
+            <div class="layui-input-inline">
+
+            </div>
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <div class="layui-inline">
+            <label class="layui-form-label">收款方式：</label>
+            <div class="layui-input-inline">
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="order-form-title">订单详情</div>
+      <div class="order-form-block">
+        <div class="layui-form-item">
+          <div class="layui-inline">
+            <label class="layui-form-label">订单状态：</label>
+            <div class="layui-input-inline">
+              嘻嘻哈哈嘻嘻哈
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script id="refundDetail" type="text/html">
+
+
+  </script>
+  <script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+  <script type="text/javascript" src="../../js/config.js"></script>
+
+  <script>
+    layui.use(['layer'], function () {
+      var $ = layui.jquery,
+        layer = parent.layer === undefined ? layui.layer : parent.layer;
+
+      function initPage() {
+        //数据请求
+        $.ajax({
+
+        })
+      }
+
+      initPage()
+    });
+  </script>
+</body>
+
+</html>

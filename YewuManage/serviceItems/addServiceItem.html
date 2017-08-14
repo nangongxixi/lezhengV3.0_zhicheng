@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>添加查询服务大类</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+</head>
+<body>
+<div style="margin: 15px;">
+    <fieldset class="layui-elem-field">
+        <legend>添加查询服务大类</legend>
+        <div class="layui-field-box">
+            <form class="layui-form" action="" id="keepinput">
+                <table class="layui-table self-site-table left">
+                    <tr>
+                        <th class="self-form-title">编辑资料：</th>
+                        <td>
+                            <div class="layui-input-block right">
+                                <button class="layui-btn" lay-submit="" lay-filter="addarea">保存</button>
+                                <button class="layui-btn  layui-btn-danger delservice" servicetypeid>删除</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="self-form-title">大类名称：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="hidden" name="servicetypeid"/>
+                                <input type="text" name="title" lay-verify="title|required" autocomplete="off"
+                                       placeholder="请输入事项名称" class="layui-input self-form-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>大类编号：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="text" name="number" lay-verify="number|required" autocomplete="off"
+                                       placeholder="请输入事项编号" class="layui-input self-form-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>开通区域：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <span id="items"></span>
+                                <button type="reset" class="layui-btn layui-btn-primary" id="addarea" areaids=""><i
+                                        class="layui-icon"></i>&nbsp;添加
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <table class="site-table table-hover selected-css right">
+                    <thead>
+                    <tr>
+                        <th>
+                            <i class="fa fa-folder-open-o" aria-hidden="true"></i> 服务大类
+                            <span class="right weih">添加</span>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody class="selsect-content0">
+                    <tr>
+                        <td class="select_input-items" id="items-list1"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div id="page1" class="page"></div>
+                <div class="clear"></div>
+            </form>
+
+        </div>
+    </fieldset>
+</div>
+
+<!---员工列表右侧的角色列表-->
+<script id="orderHandle1" type="text/html">
+    {{# layui.each(d.datalist, function(index, item){ }}
+    <h2 class="self-input itemname userrole" title="{{ item.title }}" servicetypeid="{{ item.id }}" rights=""
+        number="{{item.code}}"><i class="fa fa-id-card-o" aria-hidden="true"></i> <span>{{ item.title }}</span>
+    </h2>
+    {{# }); }}
+</script>
+
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('serviceIndex'),
+                orderID = common.getUrlParam("id"),
+                itemID = common.getUrlParam("itemid"),//事项id
+                layer = layui.layer;
+        common.saveTabIndex('serviceIndex');
+        common.init();
+        common.layTime(); //时间选择
+
+        var getJSON = common.getJsonData('api/bossApi/service/serviceTypeList', 1, '');
+
+        //给右侧选项卡定义样式
+        $(".selsect-content0").find(".layui-input").css({
+            'border': '0',
+            'background-color': '#f1f1f1',
+            'height': '34px',
+            'text-align': 'center'
+        });
+        $(".selsect-content0 tr").find("h2:even").css("background", "#ffffff");
+        $(".selsect-content0 tr").find("h2:last").css("border", "0");
+
+        //避免input被刷新清空
+        formInStorage.init({
+            formElem: '#keepinput',
+            formSession: 'keepinput'
+        });
+
+        //弹出区域列表
+        $("#addarea").on("click", function () {
+            layer.open({
+                type: 2,
+                title: '区域列表',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['85%', '80%'],
+                content: 'queryServiceArea.html' //iframe的url
+            });
+        });
+
+        $(".layui-btn").on('mouseover', function () {
+            $(this).find('.layui-icon').css('color', '#009688');
+        });
+        $(".layui-btn").on('mouseout', function () {
+            $(this).find('.layui-icon').css('color', '#666');
+        });
+
+        //点击角色维护 -》添加
+        $(".weih").on("click", function () {
+            var obj = $("#items-list1");
+            if ($(".itemname span:contains('添加角色')").length > 0) {
+                layer.msg('请先完善添加信息', {icon: 0});
+                return false;
+            }
+            obj.append('<h2 class="self-input itemname"><i class="fa fa-id-card-o" aria-hidden="true"></i>&nbsp;&nbsp;<span>添加角色</span></h2>');
+            $(".selsect-content0 tr").find("h2:even").css({'background': '#fff', 'border-top': '1px solid #ddd'});
+        });
+
+        itemLists();
+        //点击角色列表保存其id
+        $(document).on('click', '#items-list1 h2', function () {
+            $(this).attr("class", "right-btn").siblings().attr("class", "self-input")//变色
+            $(".delservice").attr("servicetypeid", $(this).attr("servicetypeid"));//给删除按钮赋值
+            $("#items").html('');
+            //给iuput赋值
+            $("input[name='servicetypeid']").val($(this).attr("servicetypeid"));
+            $("input[name='title']").val($(this).attr("title"));
+            $("input[name='number']").val($(this).attr("number"));
+            //保存值到localstorage,避免刷新清空
+            var obj = JSON.stringify({
+                "title": $(this).attr("title"),
+                "number": $(this).attr("number"),
+                "servicetypeid": $(this).attr("servicetypeid")
+            });
+            localStorage.setItem("keepinput", obj);
+            //获取相应区域ids并存入localstorage
+            var getJSON = common.getJsonData('api/bossApi/service/serviceTypeAreaList', '', {"id": $(this).attr("servicetypeid")});
+            var ids = '';
+            $.each(getJSON.datalist, function (index, item) {
+                ids += '"' + item.areaid + '":' + '"' + item.areaname + '"' + ',';
+            });
+            var ids = ids.substring(0, ids.length - 1)
+            localStorage.setItem('ids', "{" + ids + "}");
+            //显示开通区域
+            itemLists()
+        });
+
+        //显示开通区域列表
+        function itemLists(){
+            var ee = JSON.parse(localStorage.getItem("ids"));
+            for (var i in ee) {
+                $("#items").prepend('<div class="layui-btn layui-btn-primary" title="' + ee[i] + '" id="' + i + '">' + ee[i] + '&nbsp;<i class="layui-icon self-cursor" data-icon="&#x1006;">&#x1006;</i></div>');
+            }
+        }
+
+        //X号操作
+        $(document).on('click','.layui-btn .layui-icon',function(){
+            var ee = JSON.parse(localStorage.getItem("ids"));
+            var fulei = $(this).parent();
+            var key = fulei.attr('id');
+            delete ee[key]; //删除相应的键值
+            localStorage.setItem('ids', JSON.stringify(ee));//重新存回localsession
+            fulei.remove(); //删除相应的items
+        });
+
+        //监听提交
+        form.on('submit(addarea)', function (data) {
+            //拼接rightids
+            var rightids = '';
+            var dd = $("#items .layui-btn");
+            if (dd.length > 0) {
+                for (var i = 0; i < dd.length; i++) {
+                    rightids += dd.eq(i).attr("id") + ',';
+                }
+                rightids = rightids.substring(0, rightids.length - 1); // '1,2,'去掉最后一个逗号
+            }
+            if (!rightids) {
+                rightids = data.field.servicarea;
+            }
+            var servicetypeid = JSON.parse(localStorage.getItem("keepinput"))
+            servicetypeid = servicetypeid.servicetypeid;
+            if (parseInt(servicetypeid)) {
+                var dataArr = {
+                    "servicetypeid": servicetypeid,
+                    "title": data.field.title,
+                    "code": data.field.number,
+                    "servicarea": rightids
+                };
+            } else {
+                var dataArr = {
+                    "servicetypeid": 0,
+                    "title": data.field.title,
+                    "code": data.field.number,
+                    "servicarea": rightids
+                };
+            }
+            var getJSON = common.getJsonData('api/bossApi/service/serviceTypeEdit', '', dataArr);
+            // console.log(dataArr);
+            // console.log(getJSON);
+            // alert(6666)
+            // return false;
+            if (getJSON["code"] == 1) {
+                layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                    localStorage.removeItem("keepinput");
+                    localStorage.removeItem("ids");
+                    //localStorage.removeItem("rolemanage");
+                    window.location.reload();
+                });
+            } else {
+                layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                    history.go(-1);
+                });
+            }
+            return false;
+        });
+
+        //删除操作
+        $(document).on('click', '.delservice', function () {
+            var obj = $(this);
+            layer.confirm('您确定要删除本条数据？', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                var getJSON = common.getJsonData('api/bossApi/service/serviceTypeDel', '', {"id": obj.attr("servicetypeid")});
+                // console.log(getJSON);
+                // return false;
+                if (getJSON["code"] == 1) {
+                    layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                        localStorage.removeItem("keepinput");
+                        localStorage.removeItem("ids");
+                        history.go(0);
+                    });
+                } else {
+                    layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                        localStorage.removeItem("keepinput");
+                        localStorage.removeItem("ids");
+                        window.location.reload();
+                    });
+                }
+            });
+            return false;
+        });
+
+
+    });
+</script>
+</body>
+</html>

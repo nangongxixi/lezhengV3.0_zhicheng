@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>员工管理</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/table.css"/>
+
+</head>
+<body>
+<div style="margin: 15px;">
+    <div class="layui-tab layui-tab-card" lay-filter="rolemanage">
+        <ul class="layui-tab-title">
+            <li>员工管理</li>
+            <li>角色维护</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item">
+                <div class="layui-field-box">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item self-layui-form-item">
+                                <label class="layui-form-label" style="width:auto">选择时间</label>
+
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="开始日" id="LAY_demorange_s1" name="begintime">
+                                </div>
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="截止日" id="LAY_demorange_e1" name="endtime">
+                                </div>
+                                <label class="layui-form-label" style="width:auto">性别</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="sex">
+                                        <option value="">—— 请选择 ——</option>
+                                        <option value="1">男</option>
+                                        <option value="0">女</option>
+                                    </select>
+                                </div>
+
+                                <button class="layui-btn" lay-submit="" lay-filter="searrole" style="margin-left: 40px">
+                                    搜索
+                                </button>
+                                <button type="reset" class="layui-btn layui-btn-primary resetrole">重置</button>
+                            </div>
+                        </form>
+                    </blockquote>
+                    <a href="javascript:;" class="layui-btn" id="additem" roleid="" rolename=""><i
+                            class="layui-icon"></i>&nbsp;添加</a>
+
+                    <div>
+                        <span id="items-list1"></span>
+                        <table class="site-table table-hover selected-css right">
+                            <thead>
+                            <tr>
+                                <th>
+                                    <i class="fa fa-user-o" aria-hidden="true"></i> 员工角色
+                                    <span class="right" id="weihu" style="cursor: pointer">维护</span>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody class="selsect-content">
+                            <tr>
+                                <td class="select_input-items" id="items-list3">
+                                    <h2 class="self-input" value="0"><i class="layui-icon self-cursor"
+                                                                        data-icon="&#xe602;">&#xe602;</i> 主管</h2>
+
+                                    <h2 class="self-input" value="1"><i class="layui-icon self-cursor"
+                                                                        data-icon="&#xe602;">&#xe602;</i> 专员</h2>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="admin-table-page">
+                        <div id="page1" class="page"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="layui-field-box">
+                    <form class="layui-form" action="" id="keepinput">
+                        <table class="layui-table self-site-table left">
+                            <tr>
+                                <th class="self-form-title">编辑资料：</th>
+                                <td>
+                                    <div class="layui-input-block right">
+                                        <button class="layui-btn" lay-submit="" lay-filter="addroleperson">保存</button>
+                                        <button class="layui-btn  layui-btn-danger" lay-submit="" lay-filter="demo1"
+                                                id="delrole">
+                                            删除
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="self-form-title">角色名称：</th>
+                                <td>
+                                    <div class="layui-input-inline">
+                                        <input type="hidden" name="rights">
+                                        <input type="hidden" name="roleid">
+                                        <input type="text" name="name" lay-verify="required" autocomplete="off"
+                                               placeholder="请输入角色名称" class="layui-input self-form-input">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>角色编号：</th>
+                                <td>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="number" lay-verify="required" autocomplete="off"
+                                               placeholder="请输入角色编号" class="layui-input self-form-input">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>角色权限：</th>
+                                <td>
+                                    <div class="layui-input-inline">
+                                        <span id="items"></span>
+                                        <span class="layui-btn layui-btn-primary" id="chooseitem"><i class="layui-icon"></i>&nbsp;添加</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <table class="site-table table-hover selected-css right">
+                            <thead>
+                            <tr>
+                                <th>
+                                    <i class="fa fa-folder-open-o" aria-hidden="true"></i> 角色维护
+                                    <!--<span class="right weih">添加</span>-->
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody class="selsect-content">
+                            <tr>
+                                <td class="select_input-items" id="items-list2">
+                                    <h2 class="self-input"><i class="fa fa-id-card-o" aria-hidden="true"></i>&nbsp;&nbsp;超级管理员
+                                    </h2>
+
+                                    <h2 class="self-input"><i class="fa fa-id-card-o" aria-hidden="true"></i>&nbsp;&nbsp;主管
+                                    </h2>
+
+
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="clear"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!---员工管理-->
+<script id="orderHandle1" type="text/html">
+    <table class="site-table self-site-table table-hover left">
+        <thead>
+        <tr>
+            <th>编号</th>
+            <th>用户名</th>
+            <th>姓名</th>
+            <th>性别</th>
+            <th>电话</th>
+            <th>加入日期</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# layui.each(d.datalist, function(index, item){ }}
+        <tr>
+            <td>{{ item.staffnumber }}</td>
+            <td title="{{ item.username }}">{{ item.username.length>18?item.username.substring(0, 18)+
+                "...":item.username }}
+            </td>
+            <td>{{ item.staffname }}</td>
+            <td>{{# if(item.sex == 1){ }}男{{# }else{ }}女{{# } }}</td>
+            <td>{{ item.userphone }}</td>
+            <td>{{ item.joindate }}</td>
+            <td style="display: none">{{ item.staffid}}</td>
+            <td style="display: none">{{ item.headimgurl }}</td>
+            <td style="display: none">{{ item.idcard }}</td>
+            <td style="display: none">{{ item.roleid }}</td>
+            <td style="display: none">{{ item.rolename }}</td>
+            <td style="display: none">{{ item.imgguid }}</td>
+            <td>
+                <span class="layui-breadcrumb " lay-separator=" ">
+                    <a href="javascript:;" title="详情" class="detail"><i class="fa fa-file-text-o"
+                                                                        aria-hidden="true"></i></a>
+                    <a href="../roleManage/editPerson.html?mody=1" title="编辑" class="detail"><i class="fa fa-edit"
+                                                                                                aria-hidden="true"></i></a>
+                    <a href="javascript:;" title="删除" class="deluser" userid="{{ item.staffid }}"><i
+                            class="layui-icon self-cursor" data-icon="&#x1006;">&#x1006;</i></a>
+                </span>
+            </td>
+        </tr>
+        {{# }); }}
+        </tbody>
+    </table>
+</script>
+
+<!---角色列表-->
+<script id="orderHandle2" type="text/html">
+    {{# layui.each(d.data, function(index, item){ }}
+    <h2 class="self-input itemname" title="{{ item.name }}" roleid="{{ item.roleid }}" rights="{{item.rights}}"
+        number="{{item.number}}"><i class="fa fa-id-card-o" aria-hidden="true"></i> <span>{{ item.name }}</span>
+    </h2>
+    {{# }); }}
+</script>
+
+<!---员工列表右侧的角色列表-->
+<script id="orderHandle3" type="text/html">
+    {{# layui.each(d.data, function(index, item){ }}
+    <h2 class="self-input itemname userrole" title="{{ item.name }}" roleid="{{ item.roleid }}" rights="{{item.rights}}"
+        number="{{item.number}}"><i class="fa fa-id-card-o" aria-hidden="true"></i> <span>{{ item.name }}</span>
+    </h2>
+    {{# }); }}
+</script>
+
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+    //搜索表单
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                rolemanage = localStorage.getItem('rolemanage'),
+                orderID = common.getUrlParam("id"),
+                layer = layui.layer;
+        common.saveTabIndex('rolemanage');
+        common.init();
+        common.layTime(); //时间选择
+        //复选框样式
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_flat-green'
+        });
+
+
+        //复选框样式
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_flat-green'
+        });
+
+        //避免input被刷新清空
+        formInStorage.init({
+            formElem: '#keepinput',
+            formSession: 'keepinput'
+        });
+
+        /* ------------------------------------------------------------- 数据列表显示 ---------------------------------------------------------------- */
+
+        alluser(0, '');
+        alluser(1, '');
+        alluser(2, '');
+        $(".resetrole").on('click', function () {
+            alluser(0, '');
+        });
+
+        /* ------------------------------------------------------------- 数据搜索操作 ---------------------------------------------------------------- */
+
+        //客户端 -> 搜索（状态，性别，标签）
+        form.on('submit(searrole)', function (data) {
+            var dataArr = {
+                "timebegin": data.field.begintime,
+                "timeend": data.field.endtime,
+                "sex": data.field.sex,
+                "page": 1
+            };
+            alluser(0, dataArr);
+            return false;
+        });
+
+        $(document).on("click", ".userrole", function () {
+            var roleid = $(this).attr('roleid');
+            var rolename = $(this).attr('title');
+            $("#additem").attr("roleid", roleid);
+            $("#additem").attr("rolename", rolename);
+            var dataArr = {
+                "timebegin": '',
+                "timeend": '',
+                "sex": '',
+                "roleId": roleid,
+                "page": 1
+            };
+            alluser(0, dataArr);
+            return false;
+        })
+
+        /* ------------------------------------------------------------- 角色管理 ---------------------------------------------------------------- */
+
+        //角色列表
+        $(".selsect-content").find(".layui-input").css({
+            'border': '0',
+            'background-color': '#f1f1f1',
+            'height': '34px',
+            'text-align': 'center'
+        });
+        $(".selsect-content tr").find("h2:even").css("background", "#ffffff");
+        $(".selsect-content tr").find("h2:last").css("border", "0");
+        //点击角色维护 -》添加
+        $(".weih").on("click", function () {
+            var obj = $("#items-list2");
+            if ($(".itemname span:contains('添加角色')").length > 0) {
+                layer.msg('请先完善添加信息', {icon: 0});
+                return false;
+            }
+            obj.append('<h2 class="self-input itemname"><i class="fa fa-id-card-o" aria-hidden="true"></i>&nbsp;&nbsp;<span>添加角色</span></h2>');
+            $(".selsect-content tr").find("h2:even").css({'background': '#fff', 'border-top': '1px solid #ddd'});
+        });
+
+        //点击角色列表保存其id
+        $(document).on('click', '.itemname', function () {
+            $("input[name='roleid']").val($(this).attr("roleid"));
+            $("input[name='name']").val($(this).attr("title"));
+            $("input[name='number']").val($(this).attr("number"));
+            $("input[name='rights']").val($(this).attr("rights"));
+        });
+
+        //监听提交
+        form.on('submit(addroleperson)', function (data) {
+            //拼接rightids
+            var rightids = '';
+            var dd = $("#items .layui-btn");
+            if (dd.length > 0) {
+                for (var i = 0; i < dd.length; i++) {
+                    rightids += dd.eq(i).attr("id") + ',';
+                }
+                rightids = rightids.substring(0, rightids.length - 1); // '1,2,'去掉最后一个逗号
+            }
+            if (!rightids) {
+                rightids = data.field.rights;
+            }
+            if (data.field.roleid) {
+                var dataArr = {
+                    "roleid": data.field.roleid,
+                    "name": data.field.name,
+                    "number": data.field.number,
+                    "rightids": rightids
+                };
+            } else {
+                var dataArr = {
+                    "roleid": 0,
+                    "name": data.field.name,
+                    "number": data.field.number,
+                    "rightids": rightids
+                };
+            }
+            var getJSON = common.getJsonData('api/bossApi/role/roleEdit', '', dataArr);
+             //console.log(dataArr);
+            // console.log(getJSON);
+          // return false;
+            if (getJSON["code"] == 1) {
+                layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                    localStorage.removeItem("keepinput");
+                    localStorage.removeItem("ids");
+                    //localStorage.removeItem("rolemanage");
+                    window.location.reload();
+                });
+            } else {
+                layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                    window.location.reload();
+                });
+            }
+            return false;
+        });
+
+        /* ------------------------------------------------------------- 数据MODEL ---------------------------------------------------------------- */
+
+        function alluser(typeid, dataArr) {
+            var cc = typeid + 1
+            var dataArray = dataArr || {"page": 1};
+            if (typeid == 1 || typeid == 2) {
+                var getJSON = common.getJsonData('api/bossApi/role/roleList', '', '');
+                var tplid = document.getElementById('orderHandle' + cc),
+                        viewid = document.getElementById('items-list' + cc);
+                var getTpl = tplid.innerHTML;
+                layui.laytpl(getTpl).render(getJSON, function (html) {
+                    viewid.innerHTML = html;
+                    element.init();
+                });
+            } else {
+                var getJSON = common.getJsonData('api/bossApi/role/StaffSearch', 1, dataArray);
+            }
+        }
+
+        /* ------------------------------------------------------------- 其他操作 ---------------------------------------------------------------- */
+
+        //保存列表详情
+        $(document).on('click', '.detail', function () {
+            var index = $(this).parent().parent().siblings();
+            //拼凑数组并放到localhost，以便详情使用
+            var arr = {
+                "staffnumber": index.eq(0).html(),//id号，唯一标识
+                "username": index.eq(1).attr("title"),
+                "staffname": index.eq(2).html(),
+                "sex": index.eq(3).html(),
+                "userphone": index.eq(4).html(),
+                "joindate": index.eq(5).html(),//加入时间
+                "staffid": index.eq(6).html(),
+                "headimgurl": index.eq(7).html(),
+                "idcard": index.eq(8).html(),//身份证
+                "roleid": index.eq(9).html(), //这个员工的角色，主管之类的
+                "rolename": index.eq(10).html(), //这个员工的角色，主管之类的
+                "imgguid": index.eq(11).html()
+            };
+            localStorage.setItem("rolemanager", JSON.stringify(arr));
+            location.href = "persondetail.html";
+        });
+
+        //删除角色
+        $(document).on('click', '#delrole', function () {
+            layer.confirm('您确定要删除本角色？', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                var roleid = $("input[name='roleid']").val();
+                // alert(roleid)
+                var getJSON = common.getJsonData('api/bossApi/role/roleDel', '', {"id": roleid});
+                if (getJSON["code"] == 1) {
+                    layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                        history.go(0);
+                    });
+                } else {
+                    layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                        history.go(0);
+                    });
+                }
+            });
+            return false;
+        });
+
+        //删除员工
+        $(document).on('click', '.deluser', function () {
+            var obj = $(this);
+            layer.confirm('您确定要删除该员工？', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                var userid = obj.attr('userid');
+                var getJSON = common.getJsonData('api/bossApi/role/StaffDel', '', {"id": userid});
+                if (getJSON["code"] == 1) {
+                    layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                        history.go(0);
+                    });
+                }
+            });
+            return false;
+        });
+
+        //点击添加员工
+        $("#additem").on("click", function () {
+            var roleid = $(this).attr('roleid');
+
+            if (!roleid) {
+                layer.msg('请选择角色');
+                return false;
+            }
+            // var rolename = $(this).attr('rolename');
+            //sessionStorage.setItem('rolename',rolename);
+            location.href = "editPerson.html?roleid=" + roleid
+        })
+
+
+        //弹出添加库
+        $("#chooseitem").on("click", function () {
+            layer.open({
+                type: 2,
+                title: '服务区域',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['1400px', '80%'],
+                content: 'personitems.html' //iframe的url
+            });
+        });
+
+        //点击维护改变indexzhi
+        $("#weihu").on('click', function () {
+            localStorage.setItem('rolemanage', 1);
+            location.reload();
+        });
+
+        //显示及操作角色项目
+        var ee = JSON.parse(localStorage.getItem("ids"));
+        for (var i in ee) {
+            var eetext = ee[i];
+            eetext.length > 15 ? eetext = eetext.substring(0, 15) + "..." : eetext;
+            $("#items").prepend('<div class="layui-btn layui-btn-primary" title="' + ee[i] + '" id="' + i + '">' + eetext + '&nbsp;<i class="layui-icon self-cursor" data-icon="&#x1006;">&#x1006;</i></div>');
+        }
+        $(".layui-btn").on('mouseover', function () {
+            $(this).find('.layui-icon').css('color', '#009688');
+        });
+        $(".layui-btn").on('mouseout', function () {
+            $(this).find('.layui-icon').css('color', '#666');
+        });
+        $(".layui-btn .layui-icon").on('click', function () {
+            var fulei = $(this).parent();
+            var key = fulei.attr('id');
+            delete ee[key]; //删除相应的键值
+            localStorage.setItem('ids', JSON.stringify(ee)); //重新存回localsession
+            fulei.remove(); //删除响应的items
+        });
+
+    });
+</script>
+</body>
+</html>

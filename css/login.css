@@ -1,0 +1,130 @@
+.beg-login-bg {
+	background: url(../Images/login-bg-1.jpg) no-repeat center center fixed;
+	background-color: rgba(204, 204, 204, 1);
+}
+
+.beg-login-box {
+	width: 500px;
+	height: 330px;
+	margin: 10% auto;
+	background-color: rgba(255, 255, 255, 0.407843);
+	border-radius: 2px;
+	color: #009688;
+        background-color: #fff
+}
+
+.beg-login-box header {
+	height: 39px;
+	padding: 10px;
+	border-bottom: 1px solid #e6e6e6;
+}
+
+.beg-login-box header h1 {
+	text-align: center;
+	font-size: 25px;
+	line-height: 40px;
+}
+
+.beg-login-box .beg-login-main {
+	height: 185px;
+	padding: 25px 60px 0
+}
+
+.beg-login-main .layui-form-item {
+	position: relative;
+}
+
+.beg-login-main .layui-form-item .beg-login-icon {
+    position: absolute;
+    color: #cccccc;
+    /* top: 10px; */
+    /* left: 10px; */
+    width: 30px;
+    height: 28px;
+    background-color: #f1f1f1;  
+    padding: 10px 0 0 10px;
+    margin: 1px 0 0 1px;
+}
+
+.beg-login-main .layui-form-item input {
+	padding-left: 50px;
+}
+
+.beg-login-box footer {
+	height: 35px;
+	padding: 10px 10px 0 10px;
+}
+
+.beg-login-box footer p {
+	line-height: 35px;
+	text-align: center;
+}
+
+.beg-pull-left {
+	float: left !important;
+}
+
+.beg-pull-right {
+	float: right !important;
+}
+
+.beg-clear {
+	clear: both;
+}
+
+.beg-login-remember {
+	line-height: 38px;
+}
+
+.beg-login-remember .layui-form-switch {
+	margin-top: 0px;
+}
+
+.beg-login-code-box {
+	position: relative;
+	padding: 10px;
+}
+
+.beg-login-code-box input {
+	position: absolute;
+	width: 100px;
+}
+
+.beg-login-code-box img {
+	cursor: pointer;
+	position: absolute;
+	left: 115px;
+	height: 38px;
+}
+
+/*自定义*/
+.selef-layui-form-item{
+    width:260px;
+    float:right
+}
+
+.self-layui-btn {
+    width:380px;
+    background-color: #009688;
+    color:#fff
+}
+
+.self-layui-btn:hover{
+    color:#fff
+}
+
+.self-layui-input{
+    height:40px
+}
+
+.logo-img {
+    width:92px;
+    position: relative;
+    bottom: -15px;
+}
+
+.self-box-shadow{  
+  -webkit-box-shadow:0 0 10px rgba(128,138,135, .5);  
+  -moz-box-shadow:0 0 10px rgba(128,138,135, .5);  
+  box-shadow:0 0 10px rgba(128,138,135, .5);  
+} 

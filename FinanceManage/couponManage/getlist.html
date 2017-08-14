@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>领取名单</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/table.css"/>
+    <style>
+        .table-title {
+            height: 50px;
+            line-height: 50px;
+            padding-left: 20px;
+            border: 1px solid #ddd;
+            border-bottom: 0;
+            font-size: 14px;
+        }
+
+        .site-table {
+            margin: 0;
+        }
+
+        .site-text {
+            margin-bottom: 20px;
+        }
+
+        .layui-form-label {
+            width: 60px;
+        }
+    </style>
+</head>
+
+<body>
+<div style="margin: 15px;">
+    <span id="items-list1"></span>
+
+    <div class="admin-table-page">
+        <div id="page1" class="page"></div>
+    </div>
+</div>
+<!--发放优惠券-->
+<script id="orderHandle1" type="text/html">
+    <table class="site-table table-hover">
+        <thead>
+        <tr>
+            <th>乐政号</th>
+            <th>状态</th>
+            <th>手机号</th>
+            <th>昵称</th>
+            <th>性别</th>
+            <th>常驻地址</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# layui.each(d.datalist, function(index, item){ }}
+        <tr id="">
+            <td class="title">{{# if(item.joygovname == null || item.joygovname == ''){ }}/{{# }else{ }} {{ item.joygovname }}{{# } }}  </td>
+            <td>{{# if(item.status == 0){ }}正常{{# }else{ }}黑名单{{# } }}</td>
+            <td>{{ item.phone }}</td>
+            <td>{{ item.nickname }}</td>
+            <td>{{# if(item.gender == 0){ }}女{{# }else{ }}男{{# } }}</td>
+            <td>{{ item.address }}</td>
+        </tr>
+        {{# }); }}
+        </tbody>
+    </table>
+</script>
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('rolemanage'),
+                couponroleid = common.getUrlParam("couponroleid"),
+                layer = layui.layer;
+        common.saveTabIndex('financeIndex');
+        common.init();
+        common.layTime(); //时间选择
+
+        /* ------------------------------------------------------------- 数据列表显示 ---------------------------------------------------------------- */
+
+
+        var dataArr =
+        {
+            "couponroleid": couponroleid,
+            "pageindex": 1
+        }
+        getJSONData(1, dataArr);
+        function getJSONData(typeid, dataArr) {
+            var dataArray = dataArr || {"couponroleid": 1, "pageindex": 1};
+            common.getJsonData('api/bossApi/couponrole/couponuserlist', typeid, dataArray); //优惠卷发放记录列表
+            return false;
+        }
+
+    })
+    ;
+</script>
+</body>
+</html>

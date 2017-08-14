@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title> 编辑banner</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/table.css"/>
+</head>
+
+<body>
+<div style="margin: 15px;">
+    <fieldset class="layui-elem-field">
+        <legend></legend>
+        <div class="layui-field-box">
+            <form class="layui-form" action="" id="addactive">
+                <table class="layui-table" id="addactive">
+                </table>
+                <table class="layui-table">
+                    <tr>
+                        <th class="self-form-title">标题：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="text" name="name" lay-verify="required" autocomplete="off"
+                                       placeholder="请输入标题" class="layui-input self-form-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="self-form-title">编号：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="text" name="code" lay-verify="required" autocomplete="off"
+                                       placeholder="请输入编号" class="layui-input self-form-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr id="newsimg">
+                        <th class="self-form-title"> 位置：</th>
+                        <td>
+                            <div class="layui-input-inline" id="location">
+                                <select name="location">
+                                    <option value="">—— 请选择 ——</option>
+                                    <option value="1001">发现首页</option>
+                                    <option value="1002">首页第一个</option>
+                                    <option value="1003">首页第二个</option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="self-form-title">封面：</th>
+                        <td>
+                            <input type="file" name="imgguid" lay-verify="" class="layui-upload-file"
+                                   lay-title="添加一个碉堡了的图片">
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="self-form-title">链接网页：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="text" name="linkurl" lay-verify="required" autocomplete="off"
+                                       placeholder="请输入链接网页（'http://www.xxx.com'）" class="layui-input self-form-input">
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <div class="layui-btn-group self-btn-return">
+                    <!-- <a href="http://www.layui.com" class="layui-btn layui-btn-warm">预览</a>-->
+                    <button class="layui-btn" lay-submit="" lay-filter="contro" status="20">保存</button>
+                    <button class="layui-btn layui-btn-primary" lay-submit="" lay-filter="contro" status="30">上线
+                    </button>
+                </div>
+                <a href="javascript:history.go(-1);" class="return-go"><i class="fa fa-reply" data-icon="fa-reply"
+                                                                          aria-hidden="true"></i> 返回</a>
+            </form>
+        </div>
+    </fieldset>
+</div>
+
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage', 'upload'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('serviceIndex'),
+                bannerid = common.getUrlParam("bannerid"),
+                layer = layui.layer;
+        common.saveTabIndex('serviceIndex');
+        //common.init();
+        common.layTime(); //时间选择
+
+
+        //全选
+        form.on('checkbox(allChoose)', function (data) {
+            var child = $(data.elem).parents('table').find('#tags input');
+            child.each(function (index, item) {
+                item.checked = data.elem.checked;
+            });
+            form.render('checkbox');
+        });
+
+        layui.upload({
+            url: apiUrl + 'api/bossApi/account/testUp',
+            method: 'post',
+            limitSize: '30000',
+            before: function (file) {
+                console.log(file.files[0]);
+                return false
+            },
+            success: function (res) {
+                console.log(res)
+            }
+        });
+
+        form.render();
+
+        //避免input被刷新清空
+        formInStorage.init({
+            formElem: '#addactive',
+            formSession: 'addactive'
+        });
+
+        //修改的时候
+        if (bannerid != null) {
+            //修改时，获取行政审批的详情
+            $("legend").html('编辑banner');
+            var getJSON = JSON.parse(localStorage.getItem("interactionmanageDetail"));
+            console.log(getJSON);
+            $("input[name='name']").attr("value", getJSON.name);
+            $("input[name='code']").attr("value", getJSON.code);
+            $("input[name='linkurl']").attr("value", getJSON.linkurl);
+            //选中位置
+            $("#location input").attr("placeholder",getJSON.location);
+
+        } else {
+            //新增时
+            $("legend").html('添加banner');
+        }
+
+        //监听提交
+        form.on('submit(contro)', function (data) {
+            //请求接口
+            var status = $(this).attr('status');
+            var dataArr = {
+                "id": bannerid,
+                "name": data.field.name,
+                "code": data.field.code,
+                "location": data.field.location,
+                "linkurl": data.field.linkurl,
+                "imgguid": 'imgurl(imgguid)',
+                "status": status   //上线中30 待上线20 已下线10
+            };
+            var getJSON = common.getJsonData('api/bossApi/banner/bannerEdit', '', dataArr);
+            console.log(dataArr);
+            console.log(getJSON);
+            return false;
+            if (getJSON["code"] == 1) {
+                layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                    localStorage.removeItem("addnews");
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                    window.parent.location.reload();
+                });
+            } else {
+                layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                    history.go(-1);
+                });
+            }
+            return false;
+        });
+
+    });
+</script>
+</body>
+</html>

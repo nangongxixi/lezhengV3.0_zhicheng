@@ -1,0 +1,152 @@
+/*聊天主页面*/
+.chatwindow{
+    width: 100%;  
+}
+/* 消息来源*/
+#from{
+    color: #F7F7F7;
+    line-height: 270%;
+    font-size: 16px;
+}
+.fromDiv{
+    width: 100%;
+    height: 5%;
+    background-color: #00BFFF;
+}
+/*表情,图片,文件*/
+.epf{
+    width: 100%;
+    height: 4.3%;
+    background-color: white;
+    border-top: 1px solid;
+    border-top-color: #00BFFF;
+    border-bottom: 1px solid;
+    border-bottom-color: #00BFFF;
+}
+/*消息记录*/
+#content{
+    width: 100%;    
+    overflow-y:auto;	
+    background-color: #f1f1f1;
+	height:100%;
+	
+}
+li{background-color: #f1f1f1}
+/*消息输入框*/
+.inputMessage{
+    width: 100%;
+    position: relative
+}
+#message{  
+    width: 100%;
+    border: 0;   
+    font-size: 16px;
+    color: #666;   
+    height: 100px;   
+    overflow: hidden;
+    padding:5px 5px 40px 20px ;
+    border:1px solid #ddd
+}
+/*发送按钮*/
+.sendMessage{
+  
+}
+.sendMessage2{
+    width: 80px;
+    height: 30px;
+    float: right;
+}
+/*头像*/
+.touxiangRight{
+    border-radius:100%;
+    float:right;
+    width:40px;
+    height:40px;
+    background-image:url(../../images/logo.png);
+    background-size:100% 100%;
+    margin:0  4% 0 1.5%
+}
+.touxiangLeft{
+    border-radius:100%;
+    float:left;
+    width:40px;
+    height:40px;
+    background-image:url(../../images/0.jpg);
+    background-size:100% 100%;
+    margin:0 1.5% 0 4%
+}
+/*发送人和发送时间*/
+.titleRight{
+    text-align: right;
+    font-weight: bold;
+    display: none
+}
+.titleLeft{
+    text-align: left;
+    font-weight: bold;
+    display: none
+}
+/*发送图片消息*/
+.myImg{
+    width: 300px;
+    height: 200px;
+}
+/*清除浮动*/
+.clearFloat{
+    clear: both;
+}
+/**/
+.pLeft{
+    float:left;
+}
+.pRight{
+    float:right;
+}
+/*发送文件消息*/
+.postFile{
+    width:200px;
+    height:84px;
+    background-color:#87CEFA;
+    border-radius:4px;
+    float:right;
+}
+.getFile{
+    width:200px;
+    height:84px;
+    background-color:#87CEFA;
+    border-radius:4px;
+    float:left;
+}
+/**/
+.filenameRight{
+    border-radius: 1.2rem 0rem 1.2rem 1.2rem;
+    display: inline-block;
+    font-size: 16px;
+    line-height: 30px;  
+    padding: 0.4rem 1rem;
+    background-color: #84b8f4;
+    color: #fff;
+    float: right;   
+    max-width: 65%;
+    position: relative;
+}
+
+.filenameLeft{
+    border-radius: 0rem 1.2rem 1.2rem;
+    display: inline-block;
+    font-size: 16px;
+    line-height: 30px;
+    padding: 0.4rem 1rem;
+    background-color: #f9ab59;
+    color: #fff;   
+    max-width: 65%;
+    position: relative;
+}
+.filenameCenter{
+    text-align: center;
+    color: white;
+}
+/*去除超链接下划线*/
+.mya{
+    text-decoration:none;
+}

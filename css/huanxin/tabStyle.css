@@ -1,0 +1,23 @@
+.tabs {
+    overflow: hidden;
+    margin: 0;
+    padding: 0px;
+    list-style: none;
+}
+
+.tabs a {
+    float: left;
+    position: relative;
+    height: 0;
+    width: 80px;
+    text-align: center;
+    line-height: 40px;
+    text-decoration: none;
+    color: #fff;
+    border-bottom: 50px solid gray;
+    font-size: 14px;
+    border-radius:10%;
+}
+.tabs a:hover,.tabs a:focus {
+    border-bottom-color:#004974;
+}

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>服务详情</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+<div style="margin: 15px;">
+    <fieldset class="layui-elem-field">
+        <span id="items-list"></span>
+    </fieldset>
+</div>
+<script id="orderHandle" type="text/html">
+    <legend>
+        {{# if(d.param9 === '1'){ }}
+        部门详情：
+        {{# } else { }}
+        主题详情：
+        {{# } }}
+    </legend>
+    <div class="layui-field-box">
+        <table class="layui-table">
+            <tr>
+                <th>
+                    {{# if(d.param9 === '1'){ }}
+                    部门图标：
+                    {{# } else { }}
+                    主题图标：
+                    {{# } }}
+                </th>
+                <td class="suoluetu">
+                    <img src="{{ d.param8}}">
+                </td>
+            </tr>
+            <tr>
+                <th class="self-form-title">
+                    {{# if(d.param9 === '1'){ }}
+                    部门名称：
+                    {{# } else { }}
+                    主题名称：
+                    {{# } }}
+                </th>
+                <td>{{ d.param2}}</td>
+            </tr>
+            <tr>
+                <th>编号：</th>
+                <td>{{ d.param1}}</td>
+            </tr>
+            <tr>
+                <th>描述：</th>
+                <td>{{ d.param7}}</td>
+            </tr>
+        </table>
+        <div class="self-btn-return">
+            <a href="javascript:;" class="layui-btn layui-btn-big" id="return"><i class="fa fa-reply"
+                                                                                               data-icon="fa-reply"
+                                                                                               aria-hidden="true"></i>
+                返回
+            </a>
+        </div>
+    </div>
+
+</script>
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('userindex'),
+                testview = common.getUrlParam("testview"),
+                layer = layui.layer;
+        common.saveTabIndex('userindex');
+        //common.init();
+        //common.layTime(); //时间选择
+
+        //取出值赋值给模版
+        var arr = JSON.parse(localStorage.getItem("attrmanagerDetail"));
+        console.log(localStorage);
+        renderTpl(arr);
+
+        //模版调用
+        function renderTpl(data) {
+            var tplid = document.getElementById('orderHandle'),
+                    viewid = document.getElementById('items-list');
+            var getTpl = tplid.innerHTML;
+            laytpl(getTpl).render(data, function (html) {
+                viewid.innerHTML = html;
+                element.init();
+            });
+        }
+
+
+        $("#return").on('click', function () {
+            localStorage.removeItem("attrmanagerDetail");
+            history.go(-1);
+        });
+
+
+    });
+
+
+</script>
+</body>
+</html>
+

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>积分商城</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/table.css"/>
+    <style>
+        .table-title {
+            height: 50px;
+            line-height: 50px;
+            padding-left: 20px;
+            border: 1px solid #ddd;
+            border-bottom: 0;
+            font-size: 14px;
+        }
+
+        .site-table {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+<div style="margin: 15px;">
+    <div class="layui-tab layui-tab-card">
+        <div class="layui-tab-item layui-show">
+            <div class="admin-main">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>积分商城</legend>
+                </fieldset>
+                <blockquote class="layui-elem-quote">
+                    <form class="layui-form" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="width:auto">类型</label>
+
+                            <div class="layui-input-inline">
+                                <select name="type">
+                                    <option value="">—— 请选择 ——</option>
+                                    <option value="1001">优惠卷</option>
+                                    <option value="1002">虚拟卡</option>
+                                    <option value="1003">实物</option>
+                                </select>
+                            </div>
+                            <label class="layui-form-label">名称</label>
+
+                            <div class="layui-input-inline">
+                                <input type="text" name="keyword" lay-verify="" autocomplete="off"
+                                       placeholder="请输入商品名称" class="layui-input">
+                            </div>
+                            <button class="layui-btn layui-btn-warm" lay-submit="" lay-filter="sear1">搜索</button>
+                            <button type="reset" class="layui-btn layui-btn-primary reset1">重置</button>
+                        </div>
+                    </form>
+                </blockquote>
+                <a class="layui-btn" href="edit.html"><i class="layui-icon"></i>&nbsp;添加</a>
+            </div>
+            <div class="layui-field-box">
+                <div class="table-title">商品库</div>
+                <span id="items-list1"></span>
+
+                <div class="admin-table-page">
+                    <div id="page1" class="page"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--订单对账-->
+<script id="orderHandle1" type="text/html">
+    <table class="site-table table-hover" style="margin-bottom: 50px">
+        <thead>
+        <tr>
+            <th>编号</th>
+            <th>名称</th>
+            <th>类型</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# layui.each(d.datalist, function(index, item){ }}
+        <tr id="order4">
+            <td class="title">{{ item.number }}</td>
+            <td>{{ item.name }}</td>
+            <td>
+                {{# if(item.type == '1001' ){ }}优惠券{{# } }}
+                {{# if(item.type == '1002' ){ }}虚拟卡{{# } }}
+                {{# if(item.type == '1003' ){ }}实物{{# } }}
+                {{# if(item.type == '0' ){ }}全部{{# } }}
+            </td>
+            <td>
+        <span class="layui-breadcrumb" lay-separator="|">
+            <a href="goodsDetail.html?libraryid={{ item.commoditylibraryid }}">详情</a>
+            <a href="javascript:;" class="js_tab1_begin" libraryid="{{ item.commoditylibraryid }}">上架</a>
+             <a href="edit.html?libraryid={{ item.commoditylibraryid }}" class="js_tab1_edit">编辑</a>
+            <a href="javascript:;" title="删除" id="delQueryService" libraryid="{{ item.commoditylibraryid }}">删除</a>
+        </span>
+            </td>
+        </tr>
+        {{# }); }}
+        </tbody>
+    </table>
+</script>
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                pointsIndex = localStorage.getItem('pointsIndex'),
+                orderID = common.getUrlParam("id"),
+                layer = layui.layer;
+        common.saveTabIndex('pointsIndex');
+        common.init();
+        common.layTime(); //时间选择
+
+        /* ------------------------------------------------------------- 数据列表显示 ---------------------------------------------------------------- */
+
+        //重置 、 搜索 、列表
+        getJSONData(1, '');
+        $(".reset1").on('click', function () {
+            getJSONData(1, '');
+        });
+        form.on('submit(sear1)', function (data) {
+            var dataArr = {
+                "type": data.field.type,
+                "status": data.field.status,
+                "keyword": data.field.keyword,
+                "pageindex": 1
+            };
+            console.log(dataArr)
+            getJSONData(1, dataArr);
+            return false;
+        });
+
+        /* ------------------------------------------------------------- 数据MODEL ---------------------------------------------------------------- */
+
+        function getJSONData(typeid, dataArr) {
+            var dataArray = dataArr || {"pageindex": 1};
+            common.getJsonData('api/bossApi/product/getproductlibrarylist', typeid, dataArray); //优惠卷库列表
+            return false;
+        }
+
+        var layer_html = '  <div class="layer-begin">' +
+                '<form action=""></form>' +
+                '<div class="layui-form-item">' +
+                '<label class="layui-form-label">上架编号</label>' +
+                '<div class="layui-input-inline" style="width: 240px;">' +
+                '<input type="text" name="sendMode" autocomplete="off" class="layui-input" placeholder="">' +
+                '</div>' +
+                '</div>' +
+                '<div class="layui-form-item">' +
+                '<label class="layui-form-label">上架价格</label>' +
+                '<div class="layui-input-inline" style="width: 240px;">' +
+                '<input type="text" name="zipCode" autocomplete="off" class="layui-input" placeholder="">' +
+                '</div>' +
+                '</div>' +
+                '<div class="layui-form-item">' +
+                '<label class="layui-form-label">上架数量</label>' +
+                '<div class="layui-input-inline" style="width: 240px;">' +
+                '<input type="text" name="zipparm" autocomplete="off" class="layui-input" placeholder="">' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+
+        $(document).on('click', '.js_tab1_begin', function () {
+            var id = $(this).siblings('input').attr('data-id');
+            var obj = $(this);
+            layer.open({
+                type: 1,
+                area: ['420px', '280px'],
+                shadeClose: true,
+                title: '上架信息',
+                content: layer_html,
+                btn: ['提交', '取消'],
+                btn1: function (index, layero) {
+                    var libraryid = obj.attr('libraryid');
+                    var dataArr = {
+                        "shelfcode": document.getElementsByName('sendMode')[0].value,
+                        "price": document.getElementsByName('zipCode')[0].value,
+                        "number": document.getElementsByName('zipparm')[0].value,
+                        "libraryid": libraryid
+                    };
+                    var getJSON = common.getJsonData('api/bossApi/product/libraryshelf', '', dataArr);
+                   // console.log(dataArr);
+                   // console.log(getJSON);
+                    // return false;
+                    if (getJSON["code"] == 1) {
+                        layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                            localStorage.removeItem("deids");
+                            localStorage.removeItem("productdata");
+                            localStorage.removeItem("addCoupon_form");
+                            /*
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                            window.parent.location.reload();
+                            */
+                            history.go(-1);
+                        });
+                    } else {
+                        layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                            history.go(-1);
+                        });
+                    }
+                    return false;
+                    //layer.msg('提交成功')
+                    layer.close(index)
+                }
+            });
+        });
+
+
+        /* ------------------------------------------------------------- 删除 ---------------------------------------------------------------- */
+
+        //删除查询服务
+        $(document).on('click','#delQueryService',function(){
+            var obj = $(this);
+            layer.confirm('您确定要删除本条数据？', {
+                btn: ['确定','取消'] //按钮
+            }, function(){
+                var libraryid = obj.attr("libraryid");
+                var APIname = "api/bossApi/product/libraryDelete";
+                var dataArr = {"libraryid":libraryid};
+                var getJSON = common.getJsonData(APIname, '', dataArr);
+               //console.log(getJSON);
+               // return false;
+                if(getJSON["code"] == 1){
+                    layer.msg('操作成功', {icon:1, time:1500}, function(){
+                        history.go(0);
+                    });
+                }
+            });
+            return false;
+        });
+
+    });
+</script>
+</body>
+</html>

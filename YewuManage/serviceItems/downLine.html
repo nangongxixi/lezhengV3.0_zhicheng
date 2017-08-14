@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <title>服务详情</title>
+        <meta name="renderer" content="webkit">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="format-detection" content="telephone=no">
+
+        <link rel="stylesheet" href="../plugins/layui/css/layui.css" media="all" />
+        <link rel="stylesheet" href="../css/global.css" media="all">        
+    </head>
+
+    <body>
+        <div style="margin: 15px;">			
+            <fieldset class="layui-elem-field">
+                <legend>服务详情</legend>
+                <div class="layui-field-box">
+                    <table class="layui-table">
+                        <tr><th>事项名称：</th><td>房屋结构安全审批</td></tr>
+                        <tr><th>事项编号：</th><td>001005030</td></tr>
+                        <tr><th>产品编号：</th><td>001005030</td></tr>
+                        <tr><th>服务主题：</th><td>建筑类</td></tr>
+                        <tr><th>订单步骤：</th><td>订单步骤一</td></tr>
+                        <tr><th class="detail-title">办理须知：</th><td>
+                                自收到申请之日起15个工作日内按以下情况予以答复：属于公开范围的，明确公开时间、公开场所、公开方式，
+                                或直接向申请人提供。需延长公开期限的，应说明延长的理由；属于不公开范围的，说明理由；属于公开范围且
+                                已经主动向社会公开的，指引告知申请人；申请的信息不属于受理单位掌握的，协助将申请转递相关受理机关，
+                                同时告知申请人转递情况和联系方式；申请公开的信息不存在的，告知申请人；申请公开内容不明确的，告知申
+                                请人作出
+                            </td></tr>											
+                    </table>
+                    <form class="layui-form" action="">	 
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit="" lay-filter="demo1">下线</button>                           
+                        </div>                       
+                    </form>
+                </div>
+            </fieldset>	
+        </div>
+        <script type="text/javascript" src="../plugins/layui/layui.js"></script>
+        <script>
+            layui.use(['form', 'layedit', 'laydate'], function () {
+                var form = layui.form(),
+                        layer = layui.layer,
+                        layedit = layui.layedit,
+                        laydate = layui.laydate;
+                //监听提交             
+                form.on('submit(demo1)', function (data) {
+                    layer.alert('下线成功!');
+                    return false;
+                });
+            });
+        </script>
+    </body>
+</html>

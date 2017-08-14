@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>积分商城</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <style>
+        .layui-field-box {
+            padding: 0;
+        }
+
+        .layui-field-box .layui-table {
+            margin: 0;
+            border: 0;
+        }
+
+        .layui-input-inline {
+            width: 200px;
+        }
+
+        .layui-form-item .layui-input-inline {
+            width: 300px;
+        }
+
+        .order-form-title {
+            padding-left: 20px;
+            height: 38px;
+            line-height: 38px;
+            border: 1px solid #e2e2e2;
+            font-size: 15px;
+        }
+
+        .order-form-block {
+            margin-bottom: 15px;
+            border: 1px solid #e2e2e2;
+            border-top: 0;
+            padding: 20px 0;
+        }
+
+        .layui-form-item {
+            margin-top: 0;
+        }
+
+        .layui-form-item:nth-child(1) {
+            margin-top: 0;
+        }
+
+        .layui-input-inline {
+            padding: 9px 0;
+        }
+
+        .layui-form-label {
+            width: 90px;
+        }
+
+        .layui-input-inline.img_box {
+            width: 700px;
+        }
+
+        .img_box img {
+            float: left;
+            margin-right: 20px;
+            width: 100px;
+            height: 100px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+<div style="margin: 15px;">
+    <span id="items-list1"></span>
+
+    <div class="admin-table-page">
+        <div id="page1" class="page"></div>
+    </div>
+</div>
+
+<script id="orderHandle1" type="text/html">
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>积分商城</legend>
+    </fieldset>
+    <div class="layui-field-box">
+        <span id="fahuoxx">
+        <div class="order-form-title">发货信息</div>
+        <div class="order-form-block">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">商品状态：</label>
+
+                    <div class="layui-input-inline">
+                        {{d.data.typename}}
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">兑换时间：</label>
+
+                    <div class="layui-input-inline">
+                        {{d.data.createtime}}
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">收货人：</label>
+
+                    <div class="layui-input-inline">
+                        {{d.data.username}}
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">电话号码：</label>
+
+                    <div class="layui-input-inline">
+                        {{d.data.phone}}
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">收货地址：</label>
+
+                    <div class="layui-input-inline">
+                        {{d.data.address}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        </span>
+
+        <div class="order-form-title">商品详情</div>
+        <div class="order-form-block">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">商品名称：</label>
+
+                    <div class="layui-input-inline">
+                        {{d.data.productname}}
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">商品编号：</label>
+
+                    <div class="layui-input-inline">
+                        {{d.data.number}}
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">商品类型：</label>
+
+                    <div class="layui-input-inline">
+                        {{d.data.typename}}
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">商品描述：</label>
+
+                    <div class="layui-input-inline">
+                        {{d.data.productdes}}
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">商品图片：</label>
+
+                    <div class="layui-input-inline img_box">
+                        {{# layui.each(d.data.productimages, function(index, item){ }}
+                        <img src="{{item.largepic}}"
+                             alt="">
+                        {{# }); }}
+                    </div>
+                </div>
+            </div>
+        </div>
+         <span id="shangjiaxx">
+        <div class="order-form-title">上架信息</div>
+        <div class="order-form-block">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">商品状态：</label>
+
+                    <div class="layui-input-inline">
+                        {{d.data.status}}
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">上架时间：</label>
+
+                    <div class="layui-input-inline">
+                        {{d.data.creattime}}
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">上架编号：</label>
+
+                    <div class="layui-input-inline">
+                        {{d.data.productnumber}}
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">上架价格：</label>
+
+                    <div class="layui-input-inline">
+                        {{d.data.price}}
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">上架数量：</label>
+
+                    <div class="layui-input-inline">
+                        {{d.data.quantity}}
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">兑换数量：</label>
+
+                    <div class="layui-input-inline">
+                        {{d.data.convertedquantity}}
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">剩余数量：</label>
+
+                    <div class="layui-input-inline">
+                        {{d.data.quantity-d.data.convertedquantity}}
+                    </div>
+                </div>
+            </div>
+        </div>
+             </span>
+    </div>
+</script>
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('serviceIndex'),
+                commodityid = common.getUrlParam("commodityid"),
+                exchangeid = common.getUrlParam("exchangeid"),//兑换记录详情
+                libraryid = common.getUrlParam("libraryid"), //商品库商品详情
+                layer = layui.layer;
+        common.saveTabIndex('serviceIndex');
+        common.init();
+        //common.layTime(); //时间选择
+
+
+        if (commodityid) {
+            var dataArr = {
+                "commodityid": commodityid
+            }
+            common.getJsonData('api/bossApi/product/getproductinfo', 1, dataArr);
+            $('#fahuoxx').css('display', 'none');
+           // $('legend').html('优惠券详情');
+        } else if(libraryid){
+            var dataArr = {
+                "libraryid": libraryid
+            }
+            common.getJsonData('api/bossApi/product/getproductlibraryinfo', 1, dataArr);
+            $('#shangjiaxx').css('display', 'none');
+            $('#fahuoxx').css('display', 'none');
+        } else {
+            var dataArr = {
+                "exchangeid": exchangeid
+            }
+            common.getJsonData('api/bossApi/exchang/getinfo', 1, dataArr);
+            $('#shangjiaxx').css('display', 'none');
+        }
+
+
+        $(document).on('click', '.img_box img', function () {
+            var img_src = $(this).attr('src');
+            layer.open({
+                type: 1,
+                title: false,
+                closeBtn: 0,
+                area: '700',
+                skin: 'layui-layer-nobg',
+                shadeClose: true,
+                content: '<img src="' + img_src + '" alt="">'
+            });
+        });
+
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>用户管理</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/table.css"/>
+
+</head>
+<body>
+<div style="margin: 15px;">
+    <div class="layui-tab layui-tab-card" lay-filter="userindex">
+        <ul class="layui-tab-title">
+            <li>全部</li>
+            <li>黑名单</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item">
+                <div class="layui-field-box">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item self-layui-form-item">
+                                <label class="layui-form-label" style="width:auto">状态</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="status">
+                                        <option value="">—— 请选择 ——</option>
+                                        <option value="0">正常</option>
+                                        <option value="1">黑名单</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label" style="width:auto">性别</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="sex">
+                                        <option value="">—— 请选择 ——</option>
+                                        <option value="1">男</option>
+                                        <option value="0">女</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label" style="width:auto">标签</label>
+
+                                <div class="layui-input-inline tags">
+                                    <select name="tags">
+                                        <option value="">—— 请选择 ——</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label" style="width:auto">关键字</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="keywords" lay-verify="title" autocomplete="off"
+                                           placeholder="请输入关键字" class="layui-input">
+                                </div>
+                                <button class="layui-btn" lay-submit="" lay-filter="searall" style="margin-left: 40px">
+                                    搜索
+                                </button>
+                                <button type="reset" class="layui-btn layui-btn-primary " id="resetall">重置</button>
+                            </div>
+                        </form>
+                    </blockquote>
+                    <a href="javascript:;" class="layui-btn adduser"><i class="layui-icon"></i>&nbsp;添加</a>
+                    <table class="site-table table-hover">
+                        <thead>
+                        <tr>
+                            <th>乐政号</th>
+                            <th>状态</th>
+                            <th>手机号</th>
+                            <th>昵称</th>
+                            <th>性别</th>
+                            <th>常驻地址</th>
+                            <th>关注标签</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="items-list1"></tbody>
+                    </table>
+                    <div class="admin-table-page">
+                        <div id="page1" class="page"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="layui-field-box">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item self-layui-form-item">
+                                <label class="layui-form-label" style="width:auto">性别</label>
+
+                                <div class="layui-input-inline">
+                                    <select name="sex">
+                                        <option value="">—— 请选择 ——</option>
+                                        <option value="1">男</option>
+                                        <option value="0">女</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label" style="width:auto">标签</label>
+
+                                <div class="layui-input-inline tags">
+                                    <select name="tags">
+                                        <option value="">—— 请选择 ——</option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label" style="width:auto">关键字</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="keywords" lay-verify="title" autocomplete="off"
+                                           placeholder="请输入关键字" class="layui-input">
+                                </div>
+                                <button class="layui-btn" lay-submit="" lay-filter="searhei" style="margin-left: 40px">
+                                    搜索
+                                </button>
+                                <button type="reset" class="layui-btn layui-btn-primary" id="resetblack">重置</button>
+                            </div>
+                        </form>
+                    </blockquote>
+                    <a href="javascript:;" class="layui-btn adduser"><i class="layui-icon"></i>&nbsp;添加</a>
+                    <table class="site-table table-hover">
+                        <thead>
+                        <tr>
+                            <th>乐政号</th>
+                            <th>状态</th>
+                            <th>手机号</th>
+                            <th>昵称</th>
+                            <th>性别</th>
+                            <th>常驻地址</th>
+                            <th>关注标签</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="items-list2"></tbody>
+                    </table>
+                    <div class="admin-table-page">
+                        <div id="page2" class="page"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!---正常-->
+<script id="orderHandle1" type="text/html">
+    {{#  layui.each(d.datalist, function(index, item){ }}
+    <tr>
+        <td>{{# if(item.username == '' || item.username == null){ }}/{{# }else{ }}
+            {{ item.username && item.username.length>20?item.username.substring(0, 20)+
+            "...":item.username }}
+            {{# } }}
+        </td>
+        <td>{{# if(item.status == 0){ }}正常{{# }else{ }}黑名单{{# } }}</td>
+        <td>{{ item.phonenumber }}</td>
+        <td title="{{ item.nickname }}">
+            {{# if(item.nickname == '' || item.nickname == null){ }}/{{# }else{ }}
+            {{ item.nickname && item.nickname.length>20?item.nickname.substring(0, 20)+
+            "...":item.nickname }}
+            {{# } }}
+        </td>
+        <td>{{# if(item.sex == 1){ }}男{{# }else{ }}女{{# } }}</td>
+        <td title="{{ item.address }}">
+            {{# if(item.address == '' || item.address == null){ }}/{{# }else{ }}
+            {{ item.address && item.address.length>20?item.address.substring(0, 20)+
+            "...":item.address }}
+            {{# } }}
+        </td>
+        <td title="{{item.interestname}}">
+            {{# if(item.interestname == '' || item.interestname == null){ }}/{{# }else{ }}
+            {{ item.interestname && item.interestname.length>20?item.interestname.substring(0, 20)+
+            "...":item.interestname }}
+            {{# } }}
+        </td>
+        <td>
+                <span class="layui-breadcrumb" lay-separator=" ">
+                    <a href="../usermanage/detail.html?id={{ item.userid }}&typeid=0&replyid=1" title="详情"><i
+                            class="fa fa-file-text-o" aria-hidden="true"></i></a>
+                    <a href="../usermanage/edit.html?id={{ item.userid }}" title="编辑"><i class="fa fa-edit"
+                                                                                         aria-hidden="true"></i></a>
+
+                    {{# if(item.status == 1){ }}
+                     <a href="javascript:;" title="移出黑名单" id="delhei" orderid="{{ item.userid }}"><i
+                             class="layui-icon self-cursor"
+                             data-icon="&#xe61a;">
+                         &#xe61a;</i></a>
+                    {{# }else{ }}
+                     <a href="javascript:;" title="加入黑名单" id="addhei" orderid="{{ item.userid }}"><i
+                             class="layui-icon self-cursor"
+                             data-icon="&#xe619;">
+                         &#xe619;</i></a>
+
+                    {{# } }}
+
+
+
+
+                </span>
+        </td>
+    </tr>
+    {{#  }); }}
+</script>
+<!---黑名单-->
+<script id="orderHandle2" type="text/html">
+    {{#  layui.each(d.datalist, function(index, item){ }}
+    <tr>
+        <td>{{ item.username }}</td>
+        <td>{{# if(item.status == 0){ }}正常{{# }else{ }}黑名单{{# } }}</td>
+        <td>{{ item.phonenumber }}</td>
+        <td> {{# if(item.nickname == '' || item.nickname == null){ }}/{{# }else{ }}
+            {{ item.nickname && item.nickname.length>0?item.nickname.substring(0, 20)+
+            "...":item.nickname }}
+            {{# } }}
+        </td>
+        <td>{{# if(item.sex == 1){ }}男{{# }else{ }}女{{# } }}</td>
+        <td title="{{ item.address }}">{{ item.address && item.address.length>0?item.address.substring(0, 20)+
+            "...":item.address }}
+        </td>
+        <td>{{ item.interestname && item.interestname.length>0?item.interestname.substring(0, 20)+
+            "...":item.interestname }}
+        </td>
+        <td>
+                <span class="layui-breadcrumb" lay-separator=" ">
+                    <a href="../usermanage/detail.html?id={{ item.userid }}&typeid=0&replyid=1" title="详情"><i
+                            class="fa fa-file-text-o" aria-hidden="true"></i></a>
+                    <a href="../usermanage/edit.html?id={{ item.userid }}" title="编辑"><i class="fa fa-edit"
+                                                                                         aria-hidden="true"></i></a>
+                    <a href="javascript:;" title="移出黑名单" id="delhei" orderid="{{ item.userid }}"><i
+                            class="layui-icon self-cursor"
+                            data-icon="&#xe61a;">
+                        &#xe61a;</i></a>
+                </span>
+        </td>
+    </tr>
+    {{#  }); }}
+</script>
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('userindex'),
+                orderID = common.getUrlParam("id"),
+                layer = layui.layer;
+        common.saveTabIndex('userindex');
+        common.init();
+        common.layTime(); //时间选择
+        //复选框样式
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_flat-green'
+        });
+
+        /* ------------------------------------------------------------- 数据列表显示 ---------------------------------------------------------------- */
+
+        alluser(-1, '');
+        alluser(1, '');
+        $("#resetall").on('click', function () {
+            alluser(-1, '');
+        });
+        $("#resetblack").on('click', function () {
+            alluser(1, '');
+        });
+
+        /* ------------------------------------------------------------- 数据搜索操作 ---------------------------------------------------------------- */
+
+        //全部 -> 搜索（状态，性别，标签）
+        form.on('submit(searall)', function (data) {
+            var dataArr = {
+                "status": data.field.status,
+                "sex": data.field.sex,
+                "tags": data.field.tags,
+                "keywords":data.field.keywords,
+                "page": 1
+            };
+            alluser(-1, dataArr);
+            return false;
+        });
+
+        //黑名单 -> 搜索（性别，标签）
+        form.on('submit(searhei)', function (data) {
+            var dataArr = {
+                "status": 1,
+                "sex": data.field.sex,
+                "tags": data.field.tags,
+                "keywords":data.field.keywords,
+                "page": 1
+            };
+            alluser(1, dataArr);
+            return false;
+        });
+
+        /* ------------------------------------------------------------- 数据MODEL ---------------------------------------------------------------- */
+        console.log(localStorage);
+
+
+        function alluser(typeid, dataArr) {
+            //映射模版
+            if (typeid == -1) {
+                var cc = typeid + 2;
+            } else {
+                var cc = typeid + 1;
+            }
+            var dataArray = dataArr || {"page": 1, "status": typeid};
+            var getJSON = common.getJsonData('api/bossApi/users/usersSearch', cc, dataArray);
+            /*
+             //标签名称处理
+             var tagsGetJSON = common.getJsonData('api/bossApi/property/tagList', '', '');
+             for (var j = 0; j < getJSON.datalist.length; j++) {
+             var dd = getJSON.datalist[j].interest;
+             getJSON.datalist[j].tagsname = '';
+             if (dd != null) {
+             for (var i = 0; i < dd.length; i++) {
+             $.each(tagsGetJSON.data, function (index, item) {
+             if (dd[i] == item.tagsid) {
+             getJSON.datalist[j].tagsname += item.name + ' / ';
+             }
+             });
+             }
+             getJSON.datalist[j].tagsname = getJSON.datalist[j].tagsname.substring(0, getJSON.datalist[j].tagsname.length - 2);//去掉最后一个/
+             }
+             }
+             */
+            var tplid = document.getElementById('orderHandle' + cc),
+                    viewid = document.getElementById('items-list' + cc);
+            var getTpl = tplid.innerHTML;
+            layui.laytpl(getTpl).render(getJSON, function (html) {
+                viewid.innerHTML = html;
+                element.init();
+            });
+        }
+
+        /* ------------------------------------------------------------- 黑名单操作 ---------------------------------------------------------------- */
+        var layer_html = '  <div class="layer-begin">' +
+                '<form action=""></form>' +
+                '<div class="layui-form-item">' +
+                '<label class="layui-form-label">电话号码：</label>' +
+                '<div class="layui-input-inline">' +
+                '<input type="text" name="sendMode" autocomplete="off" class="layui-input" maxlength="11" placeholder="请输入11位电话号码">' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+        $(document).on('click', '.adduser', function () {
+            var obj = $(this);
+            layer.open({
+                type: 1,
+                area: ['400px', '170px'],
+                shadeClose: true,
+                title: '添加用户',
+                content: layer_html,
+                btn: ['提交', '取消'],
+                btn1: function (index, layero) {
+                    var dataArr = {
+                        "uid": 0,
+                        "headpath": "",
+                        "username": "",
+                        "nickname": "",
+                        "gender": "",
+                        "phonenumber": document.getElementsByName('sendMode')[0].value,
+                        "address": "",
+                        "tags": "",
+                        "email": "",
+                        "blackreason": ""
+                    };
+                    var dataArr1 = {"text": document.getElementsByName('sendMode')[0].value}
+
+                    var getJSON = common.getJsonData('api/bossApi/users/phoneCount', '', dataArr1);
+                    if (getJSON && getJSON["data"] == 1) {
+                        layer.msg('电话号码已被注册');
+                        return false;
+                    }
+                    var phone = dataArr1.text;
+
+                    if (phone == '' || phone.length < 11 || isNaN(phone)) {
+                        layer.msg('请输入正确的手机号');
+                        return false;
+                    }
+                    if (phone.match(/^((0\d{2,3}-\d{7,8})|(1[35784]\d{9}))$/ig)) {
+                    } else {
+                        layer.msg('请输入正确的手机号');
+                        return false;
+                    }
+
+
+                    var getJSON = common.getJsonData('api/bossApi/users/updateuserinfo', '', dataArr);
+                    console.log(dataArr);
+                    console.log(getJSON);
+                    //return false;
+                    if (getJSON["code"] == 1) {
+                        layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                            sessionStorage.setItem('usertel', dataArr.phonenumber);
+                            location.href = 'edit.html?adduser=1&id=' + getJSON["data"];
+                        });
+                    } else {
+                        layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                            history.go(-1);
+                        });
+                    }
+                    return false;
+                    layer.close(index)
+                }
+            });
+        });
+
+
+        //加入黑名单
+        $(document).on('click', '#addhei', function () {
+            var obj = $(this);
+            layer.confirm('您确定要把该用户移入黑名单？', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                var orderid = obj.attr("orderid");
+                var APIname = "api/bossApi/users/usersSet";
+                var dataArr = {"id": orderid, "status": 1};
+                var getJSON = common.getJsonData(APIname, '', dataArr);
+                if (getJSON["code"] == 1) {
+                    layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                        history.go(0);
+                    });
+                }
+            });
+            return false;
+        });
+
+        //移出黑名单
+        $(document).on('click', '#delhei', function () {
+            var obj = $(this);
+            layer.confirm('您确定要把该用户移入正常？', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                var orderid = obj.attr("orderid");
+                var APIname = "api/bossApi/users/usersSet";
+                var dataArr = {"id": orderid, "status": 0};
+                var getJSON = common.getJsonData(APIname, '', dataArr);
+                if (getJSON["code"] == 1) {
+                    layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                        history.go(0);
+                    });
+                }
+            });
+            return false;
+        });
+
+        /* ------------------------------------------------------------- 其他操作 ---------------------------------------------------------------- */
+
+        //搜索下拉的标签列表
+        var APIname = "api/bossApi/property/tagList";
+        var getJSON = common.getJsonData(APIname, '', '');
+        console.log(getJSON);
+        $.each(getJSON.data, function (index, item) {
+            $(".tags select").append('<option value="' + item.tagsid + '">' + item.name + '</option>');
+            $(".tags select").next().find(".layui-anim-upbit").append('<dd lay-value="' + item.tagsid + '" class="">' + item.name + '</dd>');
+        });
+        form.render();
+
+
+    });
+</script>
+</body>
+</html>

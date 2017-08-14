@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>添加事项</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+</head>
+<body>
+<div style="margin: 15px;">
+    <fieldset class="layui-elem-field">
+        <legend>员工管理</legend>
+        <div class="layui-field-box">
+            <blockquote class="layui-elem-quote">
+                <form class="layui-form" action="">
+                    <div class="layui-form-item self-layui-form-item">
+                        <label class="layui-form-label" style="width:auto;">性别</label>
+
+                        <div class="layui-input-inline" style="width:150px">
+                            <select name="gender">
+                                <option value="">—— 请选择 ——</option>
+                                <option value="1">男</option>
+                                <option value="0">女</option>
+                            </select>
+                        </div>
+                        <label class="layui-form-label">选择时间</label>
+
+                        <div class="layui-input-inline">
+                            <input class="layui-input" placeholder="开始日" id="LAY_demorange_s1" name="begintime">
+                        </div>
+                        <div class="layui-input-inline">
+                            <input class="layui-input" placeholder="截止日" id="LAY_demorange_e1" name="endtime">
+                        </div>
+                        <label class="layui-form-label" style="width:auto;">姓名</label>
+
+                        <div class="layui-input-inline">
+                            <input type="text" name="keyword" lay-verify="" autocomplete="off" placeholder="请输入姓名"
+                                   class="layui-input">
+                        </div>
+                        <button class="layui-btn" lay-submit="" lay-filter="sear1" style="margin-left: 40px">搜索</button>
+                        <button type="reset" class="layui-btn layui-btn-primary reset1">重置</button>
+                    </div>
+                </form>
+            </blockquote>
+            <span href="javascript:;" class="layui-btn" id="additem"><i class="layui-icon"></i>&nbsp;新建</span>
+
+            <div>
+                <table class="site-table self-site-table table-hover left">
+                    <thead>
+                    <tr>
+                        <th>编号</th>
+                        <th>用户名</th>
+                        <th>姓名</th>
+                        <th>性别</th>
+                        <th>电话</th>
+                        <th>加入日期</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="items-list1"></tbody>
+                </table>
+                <table class="site-table table-hover selected-css right">
+                    <thead>
+                    <tr>
+                        <th>
+                            <i class="fa fa-user-o" aria-hidden="true"></i> 员工角色
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody class="selsect-content">
+                    <tr>
+                        <td class="select_input-items">
+                            <span id="items-list2">
+                                <h2 class="self-input itemname userrole" title="主管" roleid="0"><i
+                                        class="fa fa-id-card-o" aria-hidden="true"></i> <span>主管</span></h2>
+                                <h2 class="self-input itemname userrole" title="专员" roleid="1"><i
+                                        class="fa fa-id-card-o" aria-hidden="true"></i> <span>专员</span></h2>
+                            </span>
+
+                            <div id="page2" class="page"></div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="clear"></div>
+            </div>
+            <div class="admin-table-page">
+                <div id="page1" class="page"></div>
+            </div>
+        </div>
+    </fieldset>
+</div>
+<a href="javascript:history.go(-1);" class="return-go"><i class="fa fa-reply" data-icon="fa-reply"
+                                                          aria-hidden="true"></i> 返回</a>
+<!---行政审批-->
+<script id="orderHandle1" type="text/html">
+    {{#  layui.each(d.datalist, function(index, item){ }}
+    <tr>
+        <td>{{ item.number }}</td>
+        <td>{{ item.username }}</td>
+        <td title="{{ item.name }}">{{ item.name && item.name.length>18?item.name.substring(0, 18)+ "...":item.name }}
+        </td>
+        <td>{{# if(item.gender==0){ }}女{{# }else{ }}男{{# } }}</td>
+        <td>{{ item.userphone }}</td>
+        <td>{{ item.createtime }}</td>
+        <td style="display: none">{{ item.businessid }}</td>
+        <td style="display: none">{{ item.businessusersid }}</td>
+        <td style="display: none">{{ item.idcardnum }}</td>
+        <td style="display: none">{{ item.imgguid }}</td>
+        <td style="display: none">{{ item.roletype }}</td>
+        <td style="display: none">{{ item.status }}</td>
+        <td style="display: none">{{ item.imgurl }}</td>
+        <td style="display: none">{{ item.businessname }}</td>
+        <td>
+                <span class="layui-breadcrumb" lay-separator=" ">
+                    <a href="javascript:;" title="详情" class="detail"><i
+                            class="fa fa-file-text-o" aria-hidden="true"></i></a>
+                    <a href="javascript:;" title="编辑" class="detail" edit="1"><i
+                            class="fa fa-edit"
+                            aria-hidden="true"></i></a>
+                    <a href="javascript:;" title="删除" class="deluser" userid="{{ item.businessusersid }}"><i
+                            class="layui-icon self-cursor"
+                            data-icon="&#x1006;">&#x1006;</i></a>
+                    <!-- <a href="../serviceItems/downLine.html?id=73" title="下线" onclick="downline({{ item.id }})"><i class="layui-icon" data-icon="&#xe601;">&#xe601;</i></a>-->
+                </span>
+        </td>
+    </tr>
+    {{#  }); }}
+</script>
+<!---员工列表右侧的角色列表-->
+<script id="orderHandle2" type="text/html">
+    {{# layui.each(d.data, function(index, item){ }}
+    <h2 class="self-input itemname userrole" title="{{ item.name }}" roleid="{{ item.roleid }}" rights="{{item.rights}}"
+        number="{{item.number}}"><i class="fa fa-id-card-o" aria-hidden="true"></i> <span>{{ item.name }}</span>
+    </h2>
+    {{# }); }}
+</script>
+
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('serviceIndex'),
+                buniessid = common.getUrlParam("id"), //商家id
+                itemID = common.getUrlParam("itemid"),//事项id
+                layer = layui.layer;
+        common.saveTabIndex('serviceIndex');
+        common.init();
+        common.layTime(); //时间选择
+
+        common.saveTabIndex('businessMangeaIndex');
+
+        $(document).on('click', '#items-list2 h2', function () {
+            var roleid = $(this).attr("roleid");
+            $("#additem").attr("roleid", roleid);
+        });
+
+        $("#additem").on('click', function () {
+            var roleid = $(this).attr("roleid");
+            if (roleid === undefined || roleid == '') {
+                layer.msg('请选择角色');
+                return false;
+            }
+            location.href = "addperson.html?buniessid=" + buniessid + "&roleid=" + roleid;
+        });
+
+
+        $(document).on('click', '.detail', function () {
+            var index = $(this).parent().parent().siblings();
+            var edit = $(this).attr("edit");
+            //拼凑数组并放到localhost，以便详情使用
+            var arr = [];
+            for (var i = 0; i < index.length; i++) {
+                arr.push(index.eq(i).html());
+            }
+            localStorage.setItem("BuniessUserInfo", JSON.stringify(arr));
+            if(edit){
+                location.href = "addperson.html";
+            }else{
+                location.href = "persondetail.html";
+            }
+
+        });
+
+
+        //复选框样式
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_flat-green'
+        });
+
+        getJsonList(1, '');//区域
+        $(".resetzhuti").on('click', function () {
+            getJsonList(1, '');
+        });
+        form.on('submit(sear1)', function (data) {
+            var dataArr = {
+                "businessid": buniessid,
+                "gender": data.field.gender,
+                "begintime": data.field.begintime,
+                "endtime": data.field.endtime,
+                "keyword": data.field.keyword,
+                "pageindex": 1,
+            };
+            getJsonList(1, dataArr);
+            return false;
+        });
+
+        function getJsonList(typeid, dataArr) {
+            var dataArray = dataArr || {"businessid": buniessid, "pageindex": 1};
+            var getJSON = common.getJsonData('api/bossApi/business/businessUserSearch', typeid, dataArray);
+        }
+
+        //角色列表
+        // var getJSON = common.getJsonData('api/bossApi/role/roleList', 2, {"page": 1});
+
+        //点击角色显示列表
+        $("#items-list2 h2").on('click', function () {
+            var roleid = $(this).attr("roleid");
+            var dataArr = {
+                "businessid": buniessid,
+                "roletype": roleid,
+                "pageindex": 1,
+            };
+            getJsonList(1, dataArr);
+        });
+
+        //删除商家员工
+        $(document).on('click', '.deluser', function () {
+            var userid = $(this).attr("userid");
+            var getJSON = common.getJsonData('api/bossApi/business/businessUserDel', '', {"id": userid});
+            if (getJSON["code"] == 1) {
+                layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                    location.reload();
+                });
+            } else {
+                layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                    location.reload();
+                });
+            }
+            return false;
+
+        })
+
+
+    });
+</script>
+</body>
+</html>

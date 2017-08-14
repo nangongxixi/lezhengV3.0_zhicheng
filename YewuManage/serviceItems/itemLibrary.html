@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>行政审批事项库</title>
+        <meta name="renderer" content="webkit">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="format-detection" content="telephone=no">
+
+        <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all" />
+        <link rel="stylesheet" href="../../css/global.css" media="all">
+        <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+        <link rel="stylesheet" href="../../css/table.css" />
+
+    </head>
+    <body>
+        <div style="margin: 15px;">            
+            <fieldset class="layui-elem-field">
+                <legend>行政审批事项库</legend>                
+                <div class="layui-field-box">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">				
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">服务主题</label>
+                                <div class="layui-input-inline" id="theme">
+                                    <select name="theme" >
+                                        <option value="">—— 请选择 ——</option>                                       
+                                    </select>
+                                </div>                                                             
+                                <label class="layui-form-label">事项名称</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="keyword" lay-verify="keyword" autocomplete="off" placeholder="请输入事项名称" class="layui-input">
+                                </div>
+                                <button class="layui-btn" lay-submit="" lay-filter="sear" style="margin-left: 40px">搜索</button>
+                                <button type="reset" class="layui-btn layui-btn-primary" id="reset">重置</button>
+                            </div>
+                        </form>
+                    </blockquote>
+                    <a href="itemsEdit.html"><div class="layui-btn" style="margin-left: 50px"><i class="layui-icon"></i>&nbsp;添加</div></a>
+                    <table class="site-table table-hover">
+                        <thead>
+                            <tr>                                                      
+                                <th class="self-form-title">事项编号</th>
+                                <th>事项名称</th>
+                                <th>类型</th>
+                                <th>服务主题</th>                                                                 
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="items-list1"></tbody>
+                    </table> 
+                </div>  
+            </fieldset>	
+            <div class="admin-table-page"><div id="page1" class="page"></div></div>
+        </div> 
+        
+        <script id="orderHandle1" type="text/html">
+            {{#  layui.each(d.datalist, function(index, item){ }}
+            <tr orderid="{{ item.productcode }}">           
+                <td>{{ item.productcode }}</td>
+                <td class="title">{{ item.title }}</td>
+                <td>{{ item.typename }}</td>
+                <td>{{ item.theme }}</td>
+                <td> 
+                    <span class="layui-breadcrumb" lay-separator=" ">
+                        <a href="../serviceItems/itemLibraryDetail.html?id={{ item.id }}" title="详情"><i class="fa fa-file-text-o" aria-hidden="true"></i></a>
+                        <a href="../serviceItems/itemsEdit.html?id={{ item.id }}" title="编辑" id="edit"><i class="fa fa-edit" aria-hidden="true"></i></a>                         
+                    </span>
+                </td>
+            </tr>
+            {{#  }); }}
+        </script>
+    
+        <script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+        <script type="text/javascript" src="../../js/config.js"></script>
+        
+        <script>
+            layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common'], function () {
+                var form = layui.form(),
+                    layer = layui.layer,
+                    layedit = layui.layedit,
+                    laydate = layui.laydate,
+                    $ = layui.jquery,
+                    laytpl = layui.laytpl,
+                    element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                    laypage = layui.laypage,
+                    common = layui.common,                               
+                    editIndex = layedit.build('LAY_demo_editor'),//创建一个编辑器 
+                    serviceIndex = localStorage.getItem('serviceIndex'),
+                    flag = common.getUrlParam("flag"),
+                    layer = parent.layer === undefined ? layui.layer : parent.layer;           
+               
+                    common.init();
+                    common.layTime();//时间选择            
+                
+            /*-------------------------------------------------------------数据和事件---------------------------------------------------------------- */ 
+        
+               
+                //获取列表
+                getData();                
+                $("#reset").on('click', function(){
+                    getData();
+                });  
+                
+                //服务主题下拉列表
+                var getJSON = common.getJsonData('api/bossApi/property/themeList', '', {"keyword":""});
+                $.each(getJSON.data, function (index, item) {
+                    $("#theme select").append('<option value="' + item.themeid + '">' + item.name + '</option>');
+                    $("#theme select").next().find(".layui-anim-upbit").append('<dd lay-value="' + item.themeid + '" class="">' + item.name + '</dd>');
+                });              
+                form.render();
+
+                //获取数据
+                function getData(){
+                    var APIname='api/bossApi/service/EventList';                
+                    var orderHandleId = 1; 
+                    var dataArr = {"page": 1}; 
+                    common.getJsonData(APIname, orderHandleId, dataArr);                    
+                }
+                
+                //搜索                
+                form.on('submit(sear)', function (data) {
+                    var APIname='api/bossApi/service/eventSearch';
+                    var orderHandleId = 1;                   
+                    var dataArr = { "keyword":  data.field.keyword, "theme":data.field.theme, "page": 1}; 
+                    common.getJsonData(APIname, orderHandleId, dataArr);      
+                    return false;
+                }); 
+             
+            });
+           
+        </script>
+    </body>
+</html>

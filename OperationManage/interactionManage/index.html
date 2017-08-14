@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>互动管理</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/table.css"/>
+    <style>
+        .table-title {
+            height: 50px;
+            line-height: 50px;
+            padding-left: 20px;
+            border: 1px solid #ddd;
+            border-bottom: 0;
+            font-size: 14px;
+        }
+
+        .site-table {
+            margin: 0;
+        }
+
+        .site-text {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+<div style="margin: 15px;">
+    <div class="layui-tab layui-tab-card" lay-filter="financeIndex">
+        <ul class="layui-tab-title">
+            <li>问答</li>
+            <li>话题</li>
+            <li>活动</li>
+        </ul>
+        <div class="layui-tab-content">
+            <!--订单对账-->
+            <div class="layui-tab-item">
+                <div class="admin-main">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width:auto">回答数区间</label>
+
+                                <div class="layui-input-inline">
+                                    <input type="text" name="answercountbegin" placeholder="请输入回答数区间" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+                                <div class="layui-form-mid">-</div>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="answercountend" placeholder="请输入回答数区间" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+                                <label class="layui-form-label">选择时间</label>
+
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="开始日" id="LAY_demorange_s1"
+                                           name="begintime">
+                                </div>
+                                <div class="layui-form-mid">-</div>
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="截止日" id="LAY_demorange_e1"
+                                           name="endtime">
+                                </div>
+                                <div class="self-form-time">
+                                    <label class="layui-form-label" style="width:auto">状态</label>
+
+                                    <div class="layui-input-inline">
+                                        <select name="status">
+                                            <option value="">—— 请选择 ——</option>
+                                            <option value="1">已置顶</option>
+                                            <option value="10">已关闭</option>
+                                            <option value="20">发布中</option>
+                                        </select>
+                                    </div>
+                                    <button class="layui-btn" lay-submit="" lay-filter="sear1"
+                                            style="margin-left: 40px">搜索
+                                    </button>
+                                    <button type="reset" class="layui-btn layui-btn-primary reset1">重置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </blockquote>
+                </div>
+                <div class="layui-field-box">
+                    <span id="items-list1"></span>
+
+                    <div class="admin-table-page">
+                        <div id="page1" class="page"></div>
+                    </div>
+                </div>
+            </div>
+            <!--商家对账-->
+            <div class="layui-tab-item">
+                <div class="admin-main">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+
+                                <label class="layui-form-label" style="width:auto">转发数区间</label>
+
+                                <div class="layui-input-inline">
+                                    <input type="text" name="forwardingnumbegin" placeholder="请输入转发数" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+                                <div class="layui-form-mid">-</div>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="forwardingnumend" placeholder="请输入转发数" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+                                <label class="layui-form-label">评论数区间</label>
+
+                                <div class="layui-input-inline">
+                                    <input type="text" name="reviewnumbegin" placeholder="请输入评论数" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+                                <div class="layui-form-mid">-</div>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="reviewnumend" placeholder="请输入评论数" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+
+                                <div class="self-form-time">
+                                    <label class="layui-form-label" style="width:auto">点赞数区间</label>
+
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="praisenumbegin" placeholder="请输入点赞数" autocomplete="off"
+                                               class="layui-input">
+                                    </div>
+                                    <div class="layui-form-mid">-</div>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="praisenumend" placeholder="请输入点赞数" autocomplete="off"
+                                               class="layui-input">
+                                    </div>
+                                    <label class="layui-form-label">选择时间</label>
+
+                                    <div class="layui-input-inline">
+                                        <input class="layui-input" placeholder="开始日" id="LAY_demorange_s2"
+                                               name="begintime">
+                                    </div>
+                                    <div class="layui-form-mid">-</div>
+                                    <div class="layui-input-inline">
+                                        <input class="layui-input" placeholder="截止日" id="LAY_demorange_e2"
+                                               name="endtime">
+                                    </div>
+                                </div>
+                                <div class="self-form-time">
+                                    <label class="layui-form-label" style="width:auto">状态</label>
+
+                                    <div class="layui-input-inline">
+                                        <select name="status">
+                                            <option value="">—— 请选择 ——</option>
+                                            <option value="1">已置顶</option>
+                                            <option value="10">已关闭</option>
+                                            <option value="20">发布中</option>
+                                        </select>
+                                    </div>
+                                    <button class="layui-btn" lay-submit="" lay-filter="sear2"
+                                            style="margin-left: 40px">搜索
+                                    </button>
+                                    <button type="reset" class="layui-btn layui-btn-primary reset2">重置</button>
+                                </div>
+                            </div>
+
+
+                        </form>
+                    </blockquote>
+                </div>
+
+                <div class="layui-field-box">
+                    <span id="items-list2"></span>
+
+                    <div class="admin-table-page">
+                        <div id="page2" class="page"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!--商家对账-->
+            <div class="layui-tab-item">
+                <div class="admin-main">
+                    <blockquote class="layui-elem-quote">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width:auto">评论数区间</label>
+
+                                <div class="layui-input-inline">
+                                    <input type="text" name="reviewnumbegin" placeholder="请输入评论数区间" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+                                <div class="layui-form-mid">-</div>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="reviewnumend" placeholder="请输入评论数区间" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+                                <label class="layui-form-label" style="width:auto">选择时间</label>
+
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="开始日" id="LAY_demorange_s3"
+                                           name="begintime">
+                                </div>
+                                <div class="layui-form-mid">-</div>
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" placeholder="截止日" id="LAY_demorange_e3"
+                                           name="endtime">
+                                </div>
+
+                                <div class="self-form-time">
+                                    <label class="layui-form-label" style="width:auto">状态</label>
+
+                                    <div class="layui-input-inline">
+                                        <select name="status">
+                                            <option value="">—— 请选择 ——</option>
+                                            <option value="10">已下线</option>
+                                            <option value="20">待上线</option>
+                                            <option value="30">上线中</option>
+                                        </select>
+                                    </div>
+                                    <button class="layui-btn" lay-submit="" lay-filter="sear3"
+                                            style="margin-left: 40px">搜索
+                                    </button>
+                                    <button type="reset" class="layui-btn layui-btn-primary reset3">重置</button>
+                                </div>
+
+                            </div>
+                        </form>
+                    </blockquote>
+                </div>
+                <div class="layui-field-box">
+                    <div class="site-text">
+                        <a href="addactive.html" class="layui-btn" style="color: #fff;">新建</a>
+                    </div>
+                    <span id="items-list3"></span>
+
+                    <div class="admin-table-page">
+                        <div id="page3" class="page"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--订单对账-->
+<script id="orderHandle1" type="text/html">
+    <table class="site-table table-hover">
+        <thead>
+        <tr>
+            <th>摘要</th>
+            <th>提问人</th>
+            <th>状态</th>
+            <th>回答</th>
+            <th>更新时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# layui.each(d.datalist, function(index, item){ }}
+        <tr id="order4">
+            <td class="title" title="{{ item.content}}">{{ item.content &&
+                item.content.length>18?item.content.substring(0, 18)+ "...":item.content
+                }}
+            </td>
+            <td style="display:none">{{ item.content}}</td>
+            <td>{{ item.nickname }}</td>
+            <td>{{# if(item.status == 1){ }}已置顶{{# }else if(item.status == 20){ }}发布中{{# }else{ }}已关闭{{# } }}</td>
+            <td>{{ item.answercount }}</td>
+            <td>{{ item.modifytime }}</td>
+            <td style="display:none">{{ item.imgurl}}</td>
+            <td>
+        <span class="layui-breadcrumb" lay-separator="|">
+            {{# if(item.status == 1){ }} <!--已置顶-->
+                <a href="detail.html?questionid={{ item.questionid }}" class="detail1">详情</a>
+                <a href="javascript:;" title="取消置顶" class="newsset1" questionid="{{ item.questionid }}"
+                   flag="0">取消置顶</a>
+                <a href="javascript:;" title="关闭" class="js_tab1_begin1" questionid="{{ item.questionid }}"
+                   flag="10">关闭</a>
+            {{# }else if(item.status == 20){ }} <!--发布中-->
+                <a href="detail.html?questionid={{ item.questionid }}" class="detail1">详情</a>
+                <a href="javascript:;" title="置顶" class="newsset1" questionid="{{ item.questionid }}" flag="1">置顶</a>
+                <a href="javascript:;" title="关闭" class="js_tab1_begin1" questionid="{{ item.questionid }}"
+                   flag="10">关闭</a>
+            {{# }else{ }} <!--已关闭-->
+                <a href="detail.html?questionid={{ item.newsid }}" class="detail1">详情</a>
+                <a href="javascript:;" title="激活" class="newsset1" questionid="{{ item.questionid }}" flag="20">激活</a>
+            {{# } }}
+        </span>
+            </td>
+        </tr>
+        {{# }); }}
+        </tbody>
+    </table>
+</script>
+<!--商家对账-->
+<script id="orderHandle2" type="text/html">
+    <table class="site-table table-hover">
+        <thead>
+        <tr>
+            <th>摘要</th>
+            <th>发起人</th>
+            <th>状态</th>
+            <th>转发</th>
+            <th>评论</th>
+            <th>点赞</th>
+            <th>更新时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# layui.each(d.datalist, function(index, item){ }}
+        <tr id="order4">
+            <td class="title" title="{{ item.content}}">{{ item.content &&
+                item.content.length>18?item.content.substring(0, 18)+ "...":item.content
+                }}
+            </td>
+            <td style="display:none">{{ item.content}}</td>
+            <td>{{ item.nickname }}</td>
+            <td>{{# if(item.status == 1){ }}已置顶{{# }else if(item.status == 20){ }}发布中{{# }else{ }}已关闭{{# } }}</td>
+            <td>{{ item.forwardingnum }}</td>
+            <td>{{ item.reviewnum }}</td>
+            <td>{{ item.praisenum }}</td>
+            <td>{{ item.modifytime }}</td>
+            <td style="display:none">{{ item.imgurl}}</td>
+            <td>
+        <span class="layui-breadcrumb" lay-separator="|">
+            {{# if(item.status == 1){ }} <!--已置顶-->
+                <a href="huathuoddetail.html?topicid={{ item.topicid }}" class="detail2">详情</a>
+                <a href="javascript:;" title="取消置顶" class="newsset2" topicid="{{ item.topicid }}" flag="0">取消置顶</a>
+                <a href="javascript:;" title="关闭" class="js_tab1_begin2" topicid="{{ item.topicid }}" flag="10">关闭</a>
+            {{# }else if(item.status == 20){ }} <!--发布中-->
+                <a href="huathuoddetail.html?topicid={{ item.topicid }}" class="detail2">详情</a>
+                <a href="javascript:;" title="置顶" class="newsset2" topicid="{{ item.topicid }}" flag="1">置顶</a>
+                <a href="javascript:;" title="关闭" class="js_tab1_begin2" topicid="{{ item.topicid }}" flag="10">关闭</a>
+            {{# }else{ }} <!--已关闭-->
+                <a href="huathuoddetail.html?topicid={{ item.topicid }}" class="detail2">详情</a>
+                <a href="javascript:;" title="激活" class="newsset2" topicid="{{ item.topicid }}" flag="20">激活</a>
+            {{# } }}
+        </span>
+            </td>
+        </tr>
+        {{# }); }}
+        </tbody>
+    </table>
+</script>
+<!--商家对账-->
+<script id="orderHandle3" type="text/html">
+    <table class="site-table table-hover">
+        <thead>
+        <tr>
+            <th>名称</th>
+            <th>有效期</th>
+            <th>状态</th>
+            <th>分享</th>
+            <th>评论</th>
+            <th>更新时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# layui.each(d.datalist, function(index, item){ }}
+        <tr id="order4">
+            <td class="title" title="{{ item.name}}">{{ item.name && item.name.length>18?item.name.substring(0, 18)+
+                "...":item.name
+                }}
+            </td>
+            <td style="display:none">{{ item.name }}</td>
+            <td class="endtimebijiao">{{ item.endtime }}</td>
+            <td>{{# if(item.status == 10){ }}已下线{{# }else if(item.status == 20){ }}待上线{{# }else{ }}已上线{{# } }}</td>
+            <td>{{ item.sharenum }}</td>
+            <td>{{ item.reviewnum }}</td>
+            <td>{{ item.modifytime }}</td>
+            <td style="display:none">{{ item.imgurl}}</td>
+            <td style="display:none">{{ item.begintime}}</td>
+            <td style="display:none">{{ item.tags}}</td>
+            <td style="display:none">{{ item.weburl}}</td>
+            <td style="display:none">{{ item.content}}</td>
+            <td style="display:none">{{ item.tagsname}}</td>
+            <td>
+         <span class="layui-breadcrumb" lay-separator="|">
+             {{# if(item.status == 10 || item.status == 20){ }} <!--已置顶-->
+                <a href="huathuoddetail.html?activityid={{ item.activityid }}" class="detail3">详情</a>
+                <a href="addactive.html?activityid={{ item.activityid }}" class="detail3">编辑</a>
+                <a href="javascript:;" title="上线" class="newsset3" activityid="{{ item.activityid }}" flag="30">上线</a>
+               <a href="javascript:;" title="删除" class="newsset3" activityid="{{ item.activityid }}" flag="0">删除</a>
+            {{# }else{ }} <!--已关闭-->
+                <a href="huathuoddetail.html?activityid={{ item.activityid }}" class="detail3">详情</a>
+                <a href="javascript:;" title="下线" class="newsset3" activityid="{{ item.activityid }}" flag="10">下线</a>
+            {{# } }}
+        </span>
+            </td>
+        </tr>
+        {{# }); }}
+        </tbody>
+    </table>
+</script>
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                financeIndex = localStorage.getItem('financeIndex'),
+                orderID = common.getUrlParam("id"),
+                layer = layui.layer;
+        common.saveTabIndex('financeIndex');
+        common.init();
+        common.layTime(); //时间选择
+
+        /* ------------------------------------------------------------- 数据列表显示 ---------------------------------------------------------------- */
+        //重置 、 搜索 、列表
+
+        getJSONData(1, '');
+        getJSONData(2, '');
+        getJSONData(3, '');
+        $(".reset1").on('click', function () {
+            getJSONData(1, '');
+        });
+        $(".reset2").on('click', function () {
+            getJSONData(2, '');
+        });
+        $(".reset3").on('click', function () {
+            getJSONData(3, '');
+        });
+        form.on('submit(sear1)', function (data) {
+            var dataArr = {
+                "type": 0,
+                "status": parseInt(data.field.status),
+                "answercountbegin": parseInt(data.field.answercountbegin),
+                "answercountend": parseInt(data.field.answercountend),
+                "timebegin": data.field.begintime,
+                "timeend": data.field.endtime,
+                "pageindex": 1
+            };
+            //console.log(dataArr);
+            getJSONData(1, dataArr);
+            return false;
+        });
+
+        form.on('submit(sear2)', function (data) {
+            var dataArr = {
+                "type": 1,
+                "status": parseInt(data.field.status),
+                "forwardingnumbegin": parseInt(data.field.forwardingnumbegin),
+                "forwardingnumend": parseInt(data.field.forwardingnumend),
+                "sharenumbegin": parseInt(data.field.sharenumbegin),
+                "sharenumend": parseInt(data.field.sharenumend),
+                "reviewnumbegin": parseInt(data.field.reviewnumbegin),
+                "reviewnumend": parseInt(data.field.reviewnumend),
+                "praisenumbegin": parseInt(data.field.praisenumbegin),
+                "praisenumend": parseInt(data.field.praisenumend),
+                "timebegin": data.field.begintime,
+                "timeend": data.field.endtime,
+                "pageindex": 1
+            };
+            //console.log(dataArr);
+            getJSONData(2, dataArr);
+            return false;
+        });
+
+        form.on('submit(sear3)', function (data) {
+            var dataArr = {
+                "type": 2,
+                "status": parseInt(data.field.status),
+                "ishot": parseInt(data.field.ishot),
+                "sharenumbegin": parseInt(data.field.sharenumbegin),
+                "sharenumend": parseInt(data.field.sharenumend),
+                "reviewnumbegin": parseInt(data.field.reviewnumbegin),
+                "reviewnumend": parseInt(data.field.reviewnumend),
+                "praisenumbegin": parseInt(data.field.praisenumbegin),
+                "praisenumend": parseInt(data.field.praisenumend),
+                "timebegin": data.field.begintime,
+                "timeend": data.field.endtime,
+                "pageindex": 1
+            };
+            //console.log(dataArr);
+            getJSONData(3, dataArr);
+            return false;
+        });
+
+        /* ------------------------------------------------------------- 数据MODEL ---------------------------------------------------------------- */
+
+        function getJSONData(typeid, dataArr) {
+            var dataArray = dataArr || {"page": 1};
+            if (typeid == 1) {
+                common.getJsonData('api/bossApi/interaction/questionSearch', typeid, dataArray);
+            } else if (typeid == 2) {
+                common.getJsonData('api/bossApi/interaction/topicSearch', typeid, dataArray);
+            } else {
+                common.getJsonData('api/bossApi/interaction/activitySearch', typeid, dataArray);
+            }
+
+        }
+
+        /* ------------------------------------------------------------- 操作 ---------------------------------------------------------------- */
+
+        //问答
+        $(document).on('click', '.newsset1', function () {
+            var status = $(this).attr('flag');
+            var questionid = $(this).attr('questionid');
+            var dataArr = {"id": questionid, "status": status};
+            var getJSON = common.getJsonData('api/bossApi/interaction/questionSet', '', dataArr);
+            //console.log(getJSON);
+            //return false;
+            if (getJSON["code"] == 1) {
+                layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                    window.location.reload();
+                });
+            } else {
+                layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                    window.location.reload();
+                });
+            }
+        });
+
+        //话题
+        $(document).on('click', '.newsset2', function () {
+            var status = $(this).attr('flag');
+            var topicid = $(this).attr('topicid');
+            var dataArr = {"id": topicid, "status": status};
+            var getJSON = common.getJsonData('api/bossApi/interaction/topicSet', '', dataArr);
+            //console.log(getJSON);
+            //return false;
+            if (getJSON["code"] == 1) {
+                layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                    window.location.reload();
+                });
+            } else {
+                layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                    window.location.reload();
+                });
+            }
+        });
+
+        //活动
+        $(document).on('click', '.newsset3', function () {
+            var status = $(this).attr('flag');
+            var activityid = $(this).attr('activityid');
+            var dataArr = {"id": activityid, "status": status};
+
+            if (status == 0) { //删除
+                var dataArr = {"id": activityid};
+                var getJSON = common.getJsonData('api/bossApi/interaction/activityDel', '', dataArr);
+            } else { //上线 下线
+                var str1 = $(this).parent().parent().parent().find(".endtimebijiao").html();
+                var str2 = show();
+                if (Date.parse(str1.replace(/-/g, "/")) < Date.parse(str2.replace(/-/g, "/"))) {
+                    layer.msg('过期的活动自动下线!', {icon: 2, time: 1500});
+                    return false;
+                } else {
+                    var getJSON = common.getJsonData('api/bossApi/interaction/activitySet', '', dataArr);
+                }
+                //获取当前时间
+                function show() {
+                    var mydate = new Date();
+                    var str = "" + mydate.getFullYear() + "-";
+                    str += (mydate.getMonth() + 1) + "-";
+                    str += mydate.getDate();
+                    return str;
+                }
+            }
+            // console.log(dataArr);
+            // console.log(getJSON);
+            //return false;
+            if (getJSON["code"] == 1) {
+                layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                    window.location.reload();
+                });
+            } else {
+                layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                    window.location.reload();
+                });
+            }
+        });
+
+        /* ------------------------------------------------------------- 关闭原因 ---------------------------------------------------------------- */
+
+        var layer_html = '  <div class="layer-begin">' +
+                '<form action=""></form>' +
+                '<div class="layui-form-item">' +
+                '<div class="layui-input-inline">' +
+                '<textarea type="text" name="sendMode" autocomplete="off" class="layui-input" placeholder="" style="width: 400px;height:190px; margin-left: 10px"></textarea>' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+
+        $(document).on('click', '.js_tab1_begin1', function () {
+            var obj = $(this);
+            layer.open({
+                type: 1,
+                area: ['420px', '310px'],
+                shadeClose: true,
+                title: '关闭原因',
+                content: layer_html,
+                btn: ['提交', '取消'],
+                btn1: function (index, layero) {
+                    var questionid = obj.attr('questionid');
+                    var status = obj.attr('flag');
+                    var dataArr = {
+                        "id": questionid,
+                        "status": status,
+                        "closereason": document.getElementsByName('sendMode')[0].value
+                    };
+                    var getJSON = common.getJsonData('api/bossApi/interaction/questionSet', '', dataArr);
+                    //  console.log(dataArr);
+                    //  console.log(getJSON);
+                    //  return false;
+                    if (getJSON["code"] == 1) {
+                        layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                            localStorage.removeItem("deids");
+                            localStorage.removeItem("productdata");
+                            localStorage.removeItem("addCoupon_form");
+                            /*
+                             var index = parent.layer.getFrameIndex(window.name);
+                             parent.layer.close(index);
+                             */
+                            window.location.reload();
+                        });
+                    } else {
+                        layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                            window.location.reload();
+                        });
+                    }
+                    return false;
+                    //layer.msg('提交成功')
+                    layer.close(index)
+                }
+            });
+        });
+
+        $(document).on('click', '.js_tab1_begin2', function () {
+            var obj = $(this);
+            layer.open({
+                type: 1,
+                area: ['420px', '310px'],
+                shadeClose: true,
+                title: '关闭原因',
+                content: layer_html,
+                btn: ['提交', '取消'],
+                btn1: function (index, layero) {
+                    var topicid = obj.attr('topicid');
+                    var status = obj.attr('flag');
+                    var dataArr = {
+                        "id": topicid,
+                        "status": status,
+                        "closereason": document.getElementsByName('sendMode')[0].value
+                    };
+                    var getJSON = common.getJsonData('api/bossApi/interaction/topicSet', '', dataArr);
+                    //console.log(dataArr);
+                    // console.log(getJSON);
+                    // return false;
+                    if (getJSON["code"] == 1) {
+                        layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                            localStorage.removeItem("deids");
+                            localStorage.removeItem("productdata");
+                            localStorage.removeItem("addCoupon_form");
+                            /*
+                             var index = parent.layer.getFrameIndex(window.name);
+                             parent.layer.close(index);
+                             */
+                            window.location.reload();
+                        });
+                    } else {
+                        layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                            window.location.reload();
+                        });
+                    }
+                    return false;
+                    //layer.msg('提交成功')
+                    layer.close(index)
+                }
+            });
+        });
+
+        /* ------------------------------------------------------------- 详情 ---------------------------------------------------------------- */
+
+        $(document).on('click', '.detail1', function () {
+            var index = $(this).parent().parent().siblings();
+            //拼凑数组并放到localhost，以便详情使用
+            var arr = {
+                "content": index.eq(1).html(),
+                "nickname": index.eq(2).html(),
+                "status": index.eq(3).html(),
+                "answercount": index.eq(4).html(),
+                "modifytime": index.eq(5).html(),
+                "imgurl": index.eq(6).html(),
+            };
+            localStorage.setItem("interactionmanageDetail", JSON.stringify(arr));
+            location.href = "detail.html";
+        });
+
+        $(document).on('click', '.detail2', function () {
+            var index = $(this).parent().parent().siblings();
+            //拼凑数组并放到localhost，以便详情使用
+            var arr = {
+                "content": index.eq(1).html(),
+                "nickname": index.eq(2).html(),
+                "status": index.eq(3).html(),
+                "forwardingnum": index.eq(4).html(),
+                "reviewnum": index.eq(5).html(),
+                "praisenum": index.eq(6).html(),
+                "modifytime": index.eq(7).html(),
+                "imgurl": index.eq(8).html(),
+            };
+            localStorage.setItem("interactionmanageDetail", JSON.stringify(arr));
+            location.href = "detail.html";
+        });
+
+        $(document).on('click', '.detail3', function () {
+            var index = $(this).parent().parent().siblings();
+            //拼凑数组并放到localhost，以便详情使用
+            var arr = {
+                "name": index.eq(1).html(),
+                "endtime": index.eq(2).html(),
+                "status": index.eq(3).html(),
+                "sharenum": index.eq(4).html(),
+                "reviewnum": index.eq(5).html(),
+                "modifytime": index.eq(6).html(),
+                "imgurl": index.eq(7).html(),
+                "begintime": index.eq(8).html(),
+                "tags": index.eq(9).html(),
+                "weburl": index.eq(10).html(),
+                "content": index.eq(11).html(),
+                "tagsname": index.eq(12).html()
+            };
+            localStorage.setItem("interactionmanageDetail", JSON.stringify(arr));
+            location.href = "detail.html";
+        });
+
+    });
+</script>
+</body>
+</html>

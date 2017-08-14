@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title> 编辑图文新闻</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../../plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/global.css" media="all">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/table.css"/>
+</head>
+
+<body>
+<div style="margin: 15px;">
+    <fieldset class="layui-elem-field">
+        <legend></legend>
+        <div class="layui-field-box">
+            <form class="layui-form" action="" id="addnews">
+                <table class="layui-table" id="content">
+                </table>
+                <table class="layui-table">
+                    <tr>
+                        <th class="self-form-title">新闻标题：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="text" name="title" lay-verify="required" autocomplete="off"
+                                       placeholder="请输入新闻标题" class="layui-input self-form-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="self-form-title">新闻来源：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="text" name="source" lay-verify="required" autocomplete="off"
+                                       placeholder="请输入新闻来源" class="layui-input self-form-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr id="newsimg" style="display:none">
+                        <th class="self-form-title">新闻封面：</th>
+                        <td>
+
+                            <input type="file" name="imgguid" lay-verify="" class="layui-upload-file"
+                                   lay-title="添加一个碉堡了的图片">
+
+                        </td>
+                    </tr>
+                    <tr id="newsvedio" style="display:none">
+                        <th class="self-form-title">视频地址：</th>
+                        <td>
+                            <div class="layui-input-inline">
+                                <input type="text" name="videourl" lay-verify="" autocomplete="off"
+                                       placeholder="请输入视频地址（'http://www.xxx.com'）" class="layui-input self-form-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="self-form-title">推送标签：</th>
+                        <td>
+                            <div class="layui-input-inline" id="tags">
+                                <input name="" lay-skin="primary" title="全选" type="checkbox" lay-filter="allChoose">&nbsp;
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="detail-title">新闻正文：</th>
+                        <td>
+                            <div class="layui-input-block edit_box self-edit-margin">
+                                <textarea class="layui-textarea layui-hide" name="content" lay-verify=""
+                                          id="LAY_demo_editor"></textarea>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <div class="layui-btn-group self-btn-return">
+                    <a href="http://www.layui.com" class="layui-btn layui-btn-warm">预览</a>
+                    <button class="layui-btn" lay-submit="" lay-filter="contro" status="10">保存</button>
+                    <button class="layui-btn layui-btn-primary" lay-submit="" lay-filter="contro" status="20">上线
+                    </button>
+                </div>
+                <a href="javascript:history.go(-1);" class="return-go"><i class="fa fa-reply" data-icon="fa-reply"
+                                                                          aria-hidden="true"></i> 返回</a>
+            </form>
+        </div>
+    </fieldset>
+</div>
+
+<script type="text/javascript" src="../../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'element', 'icheck', 'laypage', 'layer', 'laytpl', 'common', 'formInStorage', 'upload'], function () {
+        var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit,
+                laydate = layui.laydate,
+                $ = layui.jquery,
+                laytpl = layui.laytpl,
+                element = layui.element(), //Tab的切换功能，切换事件监听等，需要依赖element模块
+                laypage = layui.laypage,
+                common = layui.common,
+                formInStorage = layui.formInStorage,
+                apiUrl = common.apiUrl,
+                editIndex = layedit.build('LAY_demo_editor'), //创建一个编辑器
+                serviceIndex = localStorage.getItem('serviceIndex'),
+                newsid = common.getUrlParam("newsid"),
+                newsimg = common.getUrlParam("newsimg"),//事项id
+                newsvedio = common.getUrlParam("newsvedio"),//事项id
+                layer = layui.layer;
+        common.saveTabIndex('serviceIndex');
+        //common.init();
+        common.layTime(); //时间选择
+
+        //全选
+        form.on('checkbox(allChoose)', function (data) {
+            var child = $(data.elem).parents('table').find('#tags input');
+            child.each(function (index, item) {
+                item.checked = data.elem.checked;
+            });
+            form.render('checkbox');
+        });
+
+        //上传图片
+        layui.upload({
+            url: apiUrl + 'api/bossApi/account/testUp',
+            method: 'post',
+            limitSize: '30000',
+            before: function (file) {
+                console.log(file.files[0]);
+               // return false
+            },
+            success: function (res) {
+                console.log(res)
+            }
+        });
+
+
+
+        //推送标签列表
+        var APIname = "api/bossApi/property/tagList";
+        var getJSON = common.getJsonData(APIname, '', '');
+        $.each(getJSON.data, function (index, item) {
+            $("#tags").append('<input name="' + item.name + '" lay-skin="primary" title="' + item.name + '" datastorage="tags" type="checkbox" fid="' + item.tagsid + '">');
+        });
+        form.render();
+
+        //避免input被刷新清空
+        formInStorage.init({
+            formElem: '#addnews',
+            formSession: 'addnews'
+        });
+        $(window.frames["LAY_layedit_1"].document).find("body").on('keyup', function () {
+            var textval = $(window.frames["LAY_layedit_1"].document).find("body").html();
+            console.log(textval);
+            localStorage.setItem("textarea", textval);
+        })
+        $(window.frames["LAY_layedit_1"].document).find("body").html(localStorage.getItem("textarea"));
+
+        //修改的时候
+        if (newsid != null) {
+            //修改时，获取行政审批的详情
+            $("legend").html('编辑新闻');
+            var dataArr = {"id": newsid};
+            var getJSON = common.getJsonData("api/bossApi/news/newsDetail", "", dataArr);
+            $("input[name='title']").attr("value", getJSON.data.title);
+            $("input[name='source']").attr("value", getJSON.data.source);
+            $("input[name='videourl']").attr("value", getJSON.data.videourl);
+            if(getJSON.data.tags){
+                //选中标签
+                $.each(getJSON.data.tags.split(','), function (index, item) {
+                    $("#tags input[fid='" + item + "']").next().addClass("layui-form-checked");
+                    $("#tags input[fid='" + item + "']").attr("checked", "checked");
+                });
+            }
+
+            window.frames["LAY_layedit_1"].document.body.innerHTML = getJSON.data.content;//给富文本区域赋值
+        } else {
+            //新增时
+            $("legend").html('添加新闻');
+        }
+
+        if (newsvedio) {
+            $("#newsvedio").removeAttr("style");
+        } else {
+            $("#newsimg").removeAttr("style");
+        }
+
+        //监听提交
+        form.on('submit(contro)', function (data) {
+            //版本和标签至少选择了一个
+            var tags = $("#tags").find(".layui-form-checked").length; //是否选择了标签
+            $("#tags").css("border", "0");
+            if (tags == 0) {
+                $("#tags").css("border", "1px solid red");
+                layer.msg('必填项不能为空！', {icon: 5, shift: 6});
+                return false;
+            }
+            //拼装数据，请求接口
+            var tags = "";
+            $('input[datastorage="tags"]:checked').each(function () { //当前选中的复选框
+                tags += $(this).attr('fid') + ",";
+            });
+            tags = tags.substring(0, tags.length - 1); // '1,2,'去掉最后一个逗号
+            //请求接口
+            var content = $(window.frames["LAY_layedit_1"].document).find("body").html();//获取富文本编辑框的值
+            var status = $(this).attr('status');
+            if (newsvedio) {
+                var type = 1
+            } else {
+                type = 0
+            }
+            if (newsid == null) {
+                newsid = 0;
+            }
+            var filetypekey={
+                        "module": 7008,
+                        "remark": "图片上传的备注"
+                    };
+            var dataArr = {
+                "newsId": newsid,
+                "title": data.field.title,
+                "source": data.field.source,
+                "title": data.field.title,
+                "videourl": data.field.videourl,
+                "imgguid": 'imgurl(imgguid)',
+                "tags": tags,
+                "status": status,
+                "type": type,
+                "ishot": 0,
+                "content": content
+            };
+            var datas = {
+                "filetypekey":filetypekey,
+                "filedatakey":dataArr
+            }
+
+
+           var getJSON = common.getJsonData('api/bossApi/news/newsEdit', '', dataArr);
+
+         // console.log(dataArr);
+          //  console.log(getJSON);
+         // return false;
+            if (getJSON["code"] == 1) {
+                layer.msg('操作成功', {icon: 1, time: 1500}, function () {
+                    localStorage.removeItem("addnews");
+                    localStorage.removeItem("textarea");
+                    history.go(-1);
+                });
+            } else {
+                layer.msg(getJSON["msg"], {icon: 2, time: 1500}, function () {
+                    history.go(-1);
+                });
+            }
+            return false;
+        });
+
+    });
+</script>
+</body>
+</html>
